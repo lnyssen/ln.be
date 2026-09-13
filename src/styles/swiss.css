@@ -382,6 +382,11 @@
 
   /* Interrupteur de thème : la position du curseur ne dépend que de
      l'attribut, jamais de l'hydratation. */
+  /* Bascule de thème : tout change d'un coup, le curseur excepté. */
+  .swiss[data-theme-switching] *:not(.theme-knob) {
+    transition-duration: 0s !important;
+  }
+
   .swiss .theme-knob {
     transform: translateX(0);
     transition: transform 200ms ease-out;

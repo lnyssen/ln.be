@@ -14,9 +14,23 @@ export default function SwissThemeToggle() {
 
   const toggle = () => {
     const next = isDark ? 'light' : 'dark';
-    document.documentElement.dataset.swissTheme = next;
+    const root = document.documentElement;
+
+    // Les jetons changent d'un bloc, mais les éléments qui portent une
+    // transition de couleur mettraient 200 ms à suivre : on voyait le cadre
+    // de « Get in touch » virer au blanc après le fond. Le temps d'une image,
+    // plus personne ne transitionne — sauf le curseur, dont la glissade est
+    // justement ce qu'on veut voir.
+    root.dataset.themeSwitching = '';
+    root.dataset.swissTheme = next;
     localStorage.setItem('swiss-theme', next);
     setTheme(next);
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        delete root.dataset.themeSwitching;
+      });
+    });
   };
 
   return (

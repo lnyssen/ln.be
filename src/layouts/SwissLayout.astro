@@ -45,6 +45,14 @@ const ogImage = new URL('/og.png', Astro.site).href;
     <meta name="theme-color" content="#141414" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <!-- Les deux graisses visibles d'emblée, demandées avant que le CSS ne les
+         réclame. Sans cela le texte s'affiche d'abord dans la police de
+         secours puis change de largeur : le cadre de « Get in touch » se
+         rétrécissait sous l'œil. `crossorigin` est obligatoire, une police se
+         charge en anonyme et le préchargement serait sinon perdu. -->
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/switzer-400.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/switzer-700.woff2" crossorigin />
     <script is:inline>
       // Thème appliqué avant le premier paint pour éviter le flash.
       const stored = localStorage.getItem('swiss-theme');
