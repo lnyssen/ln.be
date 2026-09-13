@@ -11,7 +11,8 @@ images:
 link: "https://www.empreintes.cool/"
 ---
 
-An identity where the capital S at the end does the work: every trace belongs
-to someone, and there is never only one. The mark redraws that S as a
-fingerprint whorl, a single shape that stands in for the whole word and holds up
-at the size of a sticker.
+Identity for a travelling cinema that takes films to the people who cannot go
+to them: prisons, nursing homes, reception centres, hospital wards. The capital
+S at the end of the name is the whole idea, a trace is never the only one, and
+the mark redraws that S as a fingerprint whorl, a single circle that holds up
+on a sticker, a badge or the side of a van.

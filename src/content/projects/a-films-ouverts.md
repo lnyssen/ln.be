@@ -11,7 +11,8 @@ images:
 link: "https://afilmsouverts.be/"
 ---
 
-Identity and website for a short film competition and festival that sets out
-to make a screen against racism. The logotype sits on two strips of white paper
-laid over the image, so each edition can change its photography entirely and
-still be recognised at a glance.
+Identity and website for the festival run by Média Animation, a short film
+competition against racism screened around 21 March in some fifty venues across
+French speaking Belgium, each screening followed by a debate. The logotype sits
+on two strips of white paper laid over the image, a device any partner venue
+can reuse, so every edition changes its photography and stays recognisable.

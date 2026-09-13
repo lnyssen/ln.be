@@ -11,6 +11,8 @@ images:
 link: "https://psybru.be/"
 ---
 
-Identity and website for a network of psychologists in Brussels. The work went
-into clarity rather than character: plain language, generous spacing, and a
-palette warm enough to read as care instead of clinic.
+Identity and website for a directory of psychological care in the Brussels
+region: more than a thousand practitioners, filtered by age, by speciality and
+by the language you would rather be heard in. Everything went into clarity
+rather than character, because people arrive here in a bad week and need to
+find the right person in a few clicks.

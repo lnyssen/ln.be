@@ -11,7 +11,8 @@ images:
 link: "https://www.moires.be/"
 ---
 
-A full identity for a Brussels label: name, mark, typographic system and
-printed range. The wordmark is set against its own reflection, two purples
-slightly out of register, which is exactly how a moiré appears in the first
-place.
+Identity for a shop on rue du Marché au Charbon selling prints, stationery
+and handmade objects. The name comes from the optical effect that appears when
+two similar patterns overlap, so the wordmark is set against its own
+reflection, two purples slightly out of register, and the shimmer does the
+rest.
