@@ -174,7 +174,84 @@ const ogImage = new URL('/og.png', Astro.site).href;
           for (const [el, avant] of suspendus) el.style.transform = avant;
         };
 
-        const lancer = () => requestAnimationFrame(aligner);
+        // Rythme vertical : même distance entre un filet et le texte qui le
+        // suit, et entre le dernier texte et le filet suivant. Les corps vont
+        // de 11 à 78px et chaque bloc a son propre interligne : une valeur
+        // fixe en CSS donne des écarts de 20 à 76px selon la section.
+        // Valeur choisie au-dessus du plus contraint : les sections en liste
+        // portent déjà 26px de marge dans leur première ligne, on ne peut donc
+        // pas descendre plus bas sans les resserrer.
+        const RESPIRATION = 58;
+
+        const premierHautDeCapitales = (bloc) => {
+          // On vise la colonne de contenu : l'intitulé, lui, est recalé ensuite
+          // sur elle, donc le mesurer reviendrait à courir après sa propre
+          // correction.
+          const label = bloc.querySelector('.section-label');
+          const cible = label
+            ? [...bloc.children].find((c) => c !== label) ?? bloc
+            : bloc;
+          return hautDesCapitales(cible);
+        };
+
+        const basDuDernierTexte = (bloc) => {
+          const marcheur = document.createTreeWalker(bloc, NodeFilter.SHOW_TEXT, {
+            acceptNode: (n) => (n.textContent.trim() ? 1 : 2),
+          });
+          let dernier = null;
+          let n;
+          while ((n = marcheur.nextNode())) dernier = n;
+          if (!dernier) return null;
+
+          const porteur = dernier.parentElement;
+          const sonde = document.createElement('span');
+          sonde.style.cssText =
+            'display:inline-block;width:0;height:0;vertical-align:baseline';
+          porteur.appendChild(sonde);
+          const ligneDeBase = sonde.getBoundingClientRect().top;
+          sonde.remove();
+
+          const style = getComputedStyle(porteur);
+          contexte.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+          return ligneDeBase + contexte.measureText('g').actualBoundingBoxDescent;
+        };
+
+        const rythmer = () => {
+          const blocs = [...document.querySelectorAll('main [class*="border-t"]')].filter(
+            (el) => parseFloat(getComputedStyle(el).borderTopWidth) > 0
+          );
+
+          for (const bloc of blocs) {
+            bloc.style.paddingTop = '';
+            const section = bloc.closest('section');
+            if (section) section.style.paddingBottom = '';
+          }
+
+          for (const bloc of blocs) {
+            const haut = premierHautDeCapitales(bloc);
+            if (haut === null) continue;
+            const actuel = haut - bloc.getBoundingClientRect().top;
+            const base = parseFloat(getComputedStyle(bloc).paddingTop) || 0;
+            bloc.style.paddingTop = `${Math.max(0, base + RESPIRATION - actuel).toFixed(2)}px`;
+          }
+
+          for (const bloc of blocs) {
+            const section = bloc.closest('section');
+            if (!section) continue;
+            const bas = basDuDernierTexte(bloc);
+            if (bas === null) continue;
+            const actuel = section.getBoundingClientRect().bottom - bas;
+            const base = parseFloat(getComputedStyle(section).paddingBottom) || 0;
+            section.style.paddingBottom = `${Math.max(0, base + RESPIRATION - actuel).toFixed(2)}px`;
+          }
+        };
+
+        const lancer = () =>
+          requestAnimationFrame(() => {
+            aligner();
+            rythmer();
+            aligner();
+          });
         if (document.fonts?.ready) document.fonts.ready.then(lancer);
         else lancer();
         window.addEventListener('resize', lancer);
