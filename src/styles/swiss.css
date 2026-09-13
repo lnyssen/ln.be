@@ -42,7 +42,7 @@
 .swiss[data-swiss-theme='dark'] {
   --paper: #141414;
   --ink: #faf9f6;
-  --ink-soft: #b4b4b4;
+  --ink-soft: #c6c6c6;
   --rule: #faf9f6;
   /* Le violet de la marque tombe à 3,9:1 sur fond noir : on passe à la
      lavande, l'autre violet du site, qui remonte à 7,7:1. */
@@ -293,10 +293,7 @@
      chaque texte d'une valeur différente. */
   .swiss .footer-cols > p,
   .swiss .footer-cols > div > :first-child,
-  .swiss .section-label,
-  .swiss .section-label + * {
-    text-box: trim-start cap alphabetic;
-  }
+
 
   .swiss .project-body > * + * {
     margin-top: 0.9em;

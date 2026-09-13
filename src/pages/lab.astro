@@ -46,7 +46,7 @@ const entries = (await getCollection('lab')).sort(
       {
         entries.map((entry, i) => (
           <article class="swiss-grid gap-y-5 border-t border-[var(--rule)] py-[28px]" data-reveal>
-            <div class="col-span-6 md:col-start-3 md:col-span-5">
+            <div class="col-span-6 md:col-start-3 md:col-span-3">
               {resolveImage(entry.data.image) && (
                 <Image
                   src={resolveImage(entry.data.image)!}
@@ -61,7 +61,7 @@ const entries = (await getCollection('lab')).sort(
               )}
             </div>
 
-            <div class="col-span-6 flex flex-col md:col-span-5">
+            <div class="col-span-6 flex flex-col md:col-span-6">
               <h2 class="text-[clamp(1.75rem,3.6vw,3rem)] font-medium leading-[1.02] tracking-[-0.04em]">
                 {entry.data.title}
               </h2>

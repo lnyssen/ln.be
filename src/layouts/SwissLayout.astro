@@ -111,6 +111,70 @@ const ogImage = new URL('/og.png', Astro.site).href;
         if (stored) readout();
       })();
 
+      // Les intitulés de colonne se calent sur le haut des capitales du texte
+      // qu'ils annoncent. Les corps vont de 11 à 48px, donc aucune règle CSS
+      // ne donne le même résultat partout : on mesure.
+      (() => {
+        const labels = [...document.querySelectorAll('.section-label')];
+        if (!labels.length) return;
+
+        const contexte = document.createElement('canvas').getContext('2d');
+
+        // Hauteur de capitale réelle de la police employée, en pixels.
+        const hauteurCapitale = (style) => {
+          contexte.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+          return contexte.measureText('H').actualBoundingBoxAscent;
+        };
+
+        // Une boîte en ligne de hauteur nulle s'assied sur la ligne de base :
+        // son bord supérieur la donne exactement.
+        const hautDesCapitales = (el) => {
+          const marcheur = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, {
+            acceptNode: (n) => (n.textContent.trim() ? 1 : 2),
+          });
+          const noeud = marcheur.nextNode();
+          if (!noeud) return null;
+
+          const porteur = noeud.parentElement;
+          const sonde = document.createElement('span');
+          sonde.style.cssText =
+            'display:inline-block;width:0;height:0;vertical-align:baseline';
+          porteur.insertBefore(sonde, noeud);
+          const ligneDeBase = sonde.getBoundingClientRect().top;
+          sonde.remove();
+
+          return ligneDeBase - hauteurCapitale(getComputedStyle(porteur));
+        };
+
+        const aligner = () => {
+          // Les blocs en attente d'apparition sont translatés : on les remet à
+          // plat le temps de mesurer, sinon on cale sur une position provisoire.
+          const suspendus = [...document.querySelectorAll('[data-reveal]')].map((el) => {
+            const avant = el.style.transform;
+            el.style.transform = 'none';
+            return [el, avant];
+          });
+
+          for (const label of labels) {
+            label.style.marginTop = '';
+            const voisin = [...label.parentElement.children].find((c) => c !== label);
+            if (!voisin) continue;
+            const a = hautDesCapitales(label);
+            const b = hautDesCapitales(voisin);
+            if (a === null || b === null) continue;
+            const ecart = b - a;
+            if (Math.abs(ecart) > 0.5) label.style.marginTop = `${ecart.toFixed(2)}px`;
+          }
+
+          for (const [el, avant] of suspendus) el.style.transform = avant;
+        };
+
+        const lancer = () => requestAnimationFrame(aligner);
+        if (document.fonts?.ready) document.fonts.ready.then(lancer);
+        else lancer();
+        window.addEventListener('resize', lancer);
+      })();
+
       // Apparition au défilement. Le drapeau n'est posé que si l'on anime
       // vraiment : sans script ou en mouvement réduit, rien n'est masqué.
       (() => {
