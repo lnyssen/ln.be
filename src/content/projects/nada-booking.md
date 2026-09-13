@@ -10,3 +10,8 @@ images:
   - "/images/nada-booking-4.jpg"
 link: "https://www.nadabooking.be/"
 ---
+
+An identity for a booking agency, built to stand behind the artists rather
+than in front of them. The agency signs each poster with a small wordmark and a
+yellow dot at the top, then gets out of the way and lets the photograph take
+the whole sheet.

@@ -10,3 +10,9 @@ images:
   - "/images/world-cocoa-foundation-4.jpg"
 link: "https://worldcocoafoundation.org/"
 ---
+
+A rebrand for an international organisation working across the cocoa sector.
+The mark puts a farmer and a pod inside one green roundel, and the pattern that
+carries the rest of the system is lifted from the ridges of the pod itself, so
+some warmth from the origin survives into material that mostly lives in meeting
+rooms.

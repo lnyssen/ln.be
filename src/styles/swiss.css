@@ -520,7 +520,7 @@
 
   .swiss .swiss-lede {
     font-size: clamp(1.0625rem, 1.9vw, 1.75rem);
-    line-height: 1.25;
+    line-height: 1.38;
     letter-spacing: -0.02em;
   }
 

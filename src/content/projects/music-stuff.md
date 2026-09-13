@@ -10,3 +10,7 @@ images:
   - "/images/music-stuff-4.jpg"
 link: ""
 ---
+
+Sleeves, covers and record artwork made over the years for musicians, labels
+and friends. No brief, no client, no strategy deck: this section exists because
+it is where a good share of the ideas start.

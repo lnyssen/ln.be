@@ -10,3 +10,8 @@ images:
   - "/images/empreintes-4.jpg"
 link: "https://www.empreintes.cool/"
 ---
+
+An identity where the capital S at the end does the work: every trace belongs
+to someone, and there is never only one. The mark redraws that S as a
+fingerprint whorl, a single shape that stands in for the whole word and holds up
+at the size of a sticker.

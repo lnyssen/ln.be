@@ -11,6 +11,7 @@ images:
 link: "https://www.moires.be/"
 ---
 
-Identité complète pour Moirés : nom, signe, système typographique et déclinaison
-imprimée. Le motif d'interférence qui donne son nom au projet sert de principe
-génératif — il se retrouve dans le logotype comme dans les supports.
+A full identity for a Brussels label: name, mark, typographic system and
+printed range. The wordmark is set against its own reflection, two purples
+slightly out of register, which is exactly how a moiré appears in the first
+place.
