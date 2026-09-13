@@ -513,6 +513,15 @@
     transform: none;
   }
 
+  /* Le titre et le chapô entrent plus lentement et de plus loin : ils portent
+     l'ouverture de la page, ils ne doivent pas arriver comme une ligne de
+     liste. La courbe part plus vite et s'arrête plus doucement. */
+  .swiss[data-reveal-ready] [data-reveal-slow] {
+    transform: translateY(28px);
+    transition-duration: 1100ms;
+    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .swiss details::details-content,
     .swiss details[open]::details-content {
