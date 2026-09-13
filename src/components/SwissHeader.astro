@@ -1,5 +1,5 @@
 ---
-import LogoMark from './LogoMark.astro';
+import LogoLockup from './LogoLockup.astro';
 import SwissThemeToggle from './SwissThemeToggle.jsx';
 
 interface Props {
@@ -15,20 +15,8 @@ const OUT = '↗︎';
 
 <header class="swiss-shell sticky top-0 z-30 border-b border-[var(--rule)] bg-[var(--paper)] pt-[env(safe-area-inset-top)]">
   <div class="flex items-center justify-between gap-4 py-[12px]">
-    <a href="/" class="flex items-center gap-[12px]">
-      <LogoMark class="h-[30px] w-[36px] shrink-0 text-[var(--ink)] md:h-[44px] md:w-[52px]" />
-
-      <span class="inline-flex w-fit flex-col leading-tight">
-        <span data-lockup-name class="block w-fit text-[16px] font-semibold tracking-[-0.03em] md:text-[24px]">
-          Laurent Nyssen
-        </span>
-        <span
-          data-lockup-sub
-          class="block w-fit whitespace-nowrap uppercase leading-[1.2] text-[var(--ink)]"
-        >
-          Multidisciplinary Designer
-        </span>
-      </span>
+    <a href="/" class="flex items-center">
+      <LogoLockup class="h-[26px] w-auto shrink-0 text-[var(--ink)] md:h-[48px]" />
     </a>
 
     <div class="flex items-center gap-[16px]">
@@ -90,40 +78,3 @@ const OUT = '↗︎';
     <path d="M3.5 7l8.5 6 8.5-6" />
   </svg>
 </a>
-
-<script is:inline>
-  // Le nom est la référence : le sous-titre est ramené à sa largeur exacte,
-  // d'abord par le corps, puis affiné à l'interlettrage.
-  (() => {
-    const name = document.querySelector('[data-lockup-name]');
-    const sub = document.querySelector('[data-lockup-sub]');
-    if (!name || !sub) return;
-
-    const fit = () => {
-      sub.style.letterSpacing = '0px';
-      sub.style.marginRight = '0px';
-      sub.style.fontSize = '10px';
-
-      const target = name.getBoundingClientRect().width;
-      const at10 = sub.getBoundingClientRect().width;
-      if (!target || !at10) return;
-
-      // Corps proportionnel, borné pour rester lisible.
-      const size = Math.min(13, Math.max(7, (10 * target) / at10));
-      sub.style.fontSize = `${size.toFixed(2)}px`;
-
-      // Le reliquat part dans l'interlettrage, compensé à droite pour que
-      // l'espace ajoutée après le dernier signe ne décale pas le bloc.
-      const natural = sub.getBoundingClientRect().width;
-      const glyphs = sub.textContent.trim().length;
-      const extra = (target - natural) / glyphs;
-      sub.style.letterSpacing = `${extra.toFixed(3)}px`;
-      sub.style.marginRight = `${(-extra).toFixed(3)}px`;
-    };
-
-    const run = () => requestAnimationFrame(fit);
-    if (document.fonts?.ready) document.fonts.ready.then(run);
-    else run();
-    window.addEventListener('resize', run);
-  })();
-</script>
