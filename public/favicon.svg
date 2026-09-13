@@ -1,1 +1,20 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="16" fill="#7c3aed"/><text x="16" y="21" font-family="Georgia, serif" font-size="13" fill="#fff" text-anchor="middle">LN</text></svg>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Calque_2" data-name="Calque 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #1c1c1c;
+      }
+
+      .cls-2 {
+        fill: #7b58e8;
+      }
+    </style>
+  </defs>
+  <g id="Calque_1-2" data-name="Calque 1">
+    <g>
+      <rect class="cls-2" x="0" y="0" width="600" height="600"/>
+      <polygon class="cls-1" points="283.91 422.77 321.67 422.77 321.67 222.04 400.56 222.04 400.56 422.62 445.33 422.62 445.33 177.27 276.91 177.27 276.91 323.54 189.75 177.23 154.67 177.23 154.67 422.62 199.44 422.62 199.44 280.97 283.91 422.77"/>
+    </g>
+  </g>
+</svg>

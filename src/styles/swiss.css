@@ -20,9 +20,9 @@
   --header-h: 55px;
   /* Calque de grille : couleurs prêtes à l'emploi, l'opacité ne peut pas
      s'appliquer à une variable depuis une classe utilitaire. */
-  --grid-line: color-mix(in srgb, var(--accent) 22%, transparent);
-  --grid-fill: color-mix(in srgb, var(--accent) 4%, transparent);
-  --grid-ink: color-mix(in srgb, var(--accent) 55%, transparent);
+  --grid-line: color-mix(in srgb, #7b58e8 34%, transparent);
+  --grid-fill: color-mix(in srgb, #7b58e8 6%, transparent);
+  --grid-ink: color-mix(in srgb, #7b58e8 75%, transparent);
 }
 
 /* Hauteurs dépendant du format, au même niveau que les jetons : une règle
@@ -152,6 +152,15 @@
     -ms-overflow-style: none;
     overscroll-behavior-x: contain;
     scroll-behavior: smooth;
+    /* Sans ça, l'accroche cale le premier visuel sur le bord du conteneur et
+       avale la gouttière : le visuel démarrait hors de la colonne de texte. */
+    scroll-padding-left: 20px;
+  }
+
+  @media (min-width: 768px) {
+    .swiss .filmstrip {
+      scroll-padding-left: 40px;
+    }
   }
 
   .swiss .filmstrip::-webkit-scrollbar {
@@ -172,10 +181,9 @@
     animation-delay: var(--col-delay, 0ms);
   }
 
-  .swiss .grid-overlay .grid-mark,
   .swiss .grid-overlay .grid-readout {
     opacity: 0;
-    animation: grid-mark-in 300ms ease forwards;
+    animation: grid-readout-in 300ms ease forwards;
     animation-delay: 340ms;
   }
 
@@ -186,7 +194,7 @@
     }
   }
 
-  @keyframes grid-mark-in {
+  @keyframes grid-readout-in {
     to {
       opacity: 1;
     }
@@ -194,12 +202,19 @@
 
   @media (prefers-reduced-motion: reduce) {
     .swiss .grid-overlay .grid-col,
-    .swiss .grid-overlay .grid-mark,
     .swiss .grid-overlay .grid-readout {
       animation: none;
       opacity: 1;
       transform: none;
     }
+  }
+
+  /* Les colonnes du pied de page s'alignent sur le haut des capitales, pas sur
+     le haut de la boîte : avec des corps de 9 à 36px, l'interligne décalerait
+     chaque texte d'une valeur différente. */
+  .swiss .footer-cols > p,
+  .swiss .footer-cols > div > :first-child {
+    text-box: trim-start cap alphabetic;
   }
 
   .swiss .project-body > * + * {

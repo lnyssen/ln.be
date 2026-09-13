@@ -24,27 +24,6 @@
     }
   </div>
 
-  <!-- Traits de coupe : la page devient une feuille à massicoter. -->
-  {
-    [
-      'left-0 top-0',
-      'right-0 top-0 rotate-90',
-      'right-0 bottom-0 rotate-180',
-      'left-0 bottom-0 -rotate-90',
-    ].map((corner) => (
-      <svg
-        class:list={['grid-mark absolute h-[30px] w-[30px] text-[var(--grid-ink)]', corner]}
-        viewBox="0 0 34 34"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="1"
-        aria-hidden="true"
-      >
-        <path d="M0 12h24M12 0v24" />
-      </svg>
-    ))
-  }
-
   <!-- Relevé, comme une cartouche de plan. -->
   <div
     data-grid-readout
