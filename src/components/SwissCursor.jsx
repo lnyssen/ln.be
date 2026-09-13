@@ -70,9 +70,12 @@ export default function SwissCursor() {
       if (hovered) setLabel(labelFor(hovered));
     };
 
+    // Le disque rattrape le pointeur au lieu de lui coller : 0,13 laisse une
+    // traîne perceptible sans que l'écart devienne gênant au clic, puisque
+    // c'est le pointeur réel, invisible, qui atteint la cible.
     const tick = () => {
-      current.x += (target.x - current.x) * 0.22;
-      current.y += (target.y - current.y) * 0.22;
+      current.x += (target.x - current.x) * 0.13;
+      current.y += (target.y - current.y) * 0.13;
       if (ref.current) {
         ref.current.style.transform = `translate3d(${current.x}px, ${current.y}px, 0) translate(-50%, -50%)`;
       }
