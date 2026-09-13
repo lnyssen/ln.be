@@ -16,10 +16,10 @@ const OUT = '↗︎';
 <header class="swiss-shell sticky top-0 z-30 border-b border-[var(--rule)] bg-[var(--paper)] pt-[env(safe-area-inset-top)]">
   <div class="flex items-center justify-between gap-4 py-[12px]">
     <a href="/" class="flex items-center gap-[12px]">
-      <LogoMark class="h-[30px] w-[36px] shrink-0 text-[var(--ink)]" />
+      <LogoMark class="h-[30px] w-[36px] shrink-0 text-[var(--ink)] md:h-[44px] md:w-[52px]" />
 
       <span class="inline-flex w-fit flex-col leading-tight">
-        <span data-lockup-name class="block w-fit text-[16px] font-semibold tracking-[-0.03em]">
+        <span data-lockup-name class="block w-fit text-[16px] font-semibold tracking-[-0.03em] md:text-[24px]">
           Laurent Nyssen
         </span>
         <span
@@ -78,7 +78,7 @@ const OUT = '↗︎';
       if (!target || !at10) return;
 
       // Corps proportionnel, borné pour rester lisible.
-      const size = Math.min(11, Math.max(7, (10 * target) / at10));
+      const size = Math.min(13, Math.max(7, (10 * target) / at10));
       sub.style.fontSize = `${size.toFixed(2)}px`;
 
       // Le reliquat part dans l'interlettrage, compensé à droite pour que

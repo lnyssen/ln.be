@@ -13,6 +13,25 @@
   --rule: #141414;
   --accent: #7b58e8;
   --grain: 0.6;
+  /* Pied de page : violet de la marque, texte papier — 4,53:1. */
+  --footer-bg: #7b58e8;
+  --footer-fg: #faf9f6;
+  --footer-h: 300px;
+  --header-h: 55px;
+}
+
+/* Hauteurs dépendant du format, au même niveau que les jetons : une règle
+   placée dans @layer base perdrait contre eux. */
+@media (max-width: 767px) {
+  .swiss {
+    --footer-h: 340px;
+  }
+}
+
+@media (min-width: 768px) {
+  .swiss {
+    --header-h: 69px;
+  }
 }
 
 .swiss[data-swiss-theme='dark'] {
@@ -28,6 +47,26 @@
 }
 
 @layer base {
+  .swiss-footer {
+    background-color: var(--footer-bg);
+    color: var(--footer-fg);
+  }
+
+  /* Le contenu est opaque : c'est lui qui masque le pied de page tant qu'on
+     n'est pas arrivé en bas. */
+  .swiss body > header,
+  .swiss body > main {
+    position: relative;
+    z-index: 10;
+    background-color: var(--paper);
+  }
+
+  .swiss body {
+    padding-bottom: var(--footer-h);
+  }
+
+
+
   .swiss {
     scroll-behavior: smooth;
     /* Autorise l'animation de `height: auto` sur l'accordéon. */
@@ -89,6 +128,16 @@
 
   .swiss summary::-webkit-details-marker {
     display: none;
+  }
+
+  /* Ligne ouverte : elle se cale sous l'en-tête et reste atteignable tant que
+     l'on parcourt ses visuels — le bouton Close ne quitte jamais l'écran. */
+  .swiss details[open] > summary {
+    position: sticky;
+    top: calc(var(--header-h) + env(safe-area-inset-top));
+    z-index: 20;
+    background-color: var(--paper);
+    box-shadow: 0 1px 0 color-mix(in srgb, var(--rule) 20%, transparent);
   }
 
   /* Ouverture filée : le contenu passe de 0 à sa hauteur réelle. Sur un

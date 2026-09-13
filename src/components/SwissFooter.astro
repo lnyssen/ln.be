@@ -1,27 +1,31 @@
-<footer class="swiss-shell border-t border-[var(--rule)] py-[28px]">
-  <div class="swiss-grid gap-y-6">
-    <p class="swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">Contact</p>
+---
+// Panneau violet fixé au fond : le contenu glisse par-dessus et le découvre en
+// fin de course. `main` porte un fond opaque, le body réserve la hauteur.
+---
+
+<footer
+  class="swiss-footer fixed inset-x-0 bottom-0 z-0 flex h-[var(--footer-h)] flex-col justify-center pb-[env(safe-area-inset-bottom)]"
+>
+  <div class="swiss-shell swiss-grid gap-y-6">
+    <p class="swiss-meta col-span-6 opacity-70 md:col-span-2">Contact</p>
 
     <div class="col-span-6 md:col-span-5">
       <a
         href="mailto:hello@laurentnyssen.be"
-        class="block text-[clamp(1.125rem,2.4vw,1.75rem)] font-medium tracking-[-0.03em] hover:text-[var(--accent)]"
+        class="block text-[clamp(1.25rem,3vw,2.25rem)] font-medium tracking-[-0.03em] transition-colors duration-200 hover:text-[#141414]"
       >
         hello@laurentnyssen.be
       </a>
-      <a
-        href="tel:+32497305080"
-        class="swiss-meta mt-2 block text-[var(--ink-soft)] hover:text-[var(--accent)]"
-      >
+      <a href="tel:+32497305080" class="swiss-meta mt-3 block opacity-70 hover:opacity-100">
         +32 (0)497 30 50 80
       </a>
     </div>
 
-    <p class="swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-3">
+    <p class="swiss-meta col-span-3 opacity-70 md:col-span-3">
       Brussels — BE<br />Available for commissions
     </p>
 
-    <p class="swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2 md:justify-self-end">
+    <p class="swiss-meta col-span-3 opacity-70 md:col-span-2 md:justify-self-end">
       © {new Date().getFullYear()} LN
     </p>
   </div>
