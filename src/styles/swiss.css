@@ -158,6 +158,45 @@
     cursor: pointer;
   }
 
+  /* La grille se déplie colonne après colonne, les repères suivent. */
+  .swiss .grid-overlay .grid-col {
+    opacity: 0;
+    transform: scaleY(0.94);
+    transform-origin: top;
+    animation: grid-col-in 420ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation-delay: var(--col-delay, 0ms);
+  }
+
+  .swiss .grid-overlay .grid-mark,
+  .swiss .grid-overlay .grid-readout {
+    opacity: 0;
+    animation: grid-mark-in 300ms ease forwards;
+    animation-delay: 340ms;
+  }
+
+  @keyframes grid-col-in {
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes grid-mark-in {
+    to {
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .swiss .grid-overlay .grid-col,
+    .swiss .grid-overlay .grid-mark,
+    .swiss .grid-overlay .grid-readout {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+  }
+
   .swiss .project-body > * + * {
     margin-top: 0.9em;
   }

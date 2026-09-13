@@ -1,6 +1,7 @@
 ---
 import '../styles/swiss.css';
 import SwissCursor from '../components/SwissCursor.jsx';
+import SwissGrid from '../components/SwissGrid.astro';
 
 interface Props {
   title?: string;
@@ -51,22 +52,7 @@ const ogImage = new URL('/og.png', Astro.site).href;
     </script>
   </head>
   <body>
-    <!-- Calque de grille : les douze colonnes et leurs gouttières, telles que
-         la page les utilise réellement. -->
-    <div data-grid-overlay hidden class="pointer-events-none fixed inset-0 z-[45]">
-      <div class="swiss-shell swiss-grid h-full">
-        {
-          Array.from({ length: 12 }).map((_, i) => (
-            <div
-              class:list={[
-                'h-full bg-[var(--accent)] opacity-[0.14]',
-                i >= 6 && 'hidden md:block',
-              ]}
-            />
-          ))
-        }
-      </div>
-    </div>
+    <SwissGrid />
 
     <slot />
     <SwissCursor client:idle />
@@ -85,7 +71,29 @@ const ogImage = new URL('/og.png', Astro.site).href;
           localStorage.setItem('swiss-grid', on ? '1' : '0');
         };
 
-        const toggle = () => apply(overlay.hidden);
+        // Cartouche : ce que la page mesure réellement à cet instant.
+        const readout = () => {
+          const col = overlay.querySelector('.grid-col:not(.hidden)');
+          const w = window.innerWidth;
+          const set = (sel, value) => {
+            const node = overlay.querySelector(sel);
+            if (node) node.textContent = value;
+          };
+          set('[data-grid-vw]', `${w}px`);
+          set('[data-grid-bp]', w >= 900 ? 'DESKTOP' : w >= 768 ? 'TABLET' : 'MOBILE');
+          set('[data-grid-cols]', `${w >= 900 ? 12 : 6} col`);
+          set('[data-grid-colw]', col ? `${col.getBoundingClientRect().width.toFixed(1)}px` : '—');
+        };
+
+        const toggle = () => {
+          const on = overlay.hidden;
+          apply(on);
+          if (on) readout();
+        };
+
+        window.addEventListener('resize', () => {
+          if (!overlay.hidden) readout();
+        });
 
         button.addEventListener('click', toggle);
 
@@ -97,7 +105,9 @@ const ogImage = new URL('/og.png', Astro.site).href;
           if (event.key === 'g' || event.key === 'G') toggle();
         });
 
-        apply(localStorage.getItem('swiss-grid') === '1');
+        const stored = localStorage.getItem('swiss-grid') === '1';
+        apply(stored);
+        if (stored) readout();
       })();
 
       // Apparition au défilement. Le drapeau n'est posé que si l'on anime
