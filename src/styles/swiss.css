@@ -7,7 +7,7 @@
 /* Variante suisse : papier, encre, un seul accent violet. Pas de dégradé ni
    d'ombre — la grille et la typographie portent tout, le grain fait le papier. */
 .swiss {
-  --paper: #faf9f6;
+  --paper: #fdfdfb;
   --ink: #141414;
   --ink-soft: #727272;
   --rule: #141414;
@@ -15,7 +15,7 @@
   --grain: 0.6;
   /* Pied de page : violet de la marque, texte papier — 4,53:1. */
   --footer-bg: #7b58e8;
-  --footer-fg: #faf9f6;
+  --footer-fg: #fdfdfb;
   --footer-h: 300px;
   --header-h: 55px;
   /* Respiration unique : distance entre un filet et le texte, en haut comme
@@ -44,9 +44,9 @@
 
 .swiss[data-swiss-theme='dark'] {
   --paper: #141414;
-  --ink: #faf9f6;
-  --ink-soft: #c6c6c6;
-  --rule: #faf9f6;
+  --ink: #fdfdfb;
+  --ink-soft: #d6d6d6;
+  --rule: #fdfdfb;
   /* Le violet de la marque tombe à 3,9:1 sur fond noir : on passe à la
      lavande, l'autre violet du site, qui remonte à 7,7:1. */
   --accent: #9e9eff;
@@ -309,8 +309,7 @@
   .swiss .also-title,
   .swiss .section-label,
   .swiss .swiss-lede,
-  .swiss .lab-teaser-title,
-  .swiss .marquee-track span {
+  .swiss .lab-teaser-title {
     text-box: trim-both cap alphabetic;
   }
 
