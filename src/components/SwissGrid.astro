@@ -11,12 +11,12 @@
       Array.from({ length: 12 }).map((_, i) => (
         <div
           class:list={[
-            'grid-col relative h-full border-x border-[var(--accent)]/35 bg-[var(--accent)]/[0.07]',
+            'grid-col relative h-full border-x border-[var(--grid-line)] bg-[var(--grid-fill)]',
             i >= 6 && 'hidden md:block',
           ]}
           style={`--col-delay:${i * 26}ms`}
         >
-          <span class="absolute left-1/2 top-[calc(var(--header-h)+14px)] -translate-x-1/2 font-mono text-[9px] tabular-nums text-[var(--accent)]">
+          <span class="absolute left-1/2 top-[calc(var(--header-h)+14px)] -translate-x-1/2 font-mono text-[9px] tabular-nums text-[var(--grid-ink)]">
             {String(i + 1).padStart(2, '0')}
           </span>
         </div>
@@ -33,7 +33,7 @@
       'left-0 bottom-0 -rotate-90',
     ].map((corner) => (
       <svg
-        class:list={['grid-mark absolute h-[34px] w-[34px] text-[var(--accent)]', corner]}
+        class:list={['grid-mark absolute h-[30px] w-[30px] text-[var(--grid-ink)]', corner]}
         viewBox="0 0 34 34"
         fill="none"
         stroke="currentColor"
@@ -48,7 +48,7 @@
   <!-- Relevé, comme une cartouche de plan. -->
   <div
     data-grid-readout
-    class="grid-readout absolute bottom-[calc(16px+env(safe-area-inset-bottom))] left-[20px] flex gap-[14px] border border-[var(--accent)]/40 bg-[var(--paper)]/85 px-[12px] py-[8px] font-mono text-[10px] tabular-nums text-[var(--accent)] backdrop-blur-sm md:left-[40px]"
+    class="grid-readout absolute bottom-[calc(16px+env(safe-area-inset-bottom))] left-[20px] flex gap-[12px] border border-[var(--grid-line)] bg-[var(--paper)] px-[10px] py-[6px] font-mono text-[9px] tabular-nums text-[var(--accent)] opacity-75 backdrop-blur-sm md:left-[40px]"
   >
     <span data-grid-vw>—</span>
     <span data-grid-bp>—</span>

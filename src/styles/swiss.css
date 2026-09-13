@@ -18,6 +18,11 @@
   --footer-fg: #faf9f6;
   --footer-h: 300px;
   --header-h: 55px;
+  /* Calque de grille : couleurs prêtes à l'emploi, l'opacité ne peut pas
+     s'appliquer à une variable depuis une classe utilitaire. */
+  --grid-line: color-mix(in srgb, var(--accent) 22%, transparent);
+  --grid-fill: color-mix(in srgb, var(--accent) 4%, transparent);
+  --grid-ink: color-mix(in srgb, var(--accent) 55%, transparent);
 }
 
 /* Hauteurs dépendant du format, au même niveau que les jetons : une règle
