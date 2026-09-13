@@ -97,10 +97,10 @@ export default function SwissCursor() {
     <div
       ref={ref}
       aria-hidden="true"
-      className={`swiss-cursor pointer-events-none fixed left-0 top-0 z-[60] flex items-center justify-center overflow-hidden rounded-full ${
+      className={`swiss-cursor pointer-events-none fixed left-0 top-0 z-[60] flex items-center justify-center overflow-hidden ${
         label
-          ? 'is-labelled h-[34px] w-auto bg-[var(--ink)] px-[14px]'
-          : 'h-[26px] w-[26px] bg-white px-0'
+          ? 'is-labelled h-[34px] w-auto rounded-none bg-[var(--ink)] px-[14px]'
+          : 'h-[26px] w-[26px] rounded-full bg-white px-0'
       } ${visible ? 'opacity-100' : 'opacity-0'}`}
     >
       {/* L'étiquette quitte la fusion : sur le violet, « difference » virait au
