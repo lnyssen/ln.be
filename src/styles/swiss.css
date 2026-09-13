@@ -412,18 +412,6 @@
     transform: translateX(24px);
   }
 
-  /* Sous la dernière ligne d'une liste, l'écart doit valoir celui qui sépare
-     les autres lignes : c'est la liste qu'on lit, pas la section. La ligne
-     de clôture reprend donc la marge d'une ligne, pas la respiration pleine.
-     Quand le dernier projet est ouvert, la section retrouve la sienne. */
-  .swiss main section:has(.also-list) {
-    padding-bottom: 22px;
-  }
-
-  .swiss main section#work:has(details:last-child:not([open])) {
-    padding-bottom: 26px;
-  }
-
   .swiss .privacy-body > * + * {
     margin-top: 1.1em;
   }
