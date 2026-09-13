@@ -126,7 +126,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
                       href={project.data.link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      class="swiss-meta mt-[14px] inline-block border-b border-[var(--accent)] pb-[2px] text-[var(--accent)]"
+                      class="mt-[18px] inline-flex items-center gap-[10px] border border-[var(--accent)] px-[20px] py-[11px] text-[15px] font-medium tracking-[-0.01em] text-[var(--accent)] transition-colors duration-200 hover:bg-[var(--accent)] hover:text-[var(--paper)]"
                     >
                       Visit {project.data.title} ↗︎
                     </a>
@@ -186,52 +186,23 @@ const pad = (n: number) => String(n).padStart(2, '0');
       </a>
     </section>
 
-    <!-- Fermeture toujours à portée : le bouton apparaît dès qu'une ligne est
-         ouverte et flotte au-dessus de tout, visuels compris. -->
-    <button
-      type="button"
-      data-close-open
-      hidden
-      class="swiss-meta fixed bottom-[calc(20px+env(safe-area-inset-bottom))] right-[20px] z-40 flex items-center gap-[10px] rounded-full bg-[var(--ink)] px-[18px] py-[13px] font-semibold text-[var(--paper)] shadow-[0_4px_20px_rgba(0,0,0,0.28)] transition-opacity duration-200 hover:opacity-90 md:right-[40px]"
-    >
-      Close
-      <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-        <path d="M1.5 1.5l9 9M10.5 1.5l-9 9" />
-      </svg>
-    </button>
   </main>
 
   <SwissFooter />
   <script is:inline>
-    // Le bouton suit l'état des lignes : une seule peut être ouverte à la fois
-    // (attribut name), donc il n'y a jamais d'ambiguïté sur la cible.
+    // Un clic n'importe où dans une ligne dépliée la referme et la ramène au
+    // centre. Les liens gardent la main.
     (() => {
-      const button = document.querySelector('[data-close-open]');
-      const rows = document.querySelectorAll('#work details');
-      if (!button || !rows.length) return;
+      for (const row of document.querySelectorAll('#work details')) {
+        const panel = row.querySelector(':scope > div');
+        if (!panel) continue;
 
-      const openRow = () => [...rows].find((row) => row.open) ?? null;
-
-      const sync = () => {
-        const row = openRow();
-        button.hidden = !row;
-        if (row) {
-          const title = row.querySelector('.swiss-row-title')?.textContent.trim();
-          button.setAttribute('aria-label', title ? `Close ${title}` : 'Close');
-        }
-      };
-
-      button.addEventListener('click', () => {
-        const row = openRow();
-        if (!row) return;
-        row.open = false;
-        // On revient sur la ligne refermée plutôt que de rester dans le vide.
-        row.scrollIntoView({ block: 'center', behavior: 'smooth' });
-        sync();
-      });
-
-      for (const row of rows) row.addEventListener('toggle', sync);
-      sync();
+        panel.addEventListener('click', (event) => {
+          if (event.target.closest('a')) return;
+          row.open = false;
+          row.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        });
+      }
     })();
   </script>
 </SwissLayout>

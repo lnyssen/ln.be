@@ -130,14 +130,10 @@
     display: none;
   }
 
-  /* Ligne ouverte : elle se cale sous l'en-tête et reste atteignable tant que
-     l'on parcourt ses visuels — le bouton Close ne quitte jamais l'écran. */
-  .swiss details[open] > summary {
-    position: sticky;
-    top: calc(var(--header-h) + env(safe-area-inset-top));
-    z-index: 20;
-    background-color: var(--paper);
-    box-shadow: 0 1px 0 color-mix(in srgb, var(--rule) 20%, transparent);
+  /* Le contenu d'une ligne ouverte se referme au clic : le pointeur y affiche
+     CLOSE, sauf sur les liens qui gardent leur propre étiquette. */
+  .swiss details[open] > div {
+    cursor: pointer;
   }
 
   /* Ouverture filée : le contenu passe de 0 à sa hauteur réelle. Sur un
