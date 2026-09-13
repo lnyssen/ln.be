@@ -234,9 +234,14 @@
     animation: marquee 10s linear infinite;
   }
 
-  .swiss .marquee:hover .marquee-track,
   .swiss .marquee:focus-within .marquee-track {
     animation-play-state: paused;
+  }
+
+  @media (hover: hover) {
+    .swiss .marquee:hover .marquee-track {
+      animation-play-state: paused;
+    }
   }
 
   @keyframes marquee {
@@ -276,9 +281,14 @@
     animation: marquee 10s linear infinite;
   }
 
-  .swiss .marquee:hover .marquee-track,
   .swiss .marquee:focus-within .marquee-track {
     animation-play-state: paused;
+  }
+
+  @media (hover: hover) {
+    .swiss .marquee:hover .marquee-track {
+      animation-play-state: paused;
+    }
   }
 
   @keyframes marquee {
@@ -403,9 +413,18 @@
     transition-duration: 0s !important;
   }
 
+  /* Survol de l'interrupteur : la piste ne peut pas s'emplir sans écraser le
+     curseur, alors c'est le curseur qui prend le mauve. Même promesse que les
+     deux autres commandes, tenue autrement. */
+  @media (hover: hover) {
+    .swiss [role='switch']:hover .theme-knob {
+      background-color: var(--accent);
+    }
+  }
+
   .swiss .theme-knob {
     transform: translateX(0);
-    transition: transform 200ms ease-out;
+    transition: transform 200ms ease-out, background-color 200ms ease-out;
   }
 
   .swiss[data-swiss-theme='dark'] .theme-knob {
@@ -576,5 +595,129 @@
     font-size: clamp(1.375rem, 2.6vw, 2.25rem);
     letter-spacing: -0.035em;
     font-weight: 500;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Impression. Le site est une page qui défile ; le papier est un document.
+   On retire tout ce qui ne sert qu'à l'écran, on force la palette claire quel
+   que soit le thème affiché, et on déplie les projets pour que le texte
+   imprimé dise ce que le site montre.
+   --------------------------------------------------------------------------- */
+@media print {
+  @page {
+    margin: 18mm 16mm;
+  }
+
+  .swiss,
+  .swiss[data-swiss-theme='dark'] {
+    --paper: #ffffff;
+    --ink: #000000;
+    --ink-soft: #4a4a4a;
+    --rule: #000000;
+    --accent: #000000;
+    --grain: 0;
+  }
+
+  .swiss body {
+    background: #fff !important;
+    padding-bottom: 0 !important;
+  }
+
+  /* Commandes, décors et repères d'écran : rien de tout cela n'existe sur
+     papier. Le grain non plus, il ne ferait qu'encrasser l'impression. */
+  .swiss body > header,
+  .swiss body::after,
+  .swiss .grid-overlay,
+  .swiss .swiss-cursor,
+  .swiss .strip-nav,
+  .swiss body > a.fixed {
+    display: none !important;
+  }
+
+  /* Les blocs à révélation ne se révèlent jamais : ils seraient invisibles. */
+  .swiss [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  /* Chaque projet livre son texte, pas seulement son titre. */
+  .swiss details::details-content {
+    content-visibility: visible !important;
+    block-size: auto !important;
+    overflow: visible !important;
+  }
+
+  .swiss details > summary {
+    position: static !important;
+    background: none !important;
+  }
+
+  .swiss details > summary::marker,
+  .swiss details > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  /* La planche contact devient une double page au lieu d'une bande qui file
+     hors du papier. Deux visuels par projet suffisent à un document. */
+  .swiss .filmstrip {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    overflow: visible !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    gap: 6mm !important;
+  }
+
+  .swiss .filmstrip > figure {
+    width: calc(50% - 3mm) !important;
+  }
+
+  .swiss .filmstrip > figure:nth-child(n + 3) {
+    display: none !important;
+  }
+
+  /* Un lien imprimé qui ne dit pas où il mène ne sert à rien. Les boutons en
+     portent déjà le domaine, on ne le répète pas. */
+  .swiss .also-list a[href^='http']::after,
+  .swiss .project-body a[href^='http']::after {
+    content: ' · ' attr(href);
+    font-size: 0.75em;
+    letter-spacing: 0.02em;
+    word-break: break-all;
+  }
+
+  /* Une ligne de projet ne se coupe pas entre deux pages. */
+  .swiss main section,
+  .swiss details,
+  .swiss .also-list > li,
+  .swiss .filmstrip > figure {
+    break-inside: avoid;
+  }
+
+  .swiss h1,
+  .swiss .swiss-row-title,
+  .swiss .also-title {
+    break-after: avoid;
+  }
+
+  /* Le pied de page quitte sa position fixe et son aplat violet : sur papier
+     il redevient ce qu'il est, le bloc de contact qui ferme le document. */
+  .swiss .swiss-footer {
+    position: static !important;
+    height: auto !important;
+    padding: 8mm 0 0 !important;
+    border-top: 1px solid #000 !important;
+    background: none !important;
+    color: #000 !important;
+    break-before: avoid;
+  }
+
+  .swiss .marquee-track {
+    animation: none !important;
+  }
+
+  .swiss .marquee {
+    overflow: visible !important;
   }
 }

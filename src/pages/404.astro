@@ -1,0 +1,76 @@
+---
+import SwissLayout from '../layouts/SwissLayout.astro';
+import SwissHeader from '../components/SwissHeader.astro';
+import SwissFooter from '../components/SwissFooter.astro';
+import SwissArrow from '../components/SwissArrow.astro';
+
+// Les trois sorties possibles, dans la grammaire tabulaire du reste du site.
+const ways = [
+  { label: 'Index', note: 'Selected work', href: '/' },
+  { label: 'Creative lab', note: 'Experiments', href: '/lab' },
+  { label: 'Get in touch', note: 'hello@laurentnyssen.be', href: 'mailto:hello@laurentnyssen.be' },
+];
+---
+
+<SwissLayout
+  title="404 — Laurent Nyssen"
+  description="Nothing at this address."
+  noindex
+>
+  <SwissHeader />
+
+  <main>
+    <section class="swiss-shell pt-[40px] md:pt-[72px]">
+      <h1 class="swiss-display">404<span class="text-[var(--accent)]">.</span></h1>
+    </section>
+
+    <section class="swiss-shell">
+      <div class="swiss-grid gap-y-4 border-t border-[var(--rule)]">
+        <p class="section-label swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">
+          Wrong address
+        </p>
+
+        <p class="swiss-lede col-span-6 md:col-span-8">
+          Nothing lives here. The page was moved, renamed, or never existed in
+          the first place. No harm done: everything on this site is two clicks
+          away.
+        </p>
+      </div>
+    </section>
+
+    <section class="swiss-shell">
+      <div class="swiss-grid gap-y-4 border-t border-[var(--rule)]">
+        <p class="section-label swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">
+          Ways out
+        </p>
+
+        <ul class="also-list col-span-6 md:col-span-10">
+          {
+            ways.map((way) => (
+              <li class="border-b border-[var(--rule)] last:border-b-0">
+                <a
+                  href={way.href}
+                  class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-[9px] py-[22px] hover:text-[var(--accent)] sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]"
+                >
+                  <span class="also-title col-start-1 row-start-1 text-[clamp(1.125rem,1.8vw,1.5rem)] font-medium tracking-[-0.025em]">
+                    {way.label}
+                  </span>
+
+                  <span class="swiss-meta col-start-1 col-end-2 row-start-2 text-[var(--ink-soft)] sm:col-start-2 sm:col-end-3 sm:row-start-1">
+                    {way.note}
+                  </span>
+
+                  <span class="col-start-2 row-start-1 row-span-2 flex items-center justify-self-end self-center text-[var(--ink-soft)] sm:col-start-3 sm:row-span-1">
+                    <SwissArrow direction="right" size={17} />
+                  </span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <SwissFooter />
+</SwissLayout>

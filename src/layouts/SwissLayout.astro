@@ -6,11 +6,13 @@ import SwissGrid from '../components/SwissGrid.astro';
 interface Props {
   title?: string;
   description?: string;
+  noindex?: boolean;
 }
 
 const {
   title = 'Laurent Nyssen — Multidisciplinary Designer',
   description = "I'm a Brussels-based designer creating bold identities and digital experiences through creative direction, strategy, branding and UX/UI with AI used where it truly adds value.",
+  noindex = false,
 } = Astro.props;
 
 // Adresses absolues : les réseaux sociaux refusent les chemins relatifs.
@@ -25,6 +27,7 @@ const ogImage = new URL('/og.png', Astro.site).href;
     <meta name="description" content={description} />
     <title>{title}</title>
     <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Laurent Nyssen" />

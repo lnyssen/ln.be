@@ -18,7 +18,8 @@ const rendered = await Promise.all(
     const { Content, remarkPluginFrontmatter } = await render(project);
     // Un projet sans texte ne doit pas ouvrir un bloc vide.
     const hasBody = Boolean((project.body ?? '').trim());
-    return { project, Body: hasBody ? Content : null, remarkPluginFrontmatter };
+    const slug = String(project.data.slug ?? (project as any).slug ?? project.id).replace(/\.md$/, '');
+    return { project, slug, Body: hasBody ? Content : null, remarkPluginFrontmatter };
   })
 );
 
@@ -114,8 +115,8 @@ function domainLabel(link: string) {
 
         <div class="col-span-6 md:col-span-10">
           {
-            rendered.map(({ project, Body }, i) => (
-              <details name="work" class="group border-b border-[var(--rule)] last:border-b-0" data-reveal data-reveal-delay={i * 45}>
+            rendered.map(({ project, slug, Body }, i) => (
+              <details name="work" class="group border-b border-[var(--rule)] last:border-b-0" data-slug={slug} data-reveal data-reveal-delay={i * 45}>
                 <!-- Grille explicite : le repli en flex désalignait tout sur
                      mobile. Colonne 1 le numéro, colonne 2 le titre et les
                      tags calés dessous, l'étiquette toujours à droite. -->
