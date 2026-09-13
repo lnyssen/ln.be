@@ -78,6 +78,19 @@ const OUT = '↗︎';
   </div>
 </header>
 
+<!-- Sur mobile, « Get in touch » quitte la barre, trop étroite, et devient une
+     pilule à portée du pouce. Elle reste au-dessus de la zone sûre iOS. -->
+<a
+  href="mailto:hello@laurentnyssen.be"
+  class="swiss-meta fixed bottom-[calc(20px+env(safe-area-inset-bottom))] right-[20px] z-40 flex items-center gap-[10px] rounded-full bg-[var(--ink)] px-[20px] py-[14px] font-semibold text-[var(--paper)] shadow-[0_4px_20px_rgba(0,0,0,0.3)] transition-opacity duration-200 hover:opacity-90 sm:hidden"
+>
+  Get in touch
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M3.5 6.5h17v11h-17z" />
+    <path d="M3.5 7l8.5 6 8.5-6" />
+  </svg>
+</a>
+
 <script is:inline>
   // Le nom est la référence : le sous-titre est ramené à sa largeur exacte,
   // d'abord par le corps, puis affiné à l'interlettrage.

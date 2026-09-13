@@ -53,6 +53,10 @@ const ogImage = new URL('/og.png', Astro.site).href;
     </script>
   </head>
   <body>
+    <!-- Mesure d'audience Vercel : sans cookie, sans identifiant persistant,
+         sans donnée personnelle. Le script n'existe que si la fonction est
+         activée sur le projet. -->
+    <script is:inline defer src="/_vercel/insights/script.js"></script>
     <SwissGrid />
 
     <slot />
