@@ -6,6 +6,10 @@ import { useEffect, useRef, useState } from 'react';
 function labelFor(node) {
   if (!node) return null;
 
+  // La barre de navigation garde le disque nu : trop d'étiquettes y
+  // défileraient pour trois liens courts.
+  if (node.closest('header')) return null;
+
   const summary = node.closest('summary');
   if (summary) {
     return summary.closest('details')?.open ? 'CLOSE' : 'VIEW';
