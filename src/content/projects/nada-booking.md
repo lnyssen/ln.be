@@ -12,7 +12,6 @@ link: "https://www.nadabooking.be/"
 ---
 
 Identity for a booking, management and production agency working out of
-Brussels since 1990, with a roster that runs from Girls in Hawaii to Horse
-Lords. An agency of that kind signs a poster, it does not occupy it: a small
+Brussels, with a roster that runs from Girls in Hawaii to Horse Lords. An agency of that kind signs a poster, it does not occupy it: a small
 wordmark and a yellow dot at the top, then the photograph takes the whole
 sheet.
