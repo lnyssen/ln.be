@@ -222,7 +222,7 @@ function domainLabel(link: string) {
   </main>
 
   <SwissFooter />
-  <script is:inline>
+  <script is:inline data-astro-rerun>
     // Un clic n'importe où dans une ligne dépliée la referme et la ramène au
     // centre. Les liens gardent la main.
     (() => {
@@ -326,11 +326,11 @@ function domainLabel(link: string) {
     })();
   </script>
 
-  <!-- Le titre répond au pointeur : chaque lettre se soulève d'autant plus
-       qu'elle en est proche, et retombe derrière lui. Les lettres sont
+  <!-- Le titre répond au pointeur : chaque lettre s'épaissit d'autant plus
+       qu'elle en est proche, et s'allège derrière lui. Les lettres sont
        découpées au chargement, pas dans le HTML, pour que le titre reste un
        titre si le script ne tourne pas. -->
-  <script is:inline>
+  <script is:inline data-astro-rerun>
     (() => {
       const h1 = document.querySelector('h1.swiss-display');
       if (!h1) return;
@@ -351,9 +351,8 @@ function domainLabel(link: string) {
                 const span = document.createElement('span');
                 span.textContent = ch;
                 span.style.display = 'inline-block';
-                span.style.willChange = 'transform';
                 frag.appendChild(span);
-                glyphs.push({ el: span, x: 0, y: 0, tx: 0, ty: 0 });
+                glyphs.push({ el: span, w: 700, tw: 700, painted: 700 });
               }
             }
             child.replaceWith(frag);
@@ -376,11 +375,16 @@ function domainLabel(link: string) {
         });
       };
 
+      // Switzer est variable : au lieu de déplacer les lettres, on en change
+      // la graisse. Elles s'épaississent au passage du pointeur et poussent
+      // leurs voisines, puis reviennent. C'est la typographie qui réagit en
+      // tant que typographie.
+      const REST = 700;
+      const PEAK = 880;
+
       const tick = () => {
         const size = parseFloat(getComputedStyle(h1).fontSize);
-        const reach = Math.max(140, size * 1.1);
-        const sigma = reach / 2;
-        const lift = Math.min(26, size * 0.16);
+        const sigma = Math.max(90, size * 0.55);
 
         let moving = false;
 
@@ -388,22 +392,26 @@ function domainLabel(link: string) {
           if (pointer && boxes[i]) {
             const dx = pointer.x - boxes[i].cx;
             const dy = pointer.y - boxes[i].cy;
-            const d2 = dx * dx + dy * dy;
-            const f = Math.exp(-d2 / (2 * sigma * sigma));
-            g.ty = -f * lift;
-            // Un léger écartement latéral : la matière s'ouvre au passage.
-            g.tx = -Math.sign(dx) * f * lift * 0.22;
+            const f = Math.exp(-(dx * dx + dy * dy) / (2 * sigma * sigma));
+            g.tw = REST + f * (PEAK - REST);
           } else {
-            g.tx = 0;
-            g.ty = 0;
+            g.tw = REST;
           }
 
-          g.x += (g.tx - g.x) * 0.16;
-          g.y += (g.ty - g.y) * 0.16;
+          g.w += (g.tw - g.w) * 0.16;
 
-          if (Math.abs(g.x - g.tx) > 0.01 || Math.abs(g.y - g.ty) > 0.01) moving = true;
-          g.el.style.transform = `translate3d(${g.x.toFixed(2)}px, ${g.y.toFixed(2)}px, 0)`;
+          if (Math.abs(g.w - g.tw) > 0.5) moving = true;
+          const rounded = Math.round(g.w);
+          // Changer la graisse recalcule la mise en page : on ne réécrit que
+          // si la valeur a bougé d'un cran entier.
+          if (rounded !== g.painted) {
+            g.painted = rounded;
+            g.el.style.fontWeight = String(rounded);
+          }
         });
+
+        // Les largeurs ont changé, donc les centres aussi.
+        if (pointer) measure();
 
         if (pointer || moving) {
           frame = requestAnimationFrame(tick);

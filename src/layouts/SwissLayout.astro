@@ -1,4 +1,5 @@
 ---
+import { ClientRouter } from 'astro:transitions';
 import '../styles/swiss.css';
 import SwissCursor from '../components/SwissCursor.jsx';
 import SwissGrid from '../components/SwissGrid.astro';
@@ -49,19 +50,28 @@ const ogImage = new URL('/og.png', Astro.site).href;
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
-    <!-- Les deux graisses visibles d'emblée, demandées avant que le CSS ne les
-         réclame. Sans cela le texte s'affiche d'abord dans la police de
-         secours puis change de largeur : le cadre de « Get in touch » se
-         rétrécissait sous l'œil. `crossorigin` est obligatoire, une police se
-         charge en anonyme et le préchargement serait sinon perdu. -->
-    <link rel="preload" as="font" type="font/woff2" href="/fonts/switzer-400.woff2" crossorigin />
-    <link rel="preload" as="font" type="font/woff2" href="/fonts/switzer-700.woff2" crossorigin />
+    <!-- Un seul fichier porte toutes les graisses, demandé avant que le CSS
+         ne le réclame. Sans cela le texte s'affiche d'abord dans la police de
+         secours puis change de largeur. `crossorigin` est obligatoire, une
+         police se charge en anonyme et le préchargement serait sinon perdu. -->
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/switzer-variable.woff2" crossorigin />
     <script is:inline>
-      // Thème appliqué avant le premier paint pour éviter le flash.
-      const stored = localStorage.getItem('swiss-theme');
-      document.documentElement.dataset.swissTheme =
-        stored ?? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      // Thème appliqué avant le premier paint pour éviter le flash. Une
+      // transition de vue remplace le document et ses attributs : on repose
+      // le thème avant que la nouvelle page ne s'affiche, sinon elle
+      // apparaîtrait en clair le temps d'une image.
+      (() => {
+        const apply = () => {
+          const stored = localStorage.getItem('swiss-theme');
+          document.documentElement.dataset.swissTheme =
+            stored ?? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        };
+        apply();
+        document.addEventListener('astro:after-swap', apply);
+      })();
     </script>
+
+    <ClientRouter />
   </head>
   <body>
     <!-- Mesure d'audience Vercel : sans cookie, sans identifiant persistant,
@@ -73,7 +83,7 @@ const ogImage = new URL('/og.png', Astro.site).href;
     <slot />
     <SwissCursor client:idle />
 
-    <script is:inline>
+    <script is:inline data-astro-rerun>
       // Grille : bouton dans l'en-tête, ou touche G. L'état est mémorisé.
       (() => {
         const overlay = document.querySelector('[data-grid-overlay]');

@@ -1,38 +1,12 @@
 /* Police servie depuis le site : plus aucune requête vers un tiers, donc
    aucune adresse IP de visiteur transmise à Fontshare.
-   Switzer, Indian Type Foundry, licence ITF Free Font. */
+   Switzer Variable, Indian Type Foundry, licence ITF Free Font. Un seul
+   fichier de 42 Ko couvre 100 à 900 ; les cinq graisses statiques qu'il
+   remplace en pesaient 91. */
 @font-face {
   font-family: 'Switzer';
-  src: url('/fonts/switzer-300.woff2') format('woff2');
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Switzer';
-  src: url('/fonts/switzer-400.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Switzer';
-  src: url('/fonts/switzer-500.woff2') format('woff2');
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Switzer';
-  src: url('/fonts/switzer-600.woff2') format('woff2');
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Switzer';
-  src: url('/fonts/switzer-700.woff2') format('woff2');
-  font-weight: 700;
+  src: url('/fonts/switzer-variable.woff2') format('woff2');
+  font-weight: 100 900;
   font-style: normal;
   font-display: swap;
 }
@@ -146,6 +120,30 @@
   }
 
 
+
+  /* La barre de défilement du navigateur entre dans le système : filet
+     d'encre sur le papier, et non le gris du système. Elle suit donc le
+     thème — noire sur fond clair, claire sur fond sombre, où du noir sur du
+     noir ne se verrait pas. */
+  .swiss {
+    scrollbar-width: thin;
+    scrollbar-color: var(--ink) var(--paper);
+  }
+
+  /* Safari ne connaît pas encore `scrollbar-color`. Portée à la seule page :
+     la planche contact masque la sienne et doit le rester. */
+  .swiss::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  .swiss::-webkit-scrollbar-track {
+    background: var(--paper);
+  }
+
+  .swiss::-webkit-scrollbar-thumb {
+    background: var(--ink);
+    border: 3px solid var(--paper);
+  }
 
   .swiss {
     scroll-behavior: smooth;
