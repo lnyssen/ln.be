@@ -141,6 +141,16 @@
     cursor: pointer;
   }
 
+  /* La ligne ouverte reste sous l'en-tête pendant qu'on parcourt ses visuels.
+     Elle ne peut se garer que là : l'en-tête étant collant en haut, tout autre
+     point d'arrêt donnerait un bandeau flottant en plein écran. */
+  .swiss details[open] > summary {
+    position: sticky;
+    top: calc(var(--header-h) + env(safe-area-inset-top));
+    z-index: 20;
+    background-color: var(--paper);
+  }
+
   /* Ouverture filée : le contenu passe de 0 à sa hauteur réelle. Sur un
      navigateur qui ignore ::details-content, l'ouverture reste sèche. */
   .swiss details::details-content {
