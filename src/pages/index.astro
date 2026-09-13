@@ -75,14 +75,14 @@ function domainLabel(link: string) {
       </div>
     </section>
 
-    <!-- Compétences en bande défilante, pleine largeur. Le numéro reste
-         accroché à chaque intitulé : l'index ne se perd pas en route. -->
+    <!-- Compétences en bande défilante, calée dans les gouttières comme les
+         filets des autres sections. Le numéro reste accroché à l'intitulé. -->
     <section class="swiss-shell pb-[48px]">
       <div class="swiss-grid gap-y-4 border-t border-[var(--rule)] pt-[16px]">
         <p class="swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">Capabilities</p>
       </div>
 
-      <div class="marquee -mx-[20px] mt-[18px] overflow-hidden border-y border-[var(--rule)] py-[14px] md:-mx-[40px]">
+      <div class="marquee mt-[18px] overflow-hidden border-y border-[var(--rule)] py-[14px]">
         <div class="marquee-track flex w-max">
           {
             [...skills, ...skills].map((skill, i) => (

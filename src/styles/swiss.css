@@ -163,7 +163,7 @@
   /* Bande défilante : le contenu est doublé, la piste recule d'exactement la
      moitié — la boucle est donc invisible. */
   .swiss .marquee-track {
-    animation: marquee 34s linear infinite;
+    animation: marquee 20s linear infinite;
   }
 
   .swiss .marquee:hover .marquee-track,
@@ -205,7 +205,7 @@
     /* Bande défilante : le contenu est doublé, la piste recule d'exactement la
      moitié — la boucle est donc invisible. */
   .swiss .marquee-track {
-    animation: marquee 34s linear infinite;
+    animation: marquee 20s linear infinite;
   }
 
   .swiss .marquee:hover .marquee-track,
