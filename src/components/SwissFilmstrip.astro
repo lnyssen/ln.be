@@ -1,0 +1,45 @@
+---
+import { Image } from 'astro:assets';
+import { resolveImage } from '../lib/images';
+
+interface Props {
+  images: string[];
+  title: string;
+}
+
+const { images, title } = Astro.props;
+const resolved = images
+  .map((path) => ({ path, asset: resolveImage(path) }))
+  .filter((entry) => entry.asset !== null);
+
+const total = String(resolved.length).padStart(2, '0');
+---
+
+<!-- Planche contact : les visuels s'alignent en bande, on la fait défiler au
+     doigt, à la molette ou au clavier. Chaque tirage porte son numéro. -->
+<div
+  class="filmstrip -mx-[20px] flex snap-x snap-mandatory gap-[10px] overflow-x-auto px-[20px] pb-[10px] md:-mx-[40px] md:px-[40px]"
+  role="group"
+  aria-label={`${title} — ${total} visuels`}
+  tabindex="0"
+>
+  {
+    resolved.map((entry, i) => (
+      <figure class="m-0 w-[78vw] shrink-0 snap-start md:w-[440px]">
+        <Image
+          src={entry.asset!}
+          alt={`${title} — visuel ${i + 1} sur ${resolved.length}`}
+          widths={[440, 720, 880]}
+          sizes="(min-width: 768px) 440px, 78vw"
+          format="webp"
+          quality={72}
+          loading="lazy"
+          class="aspect-[3/2] w-full object-cover"
+        />
+        <figcaption class="swiss-meta mt-[8px] text-[var(--ink-soft)]">
+          {String(i + 1).padStart(2, '0')} / {total}
+        </figcaption>
+      </figure>
+    ))
+  }
+</div>

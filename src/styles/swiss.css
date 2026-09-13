@@ -141,6 +141,20 @@
     cursor: pointer;
   }
 
+  .swiss .filmstrip {
+    scrollbar-width: thin;
+    scrollbar-color: var(--ink-soft) transparent;
+    overscroll-behavior-x: contain;
+  }
+
+  .swiss .filmstrip::-webkit-scrollbar {
+    height: 3px;
+  }
+
+  .swiss .filmstrip::-webkit-scrollbar-thumb {
+    background: var(--ink-soft);
+  }
+
   /* La ligne ouverte reste sous l'en-tête pendant qu'on parcourt ses visuels.
      Elle ne peut se garer que là : l'en-tête étant collant en haut, tout autre
      point d'arrêt donnerait un bandeau flottant en plein écran. */

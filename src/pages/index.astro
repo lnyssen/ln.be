@@ -5,6 +5,7 @@ import SwissHeader from '../components/SwissHeader.astro';
 import SwissFooter from '../components/SwissFooter.astro';
 import also from '../data/also.json';
 import SwissArrow from '../components/SwissArrow.astro';
+import SwissFilmstrip from '../components/SwissFilmstrip.astro';
 
 const projects = (await getCollection('projects')).sort(
   (a, b) => a.data.order - b.data.order
@@ -108,19 +109,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
                 </summary>
 
                 <div class="pb-[22px]">
-                  <!-- Deux visuels par ligne sur grand écran : ~670px de large. -->
-                  <div class="grid grid-cols-1 gap-[12px] sm:grid-cols-2">
-                    {
-                      project.data.images.map((src) => (
-                        <img
-                          src={src}
-                          alt=""
-                          loading="lazy"
-                          class="aspect-[3/2] w-full object-cover"
-                        />
-                      ))
-                    }
-                  </div>
+                  <SwissFilmstrip images={project.data.images} title={project.data.title} />
 
                   {project.data.link && (
                     <a
@@ -195,6 +184,23 @@ const pad = (n: number) => String(n).padStart(2, '0');
     // Un clic n'importe où dans une ligne dépliée la referme et la ramène au
     // centre. Les liens gardent la main.
     (() => {
+      // La molette verticale fait avancer la planche : sur trackpad comme à la
+      // souris, on ne devrait pas avoir à chercher le geste latéral.
+      for (const strip of document.querySelectorAll('.filmstrip')) {
+        strip.addEventListener(
+          'wheel',
+          (event) => {
+            if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+            const max = strip.scrollWidth - strip.clientWidth;
+            const next = strip.scrollLeft + event.deltaY;
+            if (next <= 0 || next >= max) return; // on rend la main à la page
+            event.preventDefault();
+            strip.scrollLeft = next;
+          },
+          { passive: false }
+        );
+      }
+
       for (const row of document.querySelectorAll('#work details')) {
         const panel = row.querySelector(':scope > div');
         if (!panel) continue;

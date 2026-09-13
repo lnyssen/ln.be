@@ -4,6 +4,8 @@ import SwissLayout from '../layouts/SwissLayout.astro';
 import SwissHeader from '../components/SwissHeader.astro';
 import SwissFooter from '../components/SwissFooter.astro';
 import SwissArrow from '../components/SwissArrow.astro';
+import { Image } from 'astro:assets';
+import { resolveImage } from '../lib/images';
 
 const entries = (await getCollection('lab')).sort(
   (a, b) => a.data.order - b.data.order
@@ -50,10 +52,14 @@ const pad = (n: number) => String(n).padStart(2, '0');
             </p>
 
             <div class="col-span-6 md:col-span-5">
-              {entry.data.image && (
-                <img
-                  src={entry.data.image}
+              {resolveImage(entry.data.image) && (
+                <Image
+                  src={resolveImage(entry.data.image)!}
                   alt=""
+                  widths={[400, 560, 800]}
+                  sizes="(min-width: 768px) 560px, 90vw"
+                  format="webp"
+                  quality={72}
                   loading="lazy"
                   class="aspect-square w-full object-cover"
                 />

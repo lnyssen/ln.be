@@ -6,7 +6,7 @@ backend:
   auth_endpoint: api/auth
 
 # Chemin des visuels : le CMS écrit dans public/images, le site les sert depuis /images
-media_folder: "public/images"
+media_folder: "src/assets/images"
 public_folder: "/images"
 
 publish_mode: simple
