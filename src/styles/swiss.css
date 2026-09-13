@@ -18,6 +18,9 @@
   --footer-fg: #faf9f6;
   --footer-h: 300px;
   --header-h: 55px;
+  /* Respiration unique : distance entre un filet et le texte, en haut comme
+     en bas de chaque section. */
+  --section-space: 42px;
   /* Calque de grille : couleurs prêtes à l'emploi, l'opacité ne peut pas
      s'appliquer à une variable depuis une classe utilitaire. */
   --grid-line: color-mix(in srgb, #7b58e8 34%, transparent);
@@ -299,9 +302,37 @@
      alors à la hauteur capitale-ligne de base, si bien que la marge verticale
      de la ligne se lit également au-dessus et au-dessous. Sans ce rognage,
      l'interligne creuse deux fois plus d'espace sous le texte que dessus. */
+  /* Tous les textes en tête ou en pied de bloc sont rognés à la hauteur
+     capitale-ligne de base : leur boîte ne contient plus d'interligne, donc
+     une marge identique produit un écart identique, quel que soit le corps. */
   .swiss .swiss-row-title,
-  .swiss .also-title {
+  .swiss .also-title,
+  .swiss .section-label,
+  .swiss .swiss-lede,
+  .swiss .lab-teaser-title,
+  .swiss .marquee-track span {
     text-box: trim-both cap alphabetic;
+  }
+
+  /* Le rythme, en une seule valeur. */
+  .swiss main section > [class*='border-t'] {
+    padding-top: var(--section-space);
+  }
+
+  .swiss main section {
+    padding-bottom: var(--section-space);
+  }
+
+  /* Les listes collent à leurs bords : leur première et leur dernière ligne
+     n'ajoutent pas leur propre marge à celle de la section. */
+  .swiss #work details:first-child > summary,
+  .swiss .also-list > li:first-child > a {
+    padding-top: 0;
+  }
+
+  .swiss #work details:last-child > summary,
+  .swiss .also-list > li:last-child > a {
+    padding-bottom: 0;
   }
 
   .swiss .project-body > * + * {
