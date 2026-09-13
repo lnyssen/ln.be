@@ -57,6 +57,9 @@
   --rule: #141414;
   --accent: #7b58e8;
   --grain: 0.6;
+  /* Fond de la barre : assez de papier pour que la typographie reste lisible,
+     assez de vide pour qu'on devine le contenu passer dessous. */
+  --header-bg: color-mix(in srgb, #fdfdfb 68%, transparent);
   /* Pied de page : violet de la marque, texte papier — 4,53:1. */
   --footer-bg: #7b58e8;
   --footer-fg: #fdfdfb;
@@ -96,6 +99,7 @@
   --accent: #9e9eff;
   /* Le bruit se voit davantage sur l'encre : on le retient un peu. */
   --grain: 0.5;
+  --header-bg: color-mix(in srgb, #141414 68%, transparent);
 }
 
 @layer base {
@@ -115,7 +119,19 @@
   }
 
   .swiss body > header {
-    background-color: var(--paper);
+    background-color: var(--header-bg);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+  }
+
+  /* Quand le système demande moins de transparence, la barre redevient
+     pleine plutôt que floue. */
+  @media (prefers-reduced-transparency: reduce) {
+    .swiss body > header {
+      background-color: var(--paper);
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
   }
 
   /* Tout ce qui se trouve au-dessus de l'en-tête collant est masqué par son
