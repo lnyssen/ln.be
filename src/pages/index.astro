@@ -186,7 +186,52 @@ const pad = (n: number) => String(n).padStart(2, '0');
       </a>
     </section>
 
+    <!-- Fermeture toujours à portée : le bouton apparaît dès qu'une ligne est
+         ouverte et flotte au-dessus de tout, visuels compris. -->
+    <button
+      type="button"
+      data-close-open
+      hidden
+      class="swiss-meta fixed bottom-[calc(20px+env(safe-area-inset-bottom))] right-[20px] z-40 flex items-center gap-[10px] rounded-full bg-[var(--ink)] px-[18px] py-[13px] font-semibold text-[var(--paper)] shadow-[0_4px_20px_rgba(0,0,0,0.28)] transition-opacity duration-200 hover:opacity-90 md:right-[40px]"
+    >
+      Close
+      <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <path d="M1.5 1.5l9 9M10.5 1.5l-9 9" />
+      </svg>
+    </button>
   </main>
 
   <SwissFooter />
+  <script is:inline>
+    // Le bouton suit l'état des lignes : une seule peut être ouverte à la fois
+    // (attribut name), donc il n'y a jamais d'ambiguïté sur la cible.
+    (() => {
+      const button = document.querySelector('[data-close-open]');
+      const rows = document.querySelectorAll('#work details');
+      if (!button || !rows.length) return;
+
+      const openRow = () => [...rows].find((row) => row.open) ?? null;
+
+      const sync = () => {
+        const row = openRow();
+        button.hidden = !row;
+        if (row) {
+          const title = row.querySelector('.swiss-row-title')?.textContent.trim();
+          button.setAttribute('aria-label', title ? `Close ${title}` : 'Close');
+        }
+      };
+
+      button.addEventListener('click', () => {
+        const row = openRow();
+        if (!row) return;
+        row.open = false;
+        // On revient sur la ligne refermée plutôt que de rester dans le vide.
+        row.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        sync();
+      });
+
+      for (const row of rows) row.addEventListener('toggle', sync);
+      sync();
+    })();
+  </script>
 </SwissLayout>
