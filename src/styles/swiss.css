@@ -146,7 +146,7 @@
 
   .swiss :focus-visible {
     outline: 2px solid var(--accent);
-    outline-offset: 3px;
+    outline-offset: 1px;
   }
 
   /* Les lignes de l'index sont des <details> : ouverture sans JavaScript. */

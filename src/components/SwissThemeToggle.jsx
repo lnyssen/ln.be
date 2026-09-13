@@ -27,7 +27,7 @@ export default function SwissThemeToggle() {
       aria-checked={isDark}
       aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
       title={isDark ? 'Light mode' : 'Dark mode'}
-      className="relative box-content h-[20px] w-[48px] shrink-0 border border-[var(--rule)] p-[3px]"
+      className="relative box-content h-[20px] w-[48px] shrink-0 border border-[var(--rule)] p-[3px] transition-colors duration-200 hover:border-[var(--accent)]"
     >
       {/* Les deux repères, chacun centré dans sa moitié de 24px. */}
       <span className="pointer-events-none absolute inset-[3px] flex text-[var(--ink-soft)]">
