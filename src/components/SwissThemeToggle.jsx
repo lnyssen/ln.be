@@ -41,7 +41,7 @@ export default function SwissThemeToggle() {
       aria-checked={isDark}
       aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
       title={isDark ? 'Light mode' : 'Dark mode'}
-      className="relative box-content h-[20px] w-[48px] shrink-0 border border-[var(--rule)] p-[3px] transition-colors duration-200 hover:border-[var(--accent)]"
+      className="relative box-content h-[20px] w-[48px] shrink-0 rounded-full border border-[var(--rule)] p-[3px] transition-colors duration-200 hover:border-[var(--accent)]"
     >
       {/* Les deux repères, chacun centré dans sa moitié de 24px. */}
       <span className="pointer-events-none absolute inset-[3px] flex text-[var(--ink-soft)]">
@@ -63,7 +63,7 @@ export default function SwissThemeToggle() {
           d'avant-peinture a déjà posé — l'état React arriverait une image
           trop tard et le curseur traverserait la piste à chaque page. */}
       <span
-        className="theme-knob pointer-events-none absolute left-[3px] top-[3px] h-[20px] w-[24px] bg-[var(--ink)]"
+        className="theme-knob pointer-events-none absolute left-[3px] top-[3px] h-[20px] w-[24px] rounded-full bg-[var(--ink)]"
         aria-hidden="true"
       />
     </button>
