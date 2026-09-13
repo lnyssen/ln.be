@@ -75,25 +75,28 @@ function domainLabel(link: string) {
       </div>
     </section>
 
-    <!-- Compétences en tableau, pas en bande défilante. -->
+    <!-- Compétences en bande défilante, pleine largeur. Le numéro reste
+         accroché à chaque intitulé : l'index ne se perd pas en route. -->
     <section class="swiss-shell pb-[48px]">
       <div class="swiss-grid gap-y-4 border-t border-[var(--rule)] pt-[16px]">
         <p class="swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">Capabilities</p>
+      </div>
 
-        <ul class="col-span-6 md:col-span-10">
+      <div class="marquee -mx-[20px] mt-[18px] overflow-hidden border-y border-[var(--rule)] py-[14px] md:-mx-[40px]">
+        <div class="marquee-track flex w-max">
           {
-            skills.map((skill, i) => (
-              <li
-                class="flex items-center gap-4 border-b border-[var(--rule)]/15 py-[9px] last:border-b-0"
-                data-reveal
-                data-reveal-delay={i * 55}
-              >
-                <span class="swiss-meta w-[26px] shrink-0 text-[var(--ink-soft)]">{pad(i + 1)}</span>
-                <span class="swiss-row-title">{skill}</span>
-              </li>
+            [...skills, ...skills].map((skill, i) => (
+              <span class="flex shrink-0 items-baseline gap-[14px] px-[26px]">
+                <span class="swiss-meta text-[var(--ink-soft)]">
+                  {pad((i % skills.length) + 1)}
+                </span>
+                <span class="whitespace-nowrap text-[clamp(1.5rem,3.4vw,2.75rem)] font-medium tracking-[-0.035em]">
+                  {skill}
+                </span>
+              </span>
             ))
           }
-        </ul>
+        </div>
       </div>
     </section>
 

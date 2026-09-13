@@ -160,6 +160,36 @@
     cursor: pointer;
   }
 
+  /* Bande défilante : le contenu est doublé, la piste recule d'exactement la
+     moitié — la boucle est donc invisible. */
+  .swiss .marquee-track {
+    animation: marquee 34s linear infinite;
+  }
+
+  .swiss .marquee:hover .marquee-track,
+  .swiss .marquee:focus-within .marquee-track {
+    animation-play-state: paused;
+  }
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .swiss .marquee-track {
+      animation: none;
+    }
+
+    .swiss .marquee {
+      overflow-x: auto;
+    }
+  }
+
   .swiss .filmstrip {
     /* Barre masquée : on navigue aux flèches, au doigt ou à la molette. */
     scrollbar-width: none;
@@ -172,7 +202,37 @@
   }
 
   @media (min-width: 768px) {
-    .swiss .filmstrip {
+    /* Bande défilante : le contenu est doublé, la piste recule d'exactement la
+     moitié — la boucle est donc invisible. */
+  .swiss .marquee-track {
+    animation: marquee 34s linear infinite;
+  }
+
+  .swiss .marquee:hover .marquee-track,
+  .swiss .marquee:focus-within .marquee-track {
+    animation-play-state: paused;
+  }
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .swiss .marquee-track {
+      animation: none;
+    }
+
+    .swiss .marquee {
+      overflow-x: auto;
+    }
+  }
+
+  .swiss .filmstrip {
       scroll-padding-left: 40px;
     }
   }
