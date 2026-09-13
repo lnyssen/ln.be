@@ -44,10 +44,12 @@ export default function SwissThemeToggle() {
         </span>
       </span>
 
-      {/* Curseur : une moitié pleine, qui glisse exactement de sa largeur. */}
+      {/* Curseur : une moitié pleine, qui glisse exactement de sa largeur. Sa
+          position vient du CSS, lu sur l'attribut de thème que le script
+          d'avant-peinture a déjà posé — l'état React arriverait une image
+          trop tard et le curseur traverserait la piste à chaque page. */}
       <span
-        className="pointer-events-none absolute left-[3px] top-[3px] h-[20px] w-[24px] bg-[var(--ink)] transition-transform duration-200 ease-out"
-        style={{ transform: isDark ? 'translateX(24px)' : 'translateX(0)' }}
+        className="theme-knob pointer-events-none absolute left-[3px] top-[3px] h-[20px] w-[24px] bg-[var(--ink)]"
         aria-hidden="true"
       />
     </button>
