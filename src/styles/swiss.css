@@ -71,6 +71,20 @@
     background-color: var(--paper);
   }
 
+  /* Tout ce qui se trouve au-dessus de l'en-tête collant est masqué par son
+     propre fond. Sur iOS, la page défile sous la barre d'état et la valeur de
+     env(safe-area-inset-top) ne suffit pas toujours à la couvrir ; cette bande
+     le fait quel que soit le décalage réel. */
+  .swiss body > header::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    right: 0;
+    height: 100vh;
+    background-color: var(--paper);
+  }
+
   .swiss body {
     padding-bottom: var(--footer-h);
   }

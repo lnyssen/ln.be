@@ -2,7 +2,7 @@ backend:
   name: github
   repo: lnyssen/ln.be
   branch: main
-  base_url: https://laurent-portfolio-iota.vercel.app
+  base_url: https://laurentnyssen.be
   auth_endpoint: api/auth
 
 # Chemin des visuels : le CMS écrit dans public/images, le site les sert depuis /images

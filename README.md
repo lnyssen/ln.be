@@ -1,6 +1,6 @@
 # Laurent Nyssen — Portfolio
 
-**En ligne :** https://laurent-portfolio-iota.vercel.app
+**En ligne :** https://laurentnyssen.be
 **Dépôt :** https://github.com/lnyssen/ln.be (privé)
 
 Design typographique suisse, seule direction du site.
