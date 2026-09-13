@@ -1,0 +1,24 @@
+---
+interface Props {
+  color?: string;
+  variant?: 'home' | 'lab';
+}
+
+const { color = 'var(--watermark)', variant = 'home' } = Astro.props;
+
+// Le monogramme LN en très grand : c'est lui qui dessine les bandes diagonales.
+// Accueil : 1530×1443 à -162 du haut. Lab : 1251×1222 à x 172, y -226 (relevé
+// à 1440, donc exprimé en vw pour suivre la largeur).
+const box =
+  variant === 'lab'
+    ? 'left-[11.94vw] top-[-15.7vw] h-[84.86vw] w-[86.88vw]'
+    : 'left-0 top-[-11.25vw] h-[100.2vw] w-[106.25vw]';
+---
+
+<div class:list={['pointer-events-none absolute -z-0 overflow-hidden', box]} aria-hidden="true">
+  <svg viewBox="0 0 1197 1010" preserveAspectRatio="none" class="h-full w-full" fill={color}>
+    <path
+      d="M 664.759 1010 L 509.251 1010 L 509.251 184.301 L 184.354 184.301 L 184.354 1009.404 L 0 1009.404 L 0 0.162 L 693.605 0.162 L 693.605 601.808 L 1052.553 0 L 1197 0 L 1197 1009.404 L 1012.646 1009.404 L 1012.646 426.714 Z"
+    ></path>
+  </svg>
+</div>

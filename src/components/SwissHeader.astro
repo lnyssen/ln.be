@@ -1,0 +1,51 @@
+---
+import LogoMark from './LogoMark.astro';
+import SwissThemeToggle from './SwissThemeToggle.jsx';
+
+interface Props {
+  current?: 'index' | 'lab';
+}
+
+const { current = 'index' } = Astro.props;
+---
+
+<header class="swiss-shell sticky top-0 z-30 border-b border-[var(--rule)] bg-[var(--paper)]">
+  <div class="flex items-center justify-between gap-4 py-[12px]">
+    <a href="/swiss" class="flex items-center gap-[12px]">
+      <LogoMark class="h-[30px] w-[36px] shrink-0 text-[var(--ink)]" />
+      <span class="leading-tight">
+        <span class="block text-[16px] font-semibold tracking-[-0.03em]">Laurent Nyssen</span>
+        <span class="swiss-meta hidden text-[var(--ink-soft)] sm:block">
+          Multidisciplinary Designer
+        </span>
+      </span>
+    </a>
+
+    <div class="flex items-center gap-[14px]">
+      <nav class="swiss-meta flex items-center gap-[14px]" aria-label="Main">
+        <a
+          href={current === 'index' ? '#work' : '/swiss#work'}
+          class={current === 'index' ? 'text-[var(--accent)]' : 'hover:text-[var(--accent)]'}
+          aria-current={current === 'index' ? 'page' : undefined}
+        >
+          Index
+        </a>
+        <a
+          href="/swiss/lab"
+          class={current === 'lab' ? 'text-[var(--accent)]' : 'hover:text-[var(--accent)]'}
+          aria-current={current === 'lab' ? 'page' : undefined}
+        >
+          Lab
+        </a>
+        <a
+          href="mailto:hello@laurentnyssen.be"
+          class="hidden hover:text-[var(--accent)] sm:inline"
+        >
+          Get in touch
+        </a>
+      </nav>
+
+      <SwissThemeToggle client:load />
+    </div>
+  </div>
+</header>

@@ -1,0 +1,61 @@
+---
+import '../styles/swiss.css';
+import SwissCursor from '../components/SwissCursor.jsx';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Laurent Nyssen — Multidisciplinary Designer',
+  description = 'Bold identities and digital experiences.',
+} = Astro.props;
+---
+
+<html lang="en" class="swiss" data-swiss-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <script is:inline>
+      // Thème appliqué avant le premier paint pour éviter le flash.
+      const stored = localStorage.getItem('swiss-theme');
+      document.documentElement.dataset.swissTheme =
+        stored ?? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    </script>
+  </head>
+  <body>
+    <slot />
+    <SwissCursor client:idle />
+
+    <script is:inline>
+      // Apparition au défilement. Le drapeau n'est posé que si l'on anime
+      // vraiment : sans script ou en mouvement réduit, rien n'est masqué.
+      (() => {
+        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const targets = document.querySelectorAll('[data-reveal]');
+        if (reduced || !('IntersectionObserver' in window) || !targets.length) return;
+
+        document.documentElement.dataset.revealReady = '';
+
+        const observer = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (!entry.isIntersecting) continue;
+              // Léger décalage entre voisins pour que ça se déroule.
+              const delay = Number(entry.target.dataset.revealDelay || 0);
+              setTimeout(() => entry.target.classList.add('is-in'), delay);
+              observer.unobserve(entry.target);
+            }
+          },
+          { rootMargin: '0px 0px -12% 0px', threshold: 0.06 }
+        );
+
+        for (const el of targets) observer.observe(el);
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,33 @@
+---
+// Bandeau en dégradé radial orange → violet, avec le même grain que la page.
+// Valeurs relevées sur le site : 381px de haut, pleine largeur.
+---
+
+<section class="relative flex min-h-[381px] flex-col justify-center overflow-hidden">
+  <div
+    class="absolute inset-0"
+    style="background-image: radial-gradient(91% 186% at 34.8% 95.4%, #ff6b2c 25%, #7b58e8 70%);"
+  >
+  </div>
+  <div
+    class="absolute inset-0"
+    style="background-image: url('/images/grain.png'); background-size: 128px auto;"
+  >
+  </div>
+
+  <div class="shell relative py-[50px] text-[#fafafa]">
+    <h2 class="display-lg">Creative lab</h2>
+
+    <p class="mt-[10px] max-w-[1103px] text-[20px] leading-[1.4] md:text-[22px]">
+      Creative experiments powered by AI, design, and code. From generative
+      visuals to interactive prototypes, each project explores new ways of making.
+    </p>
+
+    <a
+      href="/lab"
+      class="pill mt-[12px] inline-flex w-[200px] items-center justify-center bg-accent-strong text-white hover:opacity-90"
+    >
+      EXPLORE
+    </a>
+  </div>
+</section>

@@ -1,0 +1,38 @@
+backend:
+  name: github
+  repo: USERNAME/laurent-portfolio # ← à remplacer par ton repo GitHub
+  branch: main
+  auth_type: implicit
+  app_id: GITHUB_APP_ID # ← à remplacer par l'App ID de ta GitHub App
+
+media_folder: "public/images"
+public_folder: "/images"
+
+collections:
+  - name: "projects"
+    label: "Projects"
+    folder: "src/content/projects"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Slug", name: "slug", widget: "string" }
+      - { label: "Order", name: "order", widget: "number", default: 99, value_type: "int" }
+      - { label: "Tags", name: "tags", widget: "list", field: { label: "Tag", name: "tag", widget: "string" } }
+      - { label: "Images", name: "images", widget: "list", field: { label: "Image", name: "image", widget: "image" } }
+      - { label: "Link", name: "link", widget: "string", required: false }
+      - { label: "Body", name: "body", widget: "markdown", required: false }
+
+  - name: "lab"
+    label: "Lab"
+    folder: "src/content/lab"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Slug", name: "slug", widget: "string" }
+      - { label: "Order", name: "order", widget: "number", default: 99, value_type: "int" }
+      - { label: "Summary", name: "summary", widget: "text" }
+      - { label: "Image", name: "image", widget: "image", required: false }
+      - { label: "Demo URL", name: "demo", widget: "string", required: false }
+      - { label: "Instructions URL", name: "doc", widget: "string", required: false }

@@ -1,0 +1,28 @@
+---
+const skills = [
+  'Brand Strategy',
+  'Creative Direction',
+  'UX/UI Design',
+  'Visual Identity',
+  'AI Powered Design',
+];
+// Dupliqué pour que la boucle à -50% soit invisible.
+const sequence = [...skills, ...skills, ...skills, ...skills];
+---
+
+<!-- Bande violette pleine largeur, texte sombre : relevé sur le site. -->
+<div
+  class="tape flex h-[120px] items-center overflow-hidden bg-accent-strong text-bg"
+  aria-hidden="true"
+>
+  <div class="tape-track">
+    {
+      sequence.map((skill) => (
+        <span class="flex items-center whitespace-nowrap px-6 text-[26px] text-[#1c1c1c] md:text-[40px]">
+          {skill}
+          <span class="ml-6 text-[#1c1c1c]">•</span>
+        </span>
+      ))
+    }
+  </div>
+</div>

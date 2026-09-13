@@ -1,0 +1,24 @@
+---
+import ThemeToggle from './ThemeToggle.jsx';
+import LogoMark from './LogoMark.astro';
+---
+
+<header class="shell sticky top-0 z-20 flex h-[100px] items-center justify-between backdrop-blur-[28px]">
+  <a href="/" class="flex items-center gap-[15px]">
+    <LogoMark class="h-[51px] w-[60px] shrink-0 text-fg" />
+    <span class="leading-tight">
+      <span class="block text-2xl font-medium">Laurent Nyssen</span>
+      <span class="block text-[17px] text-fg/90">Multidisciplinary Designer</span>
+    </span>
+  </a>
+
+  <div class="flex items-center gap-[15px]">
+    <a
+      href="mailto:hello@laurentnyssen.be"
+      class="pill hidden w-[200px] items-center justify-center bg-accent-strong text-white hover:opacity-90 sm:flex"
+    >
+      GET IN TOUCH
+    </a>
+    <ThemeToggle client:load />
+  </div>
+</header>

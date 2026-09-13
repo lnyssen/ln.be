@@ -1,0 +1,185 @@
+---
+import { getCollection } from 'astro:content';
+import SwissLayout from '../layouts/SwissLayout.astro';
+import SwissHeader from '../components/SwissHeader.astro';
+import SwissFooter from '../components/SwissFooter.astro';
+import also from '../data/also.json';
+
+const projects = (await getCollection('projects')).sort(
+  (a, b) => a.data.order - b.data.order
+);
+
+const skills = [
+  'Brand Strategy',
+  'Creative Direction',
+  'UX/UI Design',
+  'Visual Identity',
+  'AI Powered Design',
+];
+
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+
+<SwissLayout title="Laurent Nyssen — Index">
+  <SwissHeader current="index" />
+
+  <main>
+    <!-- Titre pleine largeur, calé au filet. -->
+    <section class="swiss-shell pb-[32px] pt-[40px] md:pt-[72px]">
+      <h1 class="swiss-display" data-reveal>
+        Bold identities<br />and digital<br />experiences<span class="text-[var(--accent)]">.</span>
+      </h1>
+
+      <div class="swiss-grid mt-[40px] gap-y-6 border-t border-[var(--rule)] pt-[16px]" data-reveal data-reveal-delay="90">
+        <p class="swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">Statement</p>
+
+        <p class="swiss-lede col-span-6 md:col-span-7">
+          I'm a Brussels-based designer creating bold identities and digital
+          experiences through creative direction, strategy, branding and UX/UI
+          with AI used where it truly adds value. My background blends agency,
+          freelance, and leadership experience across culture, music, corporate,
+          and non-profit projects.
+        </p>
+
+        <ul class="swiss-meta col-span-6 space-y-2 md:col-span-3 md:justify-self-end">
+          <li><a href="https://www.linkedin.com/in/laurentnyssen/" class="hover:text-[var(--accent)]">LinkedIn ↗</a></li>
+          <li><a href="https://open.spotify.com/user/116697393?si=a871d45a9bb14fe0" class="hover:text-[var(--accent)]">Spotify ↗</a></li>
+          <li><a href="https://lepolographe.be/" class="hover:text-[var(--accent)]">Le Polographe ↗</a></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Compétences en tableau, pas en bande défilante. -->
+    <section class="swiss-shell pb-[48px]">
+      <div class="swiss-grid gap-y-4 border-t border-[var(--rule)] pt-[16px]">
+        <p class="swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">Capabilities</p>
+
+        <ul class="col-span-6 md:col-span-10">
+          {
+            skills.map((skill, i) => (
+              <li
+                class="flex items-baseline gap-4 border-b border-[var(--rule)]/15 py-[9px] last:border-b-0"
+                data-reveal
+                data-reveal-delay={i * 55}
+              >
+                <span class="swiss-meta w-[26px] shrink-0 text-[var(--ink-soft)]">{pad(i + 1)}</span>
+                <span class="swiss-row-title">{skill}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+
+    <!-- Index des projets. Chaque ligne est un <details> : la planche s'ouvre
+         au clic, donc au doigt comme à la souris, sans JavaScript. -->
+    <section id="work" class="swiss-shell pb-[48px]">
+      <div class="swiss-grid gap-y-4 border-t border-[var(--rule)] pt-[16px]">
+        <p class="swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">
+          Selected work — {projects.length}
+        </p>
+
+        <div class="col-span-6 md:col-span-10">
+          {
+            projects.map((project, i) => (
+              <details name="work" class="group border-b border-[var(--rule)]/20" data-reveal data-reveal-delay={i * 45}>
+                <summary class="flex flex-wrap items-baseline gap-x-4 gap-y-1 py-[13px] hover:text-[var(--accent)]">
+                  <span class="swiss-meta w-[26px] shrink-0 text-[var(--ink-soft)]">
+                    {pad(i + 1)}
+                  </span>
+
+                  <span class="swiss-row-title flex-1 min-w-[180px]">{project.data.title}</span>
+
+                  <span class="swiss-meta w-full text-[var(--ink-soft)] sm:w-auto sm:flex-1">
+                    {project.data.tags.join(', ')}
+                  </span>
+
+                  <span
+                    class="swiss-meta w-[46px] shrink-0 text-right text-[var(--ink-soft)] group-open:text-[var(--accent)]"
+                    aria-hidden="true"
+                  >
+                    <span class="group-open:hidden">View</span>
+                    <span class="hidden group-open:inline">Close</span>
+                  </span>
+                </summary>
+
+                <div class="pb-[22px]">
+                  <!-- Deux visuels par ligne sur grand écran : ~670px de large. -->
+                  <div class="grid grid-cols-1 gap-[12px] sm:grid-cols-2">
+                    {
+                      project.data.images.map((src) => (
+                        <img
+                          src={src}
+                          alt=""
+                          loading="lazy"
+                          class="aspect-[3/2] w-full object-cover"
+                        />
+                      ))
+                    }
+                  </div>
+
+                  {project.data.link && (
+                    <a
+                      href={project.data.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="swiss-meta mt-[14px] inline-block border-b border-[var(--accent)] pb-[2px] text-[var(--accent)]"
+                    >
+                      Visit {project.data.title} ↗
+                    </a>
+                  )}
+                </div>
+              </details>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- And also : même grammaire tabulaire, en plus petit. -->
+    <section class="swiss-shell pb-[64px]">
+      <div class="swiss-grid gap-y-4 border-t border-[var(--rule)] pt-[16px]">
+        <p class="swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">And also</p>
+
+        <ul class="col-span-6 md:col-span-10">
+          {
+            also.map((item) => (
+              <li class="border-b border-[var(--rule)]/20 last:border-b-0" data-reveal>
+                <a
+                  href={item.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 py-[10px] hover:text-[var(--accent)]"
+                >
+                  <span class="text-[17px] font-medium tracking-[-0.02em]">{item.title}</span>
+                  <span class="swiss-meta text-[var(--ink-soft)]">{item.tags.join(', ')} ↗</span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+    <!-- Renvoi vers le Lab, qui a sa page. -->
+    <section class="swiss-shell pb-[48px]">
+      <a
+        href="/swiss/lab"
+        class="swiss-grid group items-baseline gap-y-3 border-t border-[var(--rule)] pt-[16px]"
+        data-reveal
+      >
+        <p class="swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">Creative lab</p>
+
+        <p class="col-span-6 text-[clamp(1.5rem,4vw,3rem)] font-medium leading-[1.05] tracking-[-0.04em] group-hover:text-[var(--accent)] md:col-span-8">
+          Experiments where AI, design and code collide →
+        </p>
+
+        <p class="swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2 md:justify-self-end">
+          03 pieces
+        </p>
+      </a>
+    </section>
+
+  </main>
+
+  <SwissFooter />
+</SwissLayout>

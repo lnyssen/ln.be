@@ -1,0 +1,37 @@
+---
+// Panneau violet fixé au fond : le contenu glisse par-dessus et le découvre en
+// fin de scroll. body réserve sa hauteur via --footer-h.
+---
+
+<footer
+  class="fixed inset-x-0 bottom-0 z-0 flex h-[var(--footer-h)] flex-col justify-start bg-accent-strong pt-[14px] text-[#fafafa]"
+>
+  <div class="shell flex items-start justify-between gap-8">
+    <div>
+      <h2 class="display-lg">What's next starts here.</h2>
+
+      <div class="mt-[25px] flex flex-col gap-[11px] text-[20px]">
+        <a href="mailto:hello@laurentnyssen.be" class="w-fit hover:underline">hello@laurentnyssen.be</a>
+        <a href="tel:+32497305080" class="w-fit hover:underline">+32 (0)497 30 50 80</a>
+        <p>Brussels - BE</p>
+        <a
+          href="https://www.linkedin.com/in/laurentnyssen/"
+          class="w-fit underline underline-offset-4 hover:no-underline"
+        >
+          Check out my Linkedin!
+        </a>
+      </div>
+    </div>
+
+    <a
+      href="mailto:hello@laurentnyssen.be"
+      class="pill mt-[70px] hidden w-[200px] shrink-0 items-center justify-center border border-[#fafafa]/60 hover:bg-[#fafafa] hover:text-accent-strong md:flex"
+    >
+      GET IN TOUCH
+    </a>
+  </div>
+
+  <p class="mt-[30px] text-center text-[15px]">
+    © {new Date().getFullYear()} LN. All rights reserved
+  </p>
+</footer>

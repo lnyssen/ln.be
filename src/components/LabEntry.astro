@@ -1,0 +1,64 @@
+---
+interface Props {
+  title: string;
+  summary: string;
+  image?: string;
+  demo?: string;
+  doc?: string;
+}
+
+const { title, summary, image, demo, doc } = Astro.props;
+---
+
+<article class="flex flex-col gap-[40px] md:flex-row md:items-start md:gap-[53px] md:pl-[67px]">
+  {
+    image && (
+      <img
+        src={image}
+        alt={title}
+        loading="lazy"
+        class="h-[390px] w-full max-w-[390px] shrink-0 rounded-[25px] object-cover"
+      />
+    )
+  }
+
+  <div class="max-w-[763px]">
+    <h2 class="display-md font-display">{title}</h2>
+
+    <p class="mt-[20px] text-[20px] leading-[1.4]">{summary}</p>
+
+    <div class="mt-[35px] flex flex-wrap items-center gap-[41px]">
+      {
+        demo && (
+          <a
+            href={demo}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="flex h-[45px] min-w-[180px] items-center justify-center gap-[14px] rounded-[25px] bg-lab px-[30px] text-[16px] font-medium text-[#1c1c1c] hover:opacity-90"
+          >
+            TRY IT
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 4h6v6M20 4l-9 9" />
+              <path d="M19 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5" />
+            </svg>
+          </a>
+        )
+      }
+      {
+        doc && (
+          <a
+            href={doc}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="flex h-[45px] min-w-[180px] items-center justify-center gap-[14px] rounded-[25px] border border-lab px-[30px] text-[16px] font-medium text-lab hover:bg-lab hover:text-[#1c1c1c]"
+          >
+            INSTRUCTIONS
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 3v12M7 11l5 5 5-5M5 21h14" />
+            </svg>
+          </a>
+        )
+      }
+    </div>
+  </div>
+</article>
