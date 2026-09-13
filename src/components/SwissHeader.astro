@@ -7,15 +7,25 @@ interface Props {
 }
 
 const { current = 'index' } = Astro.props;
+
+// Flèche en présentation texte : sans le sélecteur U+FE0E, iOS la rend en
+// émoji bleu encadré.
+const OUT = '↗︎';
 ---
 
 <header class="swiss-shell sticky top-0 z-30 border-b border-[var(--rule)] bg-[var(--paper)]">
   <div class="flex items-center justify-between gap-4 py-[12px]">
     <a href="/" class="flex items-center gap-[12px]">
       <LogoMark class="h-[30px] w-[36px] shrink-0 text-[var(--ink)]" />
-      <span class="leading-tight">
-        <span class="block text-[16px] font-semibold tracking-[-0.03em]">Laurent Nyssen</span>
-        <span class="swiss-meta hidden text-[var(--ink-soft)] sm:block">
+
+      <span class="inline-flex w-fit flex-col leading-tight">
+        <span data-lockup-name class="block text-[16px] font-semibold tracking-[-0.03em]">
+          Laurent Nyssen
+        </span>
+        <span
+          data-lockup-sub
+          class="swiss-meta block whitespace-nowrap text-[9px] text-[var(--ink-soft)] sm:text-[10px]"
+        >
           Multidisciplinary Designer
         </span>
       </span>
@@ -49,3 +59,40 @@ const { current = 'index' } = Astro.props;
     </div>
   </div>
 </header>
+
+<script is:inline>
+  // Aligne les deux lignes du bloc-marque sur la même largeur : la plus courte
+  // est étirée par interlettrage jusqu'à celle de la plus longue.
+  (() => {
+    const name = document.querySelector('[data-lockup-name]');
+    const sub = document.querySelector('[data-lockup-sub]');
+    if (!name || !sub) return;
+
+    const fit = () => {
+      for (const el of [name, sub]) {
+        el.style.letterSpacing = '';
+        el.style.marginRight = '';
+      }
+
+      const widths = [name, sub].map((el) => el.getBoundingClientRect().width);
+      const target = Math.max(...widths);
+      const shorter = widths[0] < widths[1] ? name : sub;
+      const natural = Math.min(...widths);
+      const glyphs = shorter.textContent.trim().length;
+      if (glyphs < 2) return;
+
+      const extra = (target - natural) / glyphs;
+      if (extra <= 0) return;
+
+      const base = parseFloat(getComputedStyle(shorter).letterSpacing) || 0;
+      shorter.style.letterSpacing = `${base + extra}px`;
+      // L'interlettrage ajoute aussi une espace après le dernier signe.
+      shorter.style.marginRight = `${-(base + extra)}px`;
+    };
+
+    const run = () => requestAnimationFrame(fit);
+    if (document.fonts?.ready) document.fonts.ready.then(run);
+    else run();
+    window.addEventListener('resize', run);
+  })();
+</script>

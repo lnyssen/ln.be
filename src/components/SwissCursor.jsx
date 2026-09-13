@@ -23,7 +23,7 @@ function labelFor(node) {
   const href = link.getAttribute('href') || '';
   if (href.startsWith('mailto:')) return 'MAIL';
   if (href.startsWith('tel:')) return 'CALL';
-  if (link.target === '_blank' || /^https?:/.test(href)) return 'VISIT ↗';
+  if (link.target === '_blank' || /^https?:/.test(href)) return 'VISIT ↗︎';
   if (href.startsWith('#')) return 'JUMP';
   return 'OPEN';
 }

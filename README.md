@@ -3,12 +3,12 @@
 **En ligne :** https://laurent-portfolio-iota.vercel.app
 **Dépôt :** https://github.com/lnyssen/ln.be (privé)
 
+Design typographique suisse, seule direction du site.
+
 | Route | |
 | --- | --- |
-| `/` | variante suisse — le site |
-| `/lab` | son Creative lab |
-| `/original` | reproduction de laurentnyssen.be |
-| `/original/lab` | son Creative lab |
+| `/` | index |
+| `/lab` | Creative lab |
 
 Reproduction en Astro + React + Tailwind du site laurentnyssen.be, éditable via
 Decap CMS.
