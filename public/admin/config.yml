@@ -1,38 +1,47 @@
 backend:
   name: github
-  repo: USERNAME/laurent-portfolio # ← à remplacer par ton repo GitHub
+  repo: lnyssen/ln.be
   branch: main
-  auth_type: implicit
-  app_id: GITHUB_APP_ID # ← à remplacer par l'App ID de ta GitHub App
+  base_url: https://laurent-portfolio-iota.vercel.app
+  auth_endpoint: api/auth
 
+# Chemin des visuels : le CMS écrit dans public/images, le site les sert depuis /images
 media_folder: "public/images"
 public_folder: "/images"
 
+publish_mode: simple
+locale: fr
+
 collections:
   - name: "projects"
-    label: "Projects"
+    label: "Projets"
+    label_singular: "Projet"
     folder: "src/content/projects"
     create: true
     slug: "{{slug}}"
+    summary: "{{order}} — {{title}}"
+    sortable_fields: ["order", "title"]
     fields:
-      - { label: "Title", name: "title", widget: "string" }
-      - { label: "Slug", name: "slug", widget: "string" }
-      - { label: "Order", name: "order", widget: "number", default: 99, value_type: "int" }
-      - { label: "Tags", name: "tags", widget: "list", field: { label: "Tag", name: "tag", widget: "string" } }
-      - { label: "Images", name: "images", widget: "list", field: { label: "Image", name: "image", widget: "image" } }
-      - { label: "Link", name: "link", widget: "string", required: false }
-      - { label: "Body", name: "body", widget: "markdown", required: false }
+      - { label: "Titre", name: "title", widget: "string" }
+      - { label: "Identifiant", name: "slug", widget: "string", hint: "En minuscules, sans accent ni espace. Sert d'adresse et de nom de fichier." }
+      - { label: "Ordre", name: "order", widget: "number", default: 99, value_type: "int", hint: "Plus le nombre est petit, plus le projet apparaît haut dans l'index." }
+      - { label: "Tags", name: "tags", widget: "list", field: { label: "Tag", name: "tag", widget: "string" }, hint: "Affichés séparés par des virgules." }
+      - { label: "Visuels", name: "images", widget: "list", field: { label: "Visuel", name: "image", widget: "image" }, hint: "Quatre visuels par projet sur le site actuel." }
+      - { label: "Lien du projet", name: "link", widget: "string", required: false, hint: "Adresse complète, ou vide s'il n'y a pas de site." }
 
   - name: "lab"
-    label: "Lab"
+    label: "Creative lab"
+    label_singular: "Expérience"
     folder: "src/content/lab"
     create: true
     slug: "{{slug}}"
+    summary: "{{order}} — {{title}}"
+    sortable_fields: ["order", "title"]
     fields:
-      - { label: "Title", name: "title", widget: "string" }
-      - { label: "Slug", name: "slug", widget: "string" }
-      - { label: "Order", name: "order", widget: "number", default: 99, value_type: "int" }
-      - { label: "Summary", name: "summary", widget: "text" }
-      - { label: "Image", name: "image", widget: "image", required: false }
-      - { label: "Demo URL", name: "demo", widget: "string", required: false }
-      - { label: "Instructions URL", name: "doc", widget: "string", required: false }
+      - { label: "Titre", name: "title", widget: "string" }
+      - { label: "Identifiant", name: "slug", widget: "string" }
+      - { label: "Ordre", name: "order", widget: "number", default: 99, value_type: "int" }
+      - { label: "Description", name: "summary", widget: "text" }
+      - { label: "Visuel", name: "image", widget: "image", required: false, hint: "Carré de préférence." }
+      - { label: "Lien de la démo", name: "demo", widget: "string", required: false, hint: "Bouton « Try it »." }
+      - { label: "Lien du mode d'emploi", name: "doc", widget: "string", required: false, hint: "Bouton « Instructions »." }

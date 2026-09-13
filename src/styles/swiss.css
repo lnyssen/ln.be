@@ -12,7 +12,7 @@
   --ink-soft: #6b6b6b;
   --rule: #141414;
   --accent: #7b58e8;
-  --grain: 0.55;
+  --grain: 0.6;
 }
 
 .swiss[data-swiss-theme='dark'] {
@@ -24,7 +24,7 @@
      lavande, l'autre violet du site, qui remonte à 7,7:1. */
   --accent: #9e9eff;
   /* Le bruit se voit davantage sur l'encre : on le retient un peu. */
-  --grain: 0.4;
+  --grain: 0.5;
 }
 
 @layer base {
@@ -36,7 +36,7 @@
 
   /* L'en-tête est collant : l'ancre s'arrête en dessous, pas sous lui. */
   .swiss [id] {
-    scroll-margin-top: 72px;
+    scroll-margin-top: calc(72px + env(safe-area-inset-top));
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -180,14 +180,14 @@
   }
 
   .swiss-shell {
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-left: max(20px, env(safe-area-inset-left));
+    padding-right: max(20px, env(safe-area-inset-right));
   }
 
   @media (min-width: 768px) {
     .swiss-shell {
-      padding-left: 40px;
-      padding-right: 40px;
+      padding-left: max(40px, env(safe-area-inset-left));
+      padding-right: max(40px, env(safe-area-inset-right));
     }
   }
 
