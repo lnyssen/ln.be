@@ -373,7 +373,9 @@
     padding-top: 0;
   }
 
-  .swiss #work details:last-child > summary,
+  /* Une fois la dernière ligne ouverte, son texte a de nouveau besoin de sa
+     respiration : sans cela le corps viendrait se coller sous le titre. */
+  .swiss #work details:last-child:not([open]) > summary,
   .swiss .also-list > li:last-child > a {
     padding-bottom: 0;
   }
