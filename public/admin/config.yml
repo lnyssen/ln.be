@@ -28,6 +28,7 @@ collections:
       - { label: "Tags", name: "tags", widget: "list", field: { label: "Tag", name: "tag", widget: "string" }, hint: "Affichés séparés par des virgules." }
       - { label: "Visuels", name: "images", widget: "list", field: { label: "Visuel", name: "image", widget: "image" }, hint: "Quatre visuels par projet sur le site actuel." }
       - { label: "Lien du projet", name: "link", widget: "string", required: false, hint: "Adresse complète, ou vide s'il n'y a pas de site." }
+      - { label: "Texte", name: "body", widget: "markdown", required: false, hint: "Le problème posé, ta réponse, ce que ça a produit. Deux ou trois phrases suffisent — affiché à l'ouverture du projet." }
 
   - name: "lab"
     label: "Creative lab"

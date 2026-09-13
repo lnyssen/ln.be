@@ -10,3 +10,7 @@ images:
   - "/images/moires-4.jpg"
 link: "https://www.moires.be/"
 ---
+
+Identité complète pour Moirés : nom, signe, système typographique et déclinaison
+imprimée. Le motif d'interférence qui donne son nom au projet sert de principe
+génératif — il se retrouve dans le logotype comme dans les supports.

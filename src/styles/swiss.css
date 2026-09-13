@@ -158,6 +158,16 @@
     cursor: pointer;
   }
 
+  .swiss .project-body > * + * {
+    margin-top: 0.9em;
+  }
+
+  .swiss .project-body a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
   /* La ligne ouverte reste sous l'en-tête pendant qu'on parcourt ses visuels.
      Elle ne peut se garer que là : l'en-tête étant collant en haut, tout autre
      point d'arrêt donnerait un bandeau flottant en plein écran. */

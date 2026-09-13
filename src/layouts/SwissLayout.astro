@@ -11,6 +11,10 @@ const {
   title = 'Laurent Nyssen — Multidisciplinary Designer',
   description = 'Bold identities and digital experiences.',
 } = Astro.props;
+
+// Adresses absolues : les réseaux sociaux refusent les chemins relatifs.
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = new URL('/og.png', Astro.site).href;
 ---
 
 <html lang="en" class="swiss" data-swiss-theme="light">
@@ -19,6 +23,25 @@ const {
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="description" content={description} />
     <title>{title}</title>
+    <link rel="canonical" href={canonical} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Laurent Nyssen" />
+    <meta property="og:locale" content="en_GB" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Laurent Nyssen — Multidisciplinary Designer" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <meta name="theme-color" content="#141414" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <script is:inline>
       // Thème appliqué avant le premier paint pour éviter le flash.
@@ -28,10 +51,55 @@ const {
     </script>
   </head>
   <body>
+    <!-- Calque de grille : les douze colonnes et leurs gouttières, telles que
+         la page les utilise réellement. -->
+    <div data-grid-overlay hidden class="pointer-events-none fixed inset-0 z-[45]">
+      <div class="swiss-shell swiss-grid h-full">
+        {
+          Array.from({ length: 12 }).map((_, i) => (
+            <div
+              class:list={[
+                'h-full bg-[var(--accent)] opacity-[0.14]',
+                i >= 6 && 'hidden md:block',
+              ]}
+            />
+          ))
+        }
+      </div>
+    </div>
+
     <slot />
     <SwissCursor client:idle />
 
     <script is:inline>
+      // Grille : bouton dans l'en-tête, ou touche G. L'état est mémorisé.
+      (() => {
+        const overlay = document.querySelector('[data-grid-overlay]');
+        const button = document.querySelector('[data-grid-toggle]');
+        if (!overlay || !button) return;
+
+        const apply = (on) => {
+          overlay.hidden = !on;
+          button.setAttribute('aria-pressed', String(on));
+          button.setAttribute('aria-label', on ? 'Masquer la grille' : 'Afficher la grille');
+          localStorage.setItem('swiss-grid', on ? '1' : '0');
+        };
+
+        const toggle = () => apply(overlay.hidden);
+
+        button.addEventListener('click', toggle);
+
+        document.addEventListener('keydown', (event) => {
+          // On ne détourne pas la touche pendant une saisie ni avec un modificateur.
+          if (event.metaKey || event.ctrlKey || event.altKey) return;
+          const tag = event.target?.tagName;
+          if (tag === 'INPUT' || tag === 'TEXTAREA' || event.target?.isContentEditable) return;
+          if (event.key === 'g' || event.key === 'G') toggle();
+        });
+
+        apply(localStorage.getItem('swiss-grid') === '1');
+      })();
+
       // Apparition au défilement. Le drapeau n'est posé que si l'on anime
       // vraiment : sans script ou en mouvement réduit, rien n'est masqué.
       (() => {
