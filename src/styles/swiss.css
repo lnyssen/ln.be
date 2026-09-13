@@ -153,9 +153,10 @@
     interpolate-size: allow-keywords;
   }
 
-  /* L'en-tête est collant : l'ancre s'arrête en dessous, pas sous lui. */
+  /* L'en-tête est collant : l'ancre s'arrête en dessous, pas sous lui. La
+     valeur suit la barre au lieu d'être recopiée — elle a changé six fois. */
   .swiss [id] {
-    scroll-margin-top: calc(72px + env(safe-area-inset-top));
+    scroll-margin-top: calc(var(--header-h) + 12px + env(safe-area-inset-top));
   }
 
   @media (prefers-reduced-motion: reduce) {
