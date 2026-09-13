@@ -147,15 +147,39 @@ const ogImage = new URL('/og.png', Astro.site).href;
 
         const observer = new IntersectionObserver(
           (entries) => {
-            for (const entry of entries) {
-              if (!entry.isIntersecting) continue;
-              // Léger décalage entre voisins pour que ça se déroule.
-              const delay = Number(entry.target.dataset.revealDelay || 0);
+            // Le décalage vient du rang dans la fournée, pas d'un numéro fixe :
+            // au chargement, ce qui est déjà visible se déroule ; en cours de
+            // défilement, une ligne qui arrive seule n'attend personne.
+            const arriving = entries
+              .filter((entry) => entry.isIntersecting)
+              .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+
+            arriving.forEach((entry, rank) => {
+              const explicit = entry.target.dataset.revealDelay;
+              const delay = explicit === undefined ? Math.min(rank, 3) * 60 : Number(explicit);
               setTimeout(() => entry.target.classList.add('is-in'), delay);
               observer.unobserve(entry.target);
+            });
+          },
+          { rootMargin: '0px 0px -10% 0px', threshold: 0.05 }
+        );
+
+        // Filet de sécurité : au bas de la page, plus rien ne peut franchir la
+        // ligne de déclenchement. Ce qui reste caché est montré.
+        addEventListener(
+          'scroll',
+          () => {
+            const bottom =
+              innerHeight + scrollY >= document.documentElement.scrollHeight - 4;
+            if (!bottom) return;
+            for (const el of targets) {
+              if (!el.classList.contains('is-in')) {
+                el.classList.add('is-in');
+                observer.unobserve(el);
+              }
             }
           },
-          { rootMargin: '0px 0px -12% 0px', threshold: 0.06 }
+          { passive: true }
         );
 
         for (const el of targets) observer.observe(el);

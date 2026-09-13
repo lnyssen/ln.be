@@ -116,7 +116,7 @@ function domainLabel(link: string) {
         <div class="col-span-6 md:col-span-10">
           {
             rendered.map(({ project, slug, Body }, i) => (
-              <details name="work" class="group border-b border-[var(--rule)] last:border-b-0" data-slug={slug} data-reveal data-reveal-delay={i * 45}>
+              <details name="work" class="group border-b border-[var(--rule)] last:border-b-0" data-slug={slug} data-reveal>
                 <!-- Grille explicite : le repli en flex désalignait tout sur
                      mobile. Colonne 1 le numéro, colonne 2 le titre et les
                      tags calés dessous, l'étiquette toujours à droite. -->
