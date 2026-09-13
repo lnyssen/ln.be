@@ -1,0 +1,139 @@
+---
+import SwissLayout from '../layouts/SwissLayout.astro';
+import SwissHeader from '../components/SwissHeader.astro';
+import SwissFooter from '../components/SwissFooter.astro';
+---
+
+<SwissLayout
+  title="Laurent Nyssen — Colophon"
+  description="How this site is made: one typeface, no third-party requests, and a grid you can look at."
+>
+  <SwissHeader />
+
+  <main>
+    <section class="swiss-shell pt-[40px] md:pt-[72px]">
+      <h1 class="swiss-display">Colophon<span class="text-[var(--accent)]">.</span></h1>
+    </section>
+
+    <section class="swiss-shell">
+      <div class="swiss-grid gap-y-4 border-t border-[var(--rule)]">
+        <p class="section-label swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">
+          Why this page
+        </p>
+
+        <p class="swiss-lede col-span-6 md:col-span-8">
+          A book says on its last page how it was made. A site can do the same.
+          Everything below is a decision, not a default.
+        </p>
+      </div>
+    </section>
+
+    <section class="swiss-shell">
+      <div class="swiss-grid gap-y-4 border-t border-[var(--rule)]">
+        <p class="section-label swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">
+          Type
+        </p>
+
+        <div class="privacy-body col-span-6 text-[16px] leading-[1.6] text-[var(--ink-soft)] md:col-span-8 md:text-[17px]">
+          <p>
+            Set entirely in <strong class="font-medium text-[var(--ink)]">Switzer</strong>,
+            drawn by the Indian Type Foundry and released under their free font
+            licence. Five weights are used, from light to bold. One family for
+            the whole site, headlines and captions alike: the hierarchy comes
+            from size, weight and space, which is the harder way and the one
+            that holds together.
+          </p>
+          <p>
+            The files are served from this domain rather than from a font
+            network, so no third party learns your address when a page loads.
+            The two weights visible on arrival are preloaded, which is why the
+            text does not change width a moment after it appears.
+          </p>
+          <p>
+            Vertical spacing is set with <code>text-box: trim-both cap
+            alphabetic</code>, a recent CSS property that measures from the top
+            of the capitals to the baseline instead of from the invisible box
+            around them. It is the reason a label in the left column sits
+            exactly on the line of the text beside it.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="swiss-shell">
+      <div class="swiss-grid gap-y-4 border-t border-[var(--rule)]">
+        <p class="section-label swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">
+          Grid
+        </p>
+
+        <div class="privacy-body col-span-6 text-[16px] leading-[1.6] text-[var(--ink-soft)] md:col-span-8 md:text-[17px]">
+          <p>
+            Twelve columns on a 1200&nbsp;pixel measure, six on a phone. Every
+            section breathes by the same single value, above the rule and below
+            the last line.
+          </p>
+          <p>
+            You can look at it: the button in the header shows the columns, or
+            press <strong class="font-medium text-[var(--ink)]">G</strong>. The
+            arrow keys walk the index, Enter opens a project, Escape closes it,
+            and the left and right arrows move through its visuals.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="swiss-shell">
+      <div class="swiss-grid gap-y-4 border-t border-[var(--rule)]">
+        <p class="section-label swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">
+          Build
+        </p>
+
+        <div class="privacy-body col-span-6 text-[16px] leading-[1.6] text-[var(--ink-soft)] md:col-span-8 md:text-[17px]">
+          <p>
+            Built with Astro and hosted on Vercel. The pages are plain HTML,
+            generated once at build time; JavaScript runs only where something
+            actually moves, which is the cursor, the theme switch and the
+            reveal on scroll. Everything else, including the accordion that
+            opens each project, is done by the browser on its own.
+          </p>
+          <p>
+            The projects live as text files in a private repository. Adding one
+            writes a commit, and the commit rebuilds the site. Images are
+            converted to WebP at build time and served at the size they are
+            displayed.
+          </p>
+          <p>
+            Dark and light follow your system until you use the switch, after
+            which your choice is remembered on your device alone. The paper
+            grain is a single tiling image, and it sits above everything so the
+            texture never breaks at the edge of a bar.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="swiss-shell">
+      <div class="swiss-grid gap-y-4 border-t border-[var(--rule)]">
+        <p class="section-label swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">
+          What it costs you
+        </p>
+
+        <div class="privacy-body col-span-6 text-[16px] leading-[1.6] text-[var(--ink-soft)] md:col-span-8 md:text-[17px]">
+          <p>
+            Nothing is loaded from another domain. No cookies, no advertising,
+            no profile. Page views are counted without identifying anyone, and
+            the <a href="/privacy">privacy page</a> says exactly what that
+            means in the language the law asks for.
+          </p>
+          <p>
+            The site prints. If you send it to paper or to PDF, the bars and
+            the grain drop away, the palette turns black on white, the projects
+            unfold, and every link shows the address it points to.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <SwissFooter />
+</SwissLayout>

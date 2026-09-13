@@ -325,4 +325,113 @@ function domainLabel(link: string) {
       }
     })();
   </script>
+
+  <!-- Le titre répond au pointeur : chaque lettre se soulève d'autant plus
+       qu'elle en est proche, et retombe derrière lui. Les lettres sont
+       découpées au chargement, pas dans le HTML, pour que le titre reste un
+       titre si le script ne tourne pas. -->
+  <script is:inline>
+    (() => {
+      const h1 = document.querySelector('h1.swiss-display');
+      if (!h1) return;
+      if (!matchMedia('(pointer: fine)').matches) return;
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      // Découpe en signes, les espaces restant du texte nu : une espace dans
+      // un bloc en ligne se réduirait à rien.
+      const glyphs = [];
+      const split = (node) => {
+        [...node.childNodes].forEach((child) => {
+          if (child.nodeType === 3) {
+            const frag = document.createDocumentFragment();
+            for (const ch of child.textContent) {
+              if (ch === ' ') {
+                frag.appendChild(document.createTextNode(ch));
+              } else {
+                const span = document.createElement('span');
+                span.textContent = ch;
+                span.style.display = 'inline-block';
+                span.style.willChange = 'transform';
+                frag.appendChild(span);
+                glyphs.push({ el: span, x: 0, y: 0, tx: 0, ty: 0 });
+              }
+            }
+            child.replaceWith(frag);
+          } else if (child.nodeName !== 'BR') {
+            split(child);
+          }
+        });
+      };
+      split(h1);
+      if (!glyphs.length) return;
+
+      let pointer = null;
+      let frame = null;
+      let boxes = [];
+
+      const measure = () => {
+        boxes = glyphs.map(({ el }) => {
+          const r = el.getBoundingClientRect();
+          return { cx: r.left + r.width / 2, cy: r.top + r.height / 2 };
+        });
+      };
+
+      const tick = () => {
+        const size = parseFloat(getComputedStyle(h1).fontSize);
+        const reach = Math.max(140, size * 1.1);
+        const sigma = reach / 2;
+        const lift = Math.min(26, size * 0.16);
+
+        let moving = false;
+
+        glyphs.forEach((g, i) => {
+          if (pointer && boxes[i]) {
+            const dx = pointer.x - boxes[i].cx;
+            const dy = pointer.y - boxes[i].cy;
+            const d2 = dx * dx + dy * dy;
+            const f = Math.exp(-d2 / (2 * sigma * sigma));
+            g.ty = -f * lift;
+            // Un léger écartement latéral : la matière s'ouvre au passage.
+            g.tx = -Math.sign(dx) * f * lift * 0.22;
+          } else {
+            g.tx = 0;
+            g.ty = 0;
+          }
+
+          g.x += (g.tx - g.x) * 0.16;
+          g.y += (g.ty - g.y) * 0.16;
+
+          if (Math.abs(g.x - g.tx) > 0.01 || Math.abs(g.y - g.ty) > 0.01) moving = true;
+          g.el.style.transform = `translate3d(${g.x.toFixed(2)}px, ${g.y.toFixed(2)}px, 0)`;
+        });
+
+        if (pointer || moving) {
+          frame = requestAnimationFrame(tick);
+        } else {
+          frame = null;
+        }
+      };
+
+      const start = () => {
+        if (frame === null) frame = requestAnimationFrame(tick);
+      };
+
+      h1.addEventListener('pointerenter', () => {
+        measure();
+        start();
+      });
+
+      h1.addEventListener('pointermove', (event) => {
+        pointer = { x: event.clientX, y: event.clientY };
+        start();
+      });
+
+      h1.addEventListener('pointerleave', () => {
+        pointer = null;
+        start();
+      });
+
+      addEventListener('resize', measure);
+    })();
+  </script>
 </SwissLayout>

@@ -1,4 +1,6 @@
 ---
+import SwissArrow from './SwissArrow.astro';
+
 // Panneau violet fixé au fond : le contenu glisse par-dessus et le découvre en
 // fin de course. `main` porte un fond opaque, le body réserve la hauteur.
 ---
@@ -19,6 +21,14 @@
       <a href="tel:+32497305080" class="swiss-meta mt-3 block opacity-70 hover:opacity-100">
         +32 (0)497 30 50 80
       </a>
+      <a
+        href="https://www.linkedin.com/in/laurentnyssen/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="swiss-meta mt-2 inline-flex items-center gap-[8px] opacity-70 hover:opacity-100"
+      >
+        Full CV on LinkedIn <SwissArrow size={13} />
+      </a>
     </div>
 
     <p class="swiss-meta col-span-3 opacity-70 md:col-span-3">
@@ -27,6 +37,8 @@
 
     <p class="swiss-meta col-span-3 opacity-70 md:col-span-2 md:justify-self-end">
       © {new Date().getFullYear()} LN<br />
+      <a href="/colophon" class="underline decoration-1 underline-offset-[3px] hover:opacity-100">Colophon</a>
+      &nbsp;·&nbsp;
       <a href="/privacy" class="underline decoration-1 underline-offset-[3px] hover:opacity-100">Privacy</a>
     </p>
   </div>

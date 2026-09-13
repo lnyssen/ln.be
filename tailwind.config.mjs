@@ -17,7 +17,6 @@ export default {
         lab: 'var(--lab)',
       },
       fontFamily: {
-        display: ['Gambarino', '"Playfair Display"', 'Georgia', 'serif'],
         sans: ['Switzer', '"Helvetica Neue"', 'system-ui', 'sans-serif'],
       },
       maxWidth: { shell: '1200px' },

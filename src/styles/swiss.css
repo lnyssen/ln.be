@@ -1,13 +1,6 @@
-/* Polices servies depuis le site : plus aucune requête vers un tiers,
-   donc aucune adresse IP de visiteur transmise à Fontshare.
-   Gambarino et Switzer, Indian Type Foundry, licence ITF Free Font. */
-@font-face {
-  font-family: 'Gambarino';
-  src: url('/fonts/gambarino-400.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
+/* Police servie depuis le site : plus aucune requête vers un tiers, donc
+   aucune adresse IP de visiteur transmise à Fontshare.
+   Switzer, Indian Type Foundry, licence ITF Free Font. */
 @font-face {
   font-family: 'Switzer';
   src: url('/fonts/switzer-300.woff2') format('woff2');
