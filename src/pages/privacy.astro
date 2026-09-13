@@ -1,0 +1,103 @@
+---
+import SwissLayout from '../layouts/SwissLayout.astro';
+import SwissHeader from '../components/SwissHeader.astro';
+import SwissFooter from '../components/SwissFooter.astro';
+
+const updated = '13 September 2026';
+---
+
+<SwissLayout
+  title="Laurent Nyssen — Privacy"
+  description="What this site measures, what it does not collect, and how to reach me about it."
+>
+  <SwissHeader />
+
+  <main class="swiss-shell pt-[40px] md:pt-[72px]">
+    <h1 class="swiss-display">Privacy<span class="text-[var(--accent)]">.</span></h1>
+
+    <div class="swiss-grid gap-y-4 border-t border-[var(--rule)]">
+      <p class="section-label swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">
+        In short
+      </p>
+
+      <p class="swiss-lede col-span-6 md:col-span-8">
+        This site sets no cookies, runs no advertising, and builds no profile of
+        you. It counts visits without knowing who you are.
+      </p>
+    </div>
+
+    <div class="swiss-grid gap-y-4 border-t border-[var(--rule)]">
+      <p class="section-label swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">
+        What is measured
+      </p>
+
+      <div class="privacy-body col-span-6 text-[17px] leading-[1.55] md:col-span-8">
+        <p>
+          Page views are counted through Vercel Web Analytics. It records the
+          page, the country, the kind of device and where the visit came from.
+          It stores no cookie, no identifier that follows you between visits,
+          and nothing that names you.
+        </p>
+        <p>
+          The site is served by Vercel, which keeps server logs including IP
+          addresses for a short period, as any web host does. Those logs exist
+          to deliver the pages and defend against abuse.
+        </p>
+      </div>
+    </div>
+
+    <div class="swiss-grid gap-y-4 border-t border-[var(--rule)]">
+      <p class="section-label swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">
+        Stored on your device
+      </p>
+
+      <div class="privacy-body col-span-6 text-[17px] leading-[1.55] md:col-span-8">
+        <p>
+          Two preferences are kept in your browser's local storage: whether you
+          chose the light or the dark theme, and whether you left the grid
+          overlay showing. They never leave your device and are not readable by
+          me. Clearing your browser data removes them.
+        </p>
+        <p>
+          Typefaces and images are served from this domain. No third party sees
+          your visit.
+        </p>
+      </div>
+    </div>
+
+    <div class="swiss-grid gap-y-4 border-t border-[var(--rule)]">
+      <p class="section-label swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">
+        If you write to me
+      </p>
+
+      <div class="privacy-body col-span-6 text-[17px] leading-[1.55] md:col-span-8">
+        <p>
+          Mail sent to hello@laurentnyssen.be reaches my inbox and stays there
+          as long as the exchange is useful. It is not added to any list and not
+          passed on.
+        </p>
+      </div>
+    </div>
+
+    <div class="swiss-grid gap-y-4 border-t border-[var(--rule)]">
+      <p class="section-label swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">
+        Your rights
+      </p>
+
+      <div class="privacy-body col-span-6 text-[17px] leading-[1.55] md:col-span-8">
+        <p>
+          Under the GDPR you may ask what I hold about you, ask for it to be
+          corrected or deleted, and object to its use. Write to
+          <a href="mailto:hello@laurentnyssen.be">hello@laurentnyssen.be</a> and
+          I will answer within a month. You may also complain to the Belgian
+          Data Protection Authority, <a href="https://www.autoriteprotectiondonnees.be" target="_blank" rel="noopener noreferrer">autoriteprotectiondonnees.be</a>.
+        </p>
+        <p class="text-[var(--ink-soft)]">
+          Controller: Laurent Nyssen, Brussels, Belgium. Last updated {updated}.
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <SwissFooter />
+</SwissLayout>
