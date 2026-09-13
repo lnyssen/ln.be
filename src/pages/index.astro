@@ -30,8 +30,6 @@ const skills = [
   'AI Powered Design',
 ];
 
-const pad = (n: number) => String(n).padStart(2, '0');
-
 // Ce que voient les réseaux sociaux quand on partage l'adresse.
 const pageTitle = 'Laurent Nyssen — Multidisciplinary Designer';
 const pageDescription =
@@ -62,7 +60,7 @@ function domainLabel(link: string) {
       </h1>
 
       <div class="swiss-grid mt-[40px] gap-y-6 border-t border-[var(--rule)] pt-[16px]" data-reveal data-reveal-delay="90">
-        <p class="swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">Profile</p>
+        <p class="section-label swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">Profile</p>
 
         <p class="swiss-lede col-span-6 md:col-span-7">
           I'm a Brussels-based designer creating bold identities and digital
@@ -84,20 +82,18 @@ function domainLabel(link: string) {
          filets des autres sections. Le numéro reste accroché à l'intitulé. -->
     <section class="swiss-shell pb-[48px]">
       <div class="swiss-grid gap-y-4 border-t border-[var(--rule)] pt-[16px]">
-        <p class="swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">Capabilities</p>
+        <p class="section-label swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">Capabilities</p>
       </div>
 
       <div class="marquee mt-[18px] overflow-hidden border-y border-[var(--rule)] py-[14px]">
         <div class="marquee-track flex w-max">
           {
             [...skills, ...skills].map((skill, i) => (
-              <span class="flex shrink-0 items-baseline gap-[14px] px-[26px]">
-                <span class="swiss-meta text-[var(--ink-soft)]">
-                  {pad((i % skills.length) + 1)}
-                </span>
+              <span class="flex shrink-0 items-center gap-[26px] px-[26px]">
                 <span class="whitespace-nowrap text-[clamp(1.5rem,3.4vw,2.75rem)] font-medium tracking-[-0.035em]">
                   {skill}
                 </span>
+                <span class="text-[var(--ink-soft)]" aria-hidden="true">/</span>
               </span>
             ))
           }
@@ -109,7 +105,7 @@ function domainLabel(link: string) {
          au clic, donc au doigt comme à la souris, sans JavaScript. -->
     <section id="work" class="swiss-shell pb-[48px]">
       <div class="swiss-grid gap-y-4 border-t border-[var(--rule)] pt-[16px]">
-        <p class="swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">
+        <p class="section-label swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">
           Selected work
         </p>
 
@@ -120,14 +116,10 @@ function domainLabel(link: string) {
                 <!-- Grille explicite : le repli en flex désalignait tout sur
                      mobile. Colonne 1 le numéro, colonne 2 le titre et les
                      tags calés dessous, l'étiquette toujours à droite. -->
-                <summary class="grid grid-cols-[26px_minmax(0,1fr)_auto] items-center gap-x-4 gap-y-[3px] py-[13px] hover:text-[var(--accent)] sm:grid-cols-[26px_minmax(0,1fr)_minmax(0,1fr)_46px]">
-                  <span class="swiss-meta col-start-1 row-start-1 text-[var(--ink-soft)]">
-                    {pad(i + 1)}
-                  </span>
+                <summary class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-[3px] py-[13px] hover:text-[var(--accent)] sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]">
+                  <span class="swiss-row-title col-start-1 row-start-1">{project.data.title}</span>
 
-                  <span class="swiss-row-title col-start-2 row-start-1">{project.data.title}</span>
-
-                  <span class="swiss-meta col-start-2 col-end-4 row-start-2 text-[var(--ink-soft)] sm:col-start-3 sm:col-end-4 sm:row-start-1">
+                  <span class="swiss-meta col-start-1 col-end-3 row-start-2 text-[var(--ink-soft)] sm:col-start-2 sm:col-end-3 sm:row-start-1">
                     {project.data.tags.join(', ')}
                   </span>
 
@@ -135,7 +127,7 @@ function domainLabel(link: string) {
                        et CLOSE au survol, mais au doigt il n'y a pas de
                        pointeur — le repère doit donc rester. -->
                   <span
-                    class="col-start-3 row-start-1 flex h-[16px] w-[16px] items-center justify-center justify-self-end text-[var(--ink-soft)] group-open:text-[var(--accent)] sm:col-start-4"
+                    class="col-start-2 row-start-1 flex h-[16px] w-[16px] items-center justify-center justify-self-end text-[var(--ink-soft)] group-open:text-[var(--accent)] sm:col-start-3"
                     aria-hidden="true"
                   >
                     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4">
@@ -178,7 +170,7 @@ function domainLabel(link: string) {
     <!-- And also : même grammaire tabulaire, en plus petit. -->
     <section class="swiss-shell pb-[64px]">
       <div class="swiss-grid gap-y-4 border-t border-[var(--rule)] pt-[16px]">
-        <p class="swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">And also</p>
+        <p class="section-label swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">And also</p>
 
         <ul class="col-span-6 md:col-span-10">
           {
@@ -188,13 +180,16 @@ function domainLabel(link: string) {
                   href={item.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-[3px] py-[10px] hover:text-[var(--accent)]"
+                  class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-[3px] py-[10px] hover:text-[var(--accent)] sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]"
                 >
-                  <span class="col-start-1 row-start-1 text-[clamp(1.125rem,1.8vw,1.5rem)] font-medium tracking-[-0.025em]">
-                    {item.title}
+                  <span class="swiss-row-title col-start-1 row-start-1">{item.title}</span>
+
+                  <span class="swiss-meta col-start-1 col-end-3 row-start-2 text-[var(--ink-soft)] sm:col-start-2 sm:col-end-3 sm:row-start-1">
+                    {item.tags.join(', ')}
                   </span>
-                  <span class="swiss-meta col-start-1 col-end-3 row-start-2 text-[var(--ink-soft)] sm:col-start-2 sm:col-end-3 sm:row-start-1 sm:justify-self-end">
-                    {item.tags.join(', ')} <SwissArrow size={12} />
+
+                  <span class="col-start-2 row-start-1 flex items-center justify-self-end text-[var(--ink-soft)] sm:col-start-3">
+                    <SwissArrow size={17} />
                   </span>
                 </a>
               </li>
@@ -210,7 +205,7 @@ function domainLabel(link: string) {
         class="swiss-grid group items-center gap-y-3 border-t border-[var(--rule)] pt-[16px]"
         data-reveal
       >
-        <p class="swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">Creative lab</p>
+        <p class="section-label swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">Creative lab</p>
 
         <p class="col-span-6 text-[clamp(1.5rem,4vw,3rem)] font-medium leading-[1.05] tracking-[-0.04em] group-hover:text-[var(--accent)] md:col-span-8">
           Experiments where AI, design and code collide <SwissArrow direction="right" size={30} />
