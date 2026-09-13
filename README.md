@@ -1,5 +1,15 @@
 # Laurent Nyssen — Portfolio
 
+**En ligne :** https://laurent-portfolio-iota.vercel.app
+**Dépôt :** https://github.com/lnyssen/ln.be (privé)
+
+| Route | |
+| --- | --- |
+| `/` | variante suisse — le site |
+| `/lab` | son Creative lab |
+| `/original` | reproduction de laurentnyssen.be |
+| `/original/lab` | son Creative lab |
+
 Reproduction en Astro + React + Tailwind du site laurentnyssen.be, éditable via
 Decap CMS.
 
