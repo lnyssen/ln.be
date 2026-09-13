@@ -76,7 +76,7 @@ const entries = (await getCollection('lab')).sort(
                     href={entry.data.demo}
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="border border-[var(--accent)] bg-[var(--accent)] px-[16px] py-[9px] text-[var(--paper)]"
+                    class="rounded-full border border-[var(--accent)] bg-[var(--accent)] px-[20px] py-[9px] text-[var(--paper)]"
                   >
                     Try it <SwissArrow size={15} />
                   </a>
@@ -86,7 +86,7 @@ const entries = (await getCollection('lab')).sort(
                     href={entry.data.doc}
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="border border-[var(--rule)] px-[16px] py-[9px] hover:border-[var(--accent)] hover:text-[var(--accent)]"
+                    class="rounded-full border border-[var(--rule)] px-[20px] py-[9px] hover:border-[var(--accent)] hover:text-[var(--accent)]"
                   >
                     Instructions <SwissArrow direction="down" size={15} />
                   </a>
