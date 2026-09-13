@@ -156,14 +156,19 @@ const ogImage = new URL('/og.png', Astro.site).href;
           });
 
           for (const label of labels) {
-            label.style.marginTop = '';
+            label.style.top = '';
             const voisin = [...label.parentElement.children].find((c) => c !== label);
             if (!voisin) continue;
             const a = hautDesCapitales(label);
             const b = hautDesCapitales(voisin);
             if (a === null || b === null) continue;
             const ecart = b - a;
-            if (Math.abs(ecart) > 0.5) label.style.marginTop = `${ecart.toFixed(2)}px`;
+            // Décalage en position relative, pas en marge : sur un élément de
+            // grille, une marge agrandit la rangée et emporte le voisin avec.
+            if (Math.abs(ecart) > 0.5) {
+              label.style.position = 'relative';
+              label.style.top = `${ecart.toFixed(2)}px`;
+            }
           }
 
           for (const [el, avant] of suspendus) el.style.transform = avant;

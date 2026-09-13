@@ -295,6 +295,15 @@
   .swiss .footer-cols > div > :first-child,
 
 
+  /* Les titres de ligne sont rognés en haut et en bas : la boîte se limite
+     alors à la hauteur capitale-ligne de base, si bien que la marge verticale
+     de la ligne se lit également au-dessus et au-dessous. Sans ce rognage,
+     l'interligne creuse deux fois plus d'espace sous le texte que dessus. */
+  .swiss .swiss-row-title,
+  .swiss .also-title {
+    text-box: trim-both cap alphabetic;
+  }
+
   .swiss .project-body > * + * {
     margin-top: 0.9em;
   }
