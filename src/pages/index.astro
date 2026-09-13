@@ -83,19 +83,22 @@ const pad = (n: number) => String(n).padStart(2, '0');
           {
             projects.map((project, i) => (
               <details name="work" class="group border-b border-[var(--rule)]/20" data-reveal data-reveal-delay={i * 45}>
-                <summary class="flex flex-wrap items-center gap-x-4 gap-y-1 py-[13px] hover:text-[var(--accent)]">
-                  <span class="swiss-meta w-[26px] shrink-0 text-[var(--ink-soft)]">
+                <!-- Grille explicite : le repli en flex désalignait tout sur
+                     mobile. Colonne 1 le numéro, colonne 2 le titre et les
+                     tags calés dessous, l'étiquette toujours à droite. -->
+                <summary class="grid grid-cols-[26px_minmax(0,1fr)_auto] items-center gap-x-4 gap-y-[3px] py-[13px] hover:text-[var(--accent)] sm:grid-cols-[26px_minmax(0,1fr)_minmax(0,1fr)_46px]">
+                  <span class="swiss-meta col-start-1 row-start-1 text-[var(--ink-soft)]">
                     {pad(i + 1)}
                   </span>
 
-                  <span class="swiss-row-title flex-1 min-w-[180px]">{project.data.title}</span>
+                  <span class="swiss-row-title col-start-2 row-start-1">{project.data.title}</span>
 
-                  <span class="swiss-meta w-full text-[var(--ink-soft)] sm:w-auto sm:flex-1">
+                  <span class="swiss-meta col-start-2 col-end-4 row-start-2 text-[var(--ink-soft)] sm:col-start-3 sm:col-end-4 sm:row-start-1">
                     {project.data.tags.join(', ')}
                   </span>
 
                   <span
-                    class="swiss-meta w-[46px] shrink-0 text-right text-[var(--ink-soft)] group-open:text-[var(--accent)]"
+                    class="swiss-meta col-start-3 row-start-1 justify-self-end text-right text-[var(--ink-soft)] group-open:text-[var(--accent)] sm:col-start-4"
                     aria-hidden="true"
                   >
                     <span class="group-open:hidden">View</span>
@@ -149,10 +152,14 @@ const pad = (n: number) => String(n).padStart(2, '0');
                   href={item.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="flex flex-wrap items-center justify-between gap-x-6 gap-y-1 py-[10px] hover:text-[var(--accent)]"
+                  class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-[3px] py-[10px] hover:text-[var(--accent)]"
                 >
-                  <span class="text-[17px] font-medium tracking-[-0.02em]">{item.title}</span>
-                  <span class="swiss-meta text-[var(--ink-soft)]">{item.tags.join(', ')} ↗︎</span>
+                  <span class="col-start-1 row-start-1 text-[17px] font-medium tracking-[-0.02em]">
+                    {item.title}
+                  </span>
+                  <span class="swiss-meta col-start-1 col-end-3 row-start-2 text-[var(--ink-soft)] sm:col-start-2 sm:col-end-3 sm:row-start-1 sm:justify-self-end">
+                    {item.tags.join(', ')} ↗︎
+                  </span>
                 </a>
               </li>
             ))

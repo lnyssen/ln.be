@@ -19,12 +19,12 @@ const OUT = '↗︎';
       <LogoMark class="h-[30px] w-[36px] shrink-0 text-[var(--ink)]" />
 
       <span class="inline-flex w-fit flex-col leading-tight">
-        <span data-lockup-name class="block text-[16px] font-semibold tracking-[-0.03em]">
+        <span data-lockup-name class="block w-fit text-[16px] font-semibold tracking-[-0.03em]">
           Laurent Nyssen
         </span>
         <span
           data-lockup-sub
-          class="swiss-meta block whitespace-nowrap text-[9px] text-[var(--ink-soft)] sm:text-[10px]"
+          class="block w-fit whitespace-nowrap uppercase leading-[1.2] text-[var(--ink-soft)]"
         >
           Multidisciplinary Designer
         </span>
@@ -61,33 +61,33 @@ const OUT = '↗︎';
 </header>
 
 <script is:inline>
-  // Aligne les deux lignes du bloc-marque sur la même largeur : la plus courte
-  // est étirée par interlettrage jusqu'à celle de la plus longue.
+  // Le nom est la référence : le sous-titre est ramené à sa largeur exacte,
+  // d'abord par le corps, puis affiné à l'interlettrage.
   (() => {
     const name = document.querySelector('[data-lockup-name]');
     const sub = document.querySelector('[data-lockup-sub]');
     if (!name || !sub) return;
 
     const fit = () => {
-      for (const el of [name, sub]) {
-        el.style.letterSpacing = '';
-        el.style.marginRight = '';
-      }
+      sub.style.letterSpacing = '0px';
+      sub.style.marginRight = '0px';
+      sub.style.fontSize = '10px';
 
-      const widths = [name, sub].map((el) => el.getBoundingClientRect().width);
-      const target = Math.max(...widths);
-      const shorter = widths[0] < widths[1] ? name : sub;
-      const natural = Math.min(...widths);
-      const glyphs = shorter.textContent.trim().length;
-      if (glyphs < 2) return;
+      const target = name.getBoundingClientRect().width;
+      const at10 = sub.getBoundingClientRect().width;
+      if (!target || !at10) return;
 
+      // Corps proportionnel, borné pour rester lisible.
+      const size = Math.min(11, Math.max(7, (10 * target) / at10));
+      sub.style.fontSize = `${size.toFixed(2)}px`;
+
+      // Le reliquat part dans l'interlettrage, compensé à droite pour que
+      // l'espace ajoutée après le dernier signe ne décale pas le bloc.
+      const natural = sub.getBoundingClientRect().width;
+      const glyphs = sub.textContent.trim().length;
       const extra = (target - natural) / glyphs;
-      if (extra <= 0) return;
-
-      const base = parseFloat(getComputedStyle(shorter).letterSpacing) || 0;
-      shorter.style.letterSpacing = `${base + extra}px`;
-      // L'interlettrage ajoute aussi une espace après le dernier signe.
-      shorter.style.marginRight = `${-(base + extra)}px`;
+      sub.style.letterSpacing = `${extra.toFixed(3)}px`;
+      sub.style.marginRight = `${(-extra).toFixed(3)}px`;
     };
 
     const run = () => requestAnimationFrame(fit);
