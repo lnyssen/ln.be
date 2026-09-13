@@ -14,7 +14,7 @@ const OUT = '↗︎';
 ---
 
 <header class="swiss-shell sticky top-0 z-30 border-b border-[var(--rule)] bg-[var(--paper)] pt-[env(safe-area-inset-top)]">
-  <div class="flex items-center justify-between gap-4 py-[12px]">
+  <div class="flex items-center justify-between gap-4 py-[18px]">
     <a href="/" class="flex items-center">
       <LogoLockup class="h-[26px] w-auto shrink-0 text-[var(--ink)] md:h-[48px]" />
     </a>
@@ -38,13 +38,16 @@ const OUT = '↗︎';
         >
           Lab
         </a>
-        <a
-          href="mailto:hello@laurentnyssen.be"
-          class="hidden hover:text-[var(--accent)] sm:inline"
-        >
-          Get in touch
-        </a>
       </nav>
+
+      <!-- La seule action de la barre : elle se distingue des repères de
+           navigation par un cadre, à la hauteur des deux autres commandes. -->
+      <a
+        href="mailto:hello@laurentnyssen.be"
+        class="swiss-meta nav-link hidden h-[28px] shrink-0 items-center border border-[var(--rule)] px-[14px] transition-colors duration-200 hover:bg-[var(--ink)] hover:text-[var(--paper)] sm:inline-flex"
+      >
+        Get in touch
+      </a>
 
       <button
         type="button"

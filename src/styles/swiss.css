@@ -61,7 +61,7 @@
   --footer-bg: #7b58e8;
   --footer-fg: #fdfdfb;
   --footer-h: 300px;
-  --header-h: 53px;
+  --header-h: 65px;
   /* Respiration unique : distance entre un filet et le texte, en haut comme
      en bas de chaque section. */
   --section-space: 42px;
@@ -82,7 +82,7 @@
 
 @media (min-width: 768px) {
   .swiss {
-    --header-h: 73px;
+    --header-h: 85px;
   }
 }
 
