@@ -99,7 +99,7 @@ export default function SwissCursor() {
       aria-hidden="true"
       className={`swiss-cursor pointer-events-none fixed left-0 top-0 z-[60] flex items-center justify-center overflow-hidden ${
         label
-          ? 'is-labelled h-[34px] w-auto rounded-none bg-[var(--ink)] px-[14px]'
+          ? 'is-labelled h-[34px] w-auto rounded-full bg-[var(--ink)] px-[18px]'
           : 'h-[26px] w-[26px] rounded-full bg-white px-0'
       } ${visible ? 'opacity-100' : 'opacity-0'}`}
     >
