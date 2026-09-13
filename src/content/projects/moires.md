@@ -11,8 +11,8 @@ images:
 link: "https://www.moires.be/"
 ---
 
-Identity for a shop on rue du Marché au Charbon selling prints, stationery
-and handmade objects. The name comes from the optical effect that appears when
+Identity for a Brussels shop selling prints, stationery and handmade
+objects. The name comes from the optical effect that appears when
 two similar patterns overlap, so the wordmark is set against its own
 reflection, two purples slightly out of register, and the shimmer does the
 rest.

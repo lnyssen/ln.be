@@ -11,7 +11,7 @@ images:
 link: ""
 ---
 
-An identity for a Barcelona record shop and cultural association that took its
-street address in Sant Antoni for a name. The mark folds the L, the B and the
+An identity for a Barcelona record shop and cultural association that took
+its street number for a name. The mark folds the L, the B and the
 number into a single black block, sized to be fly posted on a wall and still
 read from the other side of the road.
