@@ -1,0 +1,57 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import LabEntry from '../../components/LabEntry.astro';
+import Watermark from '../../components/Watermark.astro';
+
+const entries = (await getCollection('lab')).sort(
+  (a, b) => a.data.order - b.data.order
+);
+---
+
+<Layout
+  title="Creative lab — Laurent Nyssen"
+  description="Creative experiments where AI, design, and code collide."
+  watermark={false}
+>
+  <Header />
+
+  <main>
+    <!-- Bandeau orange de 900px avec le monogramme en violet par-dessus. -->
+    <section class="relative flex min-h-[900px] flex-col justify-center overflow-hidden bg-lab">
+      <Watermark variant="lab" color="var(--accent-strong)" />
+
+      <div
+        class="pointer-events-none absolute inset-0"
+        style="background-image: url('/images/grain.png'); background-size: 128px auto;"
+      >
+      </div>
+
+      <div class="shell relative z-10 text-[#fafafa]">
+        <h1 class="display-xl">Creative lab</h1>
+
+        <p class="mt-[15px] max-w-[1091px] text-[22px] leading-[1.3] md:text-[34px]">
+          Creative experiments where AI, design, and code collide. Light, sound,
+          motion — generative visuals, playable instruments, interfaces that
+          answer back. Each piece is a small machine for making something, built
+          to be touched, not just looked at.
+        </p>
+      </div>
+    </section>
+
+    <div class="shell flex flex-col gap-[110px] pb-[60px] pt-[142px]">
+      {
+        entries.map((entry) => (
+          <LabEntry
+            title={entry.data.title}
+            summary={entry.data.summary}
+            image={entry.data.image}
+            demo={entry.data.demo}
+            doc={entry.data.doc}
+          />
+        ))
+      }
+    </div>
+  </main>
+</Layout>

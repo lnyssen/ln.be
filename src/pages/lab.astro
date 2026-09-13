@@ -1,57 +1,101 @@
 ---
 import { getCollection } from 'astro:content';
-import Layout from '../layouts/Layout.astro';
-import Header from '../components/Header.astro';
-import LabEntry from '../components/LabEntry.astro';
-import Watermark from '../components/Watermark.astro';
+import SwissLayout from '../layouts/SwissLayout.astro';
+import SwissHeader from '../components/SwissHeader.astro';
+import SwissFooter from '../components/SwissFooter.astro';
 
 const entries = (await getCollection('lab')).sort(
   (a, b) => a.data.order - b.data.order
 );
+
+const pad = (n: number) => String(n).padStart(2, '0');
 ---
 
-<Layout
-  title="Creative lab — Laurent Nyssen"
+<SwissLayout
+  title="Laurent Nyssen — Creative Lab"
   description="Creative experiments where AI, design, and code collide."
-  watermark={false}
 >
-  <Header />
+  <SwissHeader current="lab" />
 
   <main>
-    <!-- Bandeau orange de 900px avec le monogramme en violet par-dessus. -->
-    <section class="relative flex min-h-[900px] flex-col justify-center overflow-hidden bg-lab">
-      <Watermark variant="lab" color="var(--accent-strong)" />
+    <section class="swiss-shell pb-[32px] pt-[40px] md:pt-[72px]">
+      <h1 class="swiss-display" data-reveal>
+        Creative<br />lab<span class="text-[var(--accent)]">.</span>
+      </h1>
 
-      <div
-        class="pointer-events-none absolute inset-0"
-        style="background-image: url('/images/grain.png'); background-size: 128px auto;"
-      >
-      </div>
+      <div class="swiss-grid mt-[40px] gap-y-6 border-t border-[var(--rule)] pt-[16px]" data-reveal data-reveal-delay="90">
+        <p class="swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">Statement</p>
 
-      <div class="shell relative z-10 text-[#fafafa]">
-        <h1 class="display-xl">Creative lab</h1>
-
-        <p class="mt-[15px] max-w-[1091px] text-[22px] leading-[1.3] md:text-[34px]">
+        <p class="swiss-lede col-span-6 md:col-span-8">
           Creative experiments where AI, design, and code collide. Light, sound,
           motion — generative visuals, playable instruments, interfaces that
           answer back. Each piece is a small machine for making something, built
           to be touched, not just looked at.
         </p>
+
+        <p class="swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2 md:justify-self-end">
+          {pad(entries.length)} pieces
+        </p>
       </div>
     </section>
 
-    <div class="shell flex flex-col gap-[110px] pb-[60px] pt-[142px]">
+    <!-- Une entrée par bande pleine largeur : le visuel occupe la moitié. -->
+    <section class="swiss-shell pb-[64px]">
       {
-        entries.map((entry) => (
-          <LabEntry
-            title={entry.data.title}
-            summary={entry.data.summary}
-            image={entry.data.image}
-            demo={entry.data.demo}
-            doc={entry.data.doc}
-          />
+        entries.map((entry, i) => (
+          <article class="swiss-grid gap-y-5 border-t border-[var(--rule)] py-[28px]" data-reveal>
+            <p class="swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">
+              {pad(i + 1)}
+            </p>
+
+            <div class="col-span-6 md:col-span-5">
+              {entry.data.image && (
+                <img
+                  src={entry.data.image}
+                  alt=""
+                  loading="lazy"
+                  class="aspect-square w-full object-cover"
+                />
+              )}
+            </div>
+
+            <div class="col-span-6 flex flex-col md:col-span-5">
+              <h2 class="text-[clamp(1.75rem,3.6vw,3rem)] font-medium leading-[1.02] tracking-[-0.04em]">
+                {entry.data.title}
+              </h2>
+
+              <p class="mt-[14px] flex-1 text-[15px] leading-[1.5] text-[var(--ink-soft)] md:text-[16px]">
+                {entry.data.summary}
+              </p>
+
+              <div class="swiss-meta mt-[20px] flex flex-wrap gap-[18px]">
+                {entry.data.demo && (
+                  <a
+                    href={entry.data.demo}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="border border-[var(--accent)] bg-[var(--accent)] px-[16px] py-[9px] text-[var(--paper)]"
+                  >
+                    Try it ↗
+                  </a>
+                )}
+                {entry.data.doc && (
+                  <a
+                    href={entry.data.doc}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="border border-[var(--rule)] px-[16px] py-[9px] hover:border-[var(--accent)] hover:text-[var(--accent)]"
+                  >
+                    Instructions ↓
+                  </a>
+                )}
+              </div>
+            </div>
+          </article>
         ))
       }
-    </div>
+    </section>
   </main>
-</Layout>
+
+  <SwissFooter />
+</SwissLayout>
