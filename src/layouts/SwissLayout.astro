@@ -191,26 +191,31 @@ const ogImage = new URL('/og.png', Astro.site).href;
           return hautDesCapitales(cible);
         };
 
-        const basDuDernierTexte = (bloc) => {
+        // Le texte le plus bas à l'écran, pas le dernier dans l'ordre du code :
+        // une colonne courte placée en fin de balisage fausserait la mesure.
+        const basDuTexteLePlusBas = (bloc) => {
           const marcheur = document.createTreeWalker(bloc, NodeFilter.SHOW_TEXT, {
             acceptNode: (n) => (n.textContent.trim() ? 1 : 2),
           });
-          let dernier = null;
+
+          let plusBas = null;
           let n;
-          while ((n = marcheur.nextNode())) dernier = n;
-          if (!dernier) return null;
+          while ((n = marcheur.nextNode())) {
+            const porteur = n.parentElement;
+            const sonde = document.createElement('span');
+            sonde.style.cssText =
+              'display:inline-block;width:0;height:0;vertical-align:baseline';
+            porteur.appendChild(sonde);
+            const ligneDeBase = sonde.getBoundingClientRect().top;
+            sonde.remove();
 
-          const porteur = dernier.parentElement;
-          const sonde = document.createElement('span');
-          sonde.style.cssText =
-            'display:inline-block;width:0;height:0;vertical-align:baseline';
-          porteur.appendChild(sonde);
-          const ligneDeBase = sonde.getBoundingClientRect().top;
-          sonde.remove();
+            const style = getComputedStyle(porteur);
+            contexte.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+            const bas = ligneDeBase + contexte.measureText('g').actualBoundingBoxDescent;
+            if (plusBas === null || bas > plusBas) plusBas = bas;
+          }
 
-          const style = getComputedStyle(porteur);
-          contexte.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
-          return ligneDeBase + contexte.measureText('g').actualBoundingBoxDescent;
+          return plusBas;
         };
 
         const rythmer = () => {
@@ -219,27 +224,38 @@ const ogImage = new URL('/og.png', Astro.site).href;
           );
 
           for (const bloc of blocs) {
-            bloc.style.paddingTop = '';
+            bloc.style.paddingTop = '0px';
             const section = bloc.closest('section');
             if (section) section.style.paddingBottom = '';
           }
 
-          // Chaque section respire autant en bas qu'en haut. On ne force pas
-          // une valeur commune : les sections en liste portent déjà la marge de
-          // leur première ligne, les vouloir toutes identiques gonflerait le
-          // reste de la page.
-          for (const bloc of blocs) {
-            const section = bloc.closest('section');
-            if (!section) continue;
+          // Même respiration partout, en haut comme en bas. La valeur n'est pas
+          // choisie : c'est le plus petit écart possible une fois les marges
+          // remises à zéro, car les sections en liste portent déjà celle de
+          // leur première ligne et ne peuvent pas descendre en dessous.
+          const mesures = blocs
+            .map((bloc) => {
+              const section = bloc.closest('section');
+              if (!section) return null;
+              const haut = premierHautDeCapitales(bloc);
+              if (haut === null) return null;
+              return { bloc, section, minimum: haut - bloc.getBoundingClientRect().top };
+            })
+            .filter(Boolean);
 
-            const haut = premierHautDeCapitales(bloc);
-            const bas = basDuDernierTexte(bloc);
-            if (haut === null || bas === null) continue;
+          if (!mesures.length) return;
+          const respiration = Math.max(...mesures.map((m) => m.minimum));
 
-            const cible = haut - bloc.getBoundingClientRect().top;
+          for (const { bloc, minimum } of mesures) {
+            bloc.style.paddingTop = `${(respiration - minimum).toFixed(2)}px`;
+          }
+
+          for (const { bloc, section } of mesures) {
+            const bas = basDuTexteLePlusBas(bloc);
+            if (bas === null) continue;
             const actuel = section.getBoundingClientRect().bottom - bas;
             const base = parseFloat(getComputedStyle(section).paddingBottom) || 0;
-            section.style.paddingBottom = `${Math.max(0, base + cible - actuel).toFixed(2)}px`;
+            section.style.paddingBottom = `${Math.max(0, base + respiration - actuel).toFixed(2)}px`;
           }
         };
 

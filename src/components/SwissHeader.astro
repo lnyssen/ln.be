@@ -24,18 +24,21 @@ const OUT = '↗︎';
         </span>
         <span
           data-lockup-sub
-          class="block w-fit whitespace-nowrap uppercase leading-[1.2] text-[var(--ink-soft)]"
+          class="block w-fit whitespace-nowrap uppercase leading-[1.2] text-[var(--ink)]"
         >
           Multidisciplinary Designer
         </span>
       </span>
     </a>
 
-    <div class="flex items-center gap-[14px]">
+    <div class="flex items-center gap-[16px]">
       <nav class="swiss-meta flex items-center gap-[14px]" aria-label="Main">
         <a
           href={current === 'index' ? '#work' : '/#work'}
-          class={current === 'index' ? 'text-[var(--accent)]' : 'hover:text-[var(--accent)]'}
+          class:list={[
+            'hidden sm:inline',
+            current === 'index' ? 'text-[var(--accent)]' : 'hover:text-[var(--accent)]',
+          ]}
           aria-current={current === 'index' ? 'page' : undefined}
         >
           Index
@@ -61,7 +64,7 @@ const OUT = '↗︎';
         aria-pressed="false"
         aria-label="Afficher la grille"
         title="Grille (G)"
-        class="swiss-meta flex h-[28px] w-[28px] shrink-0 items-center justify-center border border-[var(--rule)] transition-colors duration-200 hover:border-[var(--accent)] hover:text-[var(--accent)] aria-pressed:bg-[var(--ink)] aria-pressed:text-[var(--paper)]"
+        class="swiss-meta hidden h-[28px] w-[28px] shrink-0 items-center justify-center border border-[var(--rule)] transition-colors duration-200 hover:border-[var(--accent)] hover:text-[var(--accent)] aria-pressed:bg-[var(--ink)] aria-pressed:text-[var(--paper)] md:flex"
       >
         <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true">
           <g stroke="currentColor" stroke-width="1">
