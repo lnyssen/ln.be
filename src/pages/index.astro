@@ -186,6 +186,33 @@ const pad = (n: number) => String(n).padStart(2, '0');
     (() => {
       // La molette verticale fait avancer la planche : sur trackpad comme à la
       // souris, on ne devrait pas avoir à chercher le geste latéral.
+      for (const wrap of document.querySelectorAll('.filmstrip-wrap')) {
+        const strip = wrap.querySelector('.filmstrip');
+        const prev = wrap.querySelector('[data-strip-prev]');
+        const next = wrap.querySelector('[data-strip-next]');
+        if (!strip || !prev || !next) continue;
+
+        // Un pas = la largeur d'un visuel plus la gouttière.
+        const step = () => {
+          const figure = strip.querySelector('figure');
+          return figure ? figure.getBoundingClientRect().width + 10 : strip.clientWidth;
+        };
+
+        const sync = () => {
+          // La bande déborde des gouttières : son origine n'est pas zéro mais
+          // la valeur de son propre retrait.
+          const origin = parseFloat(getComputedStyle(strip).paddingLeft) || 0;
+          const max = strip.scrollWidth - strip.clientWidth;
+          prev.disabled = strip.scrollLeft <= origin + 1;
+          next.disabled = strip.scrollLeft >= max - 1;
+        };
+
+        prev.addEventListener('click', () => strip.scrollBy({ left: -step() }));
+        next.addEventListener('click', () => strip.scrollBy({ left: step() }));
+        strip.addEventListener('scroll', sync, { passive: true });
+        sync();
+      }
+
       for (const strip of document.querySelectorAll('.filmstrip')) {
         strip.addEventListener(
           'wheel',
@@ -206,7 +233,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
         if (!panel) continue;
 
         panel.addEventListener('click', (event) => {
-          if (event.target.closest('a')) return;
+          if (event.target.closest('a, button')) return;
           row.open = false;
           row.scrollIntoView({ block: 'center', behavior: 'smooth' });
         });

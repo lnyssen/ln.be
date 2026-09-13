@@ -17,7 +17,7 @@ function labelFor(node) {
 
   // Dans une ligne dépliée — visuels compris — tout referme, sauf les liens.
   const open = node.closest('details[open]');
-  if (open && !node.closest('a')) return 'CLOSE';
+  if (open && !node.closest('a, button')) return 'CLOSE';
 
   if (node.closest('[role="switch"]')) return 'THEME';
 

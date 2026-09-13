@@ -2,14 +2,14 @@
 // Flèche géométrique : tête en équerre et hampe à 45°, épaisseur constante,
 // extrémités franches. Les autres directions sont des rotations de la même.
 interface Props {
-  direction?: 'up-right' | 'right' | 'down';
+  direction?: 'up-right' | 'right' | 'down' | 'left';
   size?: number;
   class?: string;
 }
 
 const { direction = 'up-right', size = 14, class: className } = Astro.props;
 
-const rotation = { 'up-right': 0, right: 45, down: 135 }[direction];
+const rotation = { 'up-right': 0, right: 45, down: 135, left: 225 }[direction];
 ---
 
 <svg

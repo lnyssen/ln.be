@@ -142,17 +142,20 @@
   }
 
   .swiss .filmstrip {
-    scrollbar-width: thin;
-    scrollbar-color: var(--ink-soft) transparent;
+    /* Barre masquée : on navigue aux flèches, au doigt ou à la molette. */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
     overscroll-behavior-x: contain;
+    scroll-behavior: smooth;
   }
 
   .swiss .filmstrip::-webkit-scrollbar {
-    height: 3px;
+    display: none;
   }
 
-  .swiss .filmstrip::-webkit-scrollbar-thumb {
-    background: var(--ink-soft);
+  /* Les flèches ne referment pas la ligne : elles gardent leur propre curseur. */
+  .swiss .strip-nav {
+    cursor: pointer;
   }
 
   /* La ligne ouverte reste sous l'en-tête pendant qu'on parcourt ses visuels.
