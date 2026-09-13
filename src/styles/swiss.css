@@ -458,7 +458,7 @@
 
   /* Titre affiché en capitales serrées, calé sur la grille. */
   .swiss .swiss-display {
-    font-size: clamp(2.5rem, 9.1vw, 8.5rem);
+    font-size: clamp(2rem, 11vw, 8.5rem);
     line-height: 0.88;
     letter-spacing: -0.045em;
     text-transform: uppercase;
