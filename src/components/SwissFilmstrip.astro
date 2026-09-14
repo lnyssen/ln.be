@@ -14,9 +14,6 @@ interface Props {
   // n'a pas besoin de flèches : elle se parcourt au doigt ou à la molette.
   bleed?: boolean;
   arrows?: boolean;
-  // Ce que le disque du curseur annonce sur la planche. Sans valeur, il reste
-  // nu : toutes les planches n'ont pas quelque chose à dire.
-  cursor?: string;
 }
 
 const {
@@ -25,7 +22,6 @@ const {
   variant = 'landscape',
   bleed = true,
   arrows = true,
-  cursor,
 } = Astro.props;
 const poster = variant === 'poster';
 
@@ -38,7 +34,7 @@ const total = String(resolved.length).padStart(2, '0');
 
 <!-- Planche contact : les visuels s'alignent en bande. Barre de défilement
      masquée, on avance aux flèches, au doigt, à la molette ou au clavier. -->
-<div class="filmstrip-wrap relative" data-cursor={cursor}>
+<div class="filmstrip-wrap relative">
   <div
     class:list={[
       'filmstrip flex snap-x snap-mandatory gap-[10px] overflow-x-auto pb-[10px]',

@@ -10,11 +10,6 @@ function labelFor(node) {
   // défileraient pour trois liens courts.
   if (node.closest('header')) return null;
 
-  // Une page peut nommer elle-même ce que le disque doit dire, quand aucun
-  // verbe général ne convient.
-  const dit = node.closest('[data-cursor]');
-  if (dit) return dit.dataset.cursor;
-
   const summary = node.closest('summary');
   if (summary) {
     return summary.closest('details')?.open ? 'CLOSE' : 'VIEW';
@@ -33,8 +28,10 @@ function labelFor(node) {
   if (!link) return node.closest('button') ? 'CLICK' : null;
 
   const href = link.getAttribute('href') || '';
-  // Le renvoi vers le Lab n'ouvre pas une page comme une autre : il propose.
+  // Les deux terrains personnels n'ouvrent pas une page comme une autre :
+  // l'un propose, l'autre n'attend rien qu'un regard.
   if (href === '/lab') return 'EXPLORE';
+  if (href === '/lepolographe') return 'ENJOY';
   if (href.startsWith('mailto:')) return 'MAIL';
   if (href.startsWith('tel:')) return 'CALL';
   if (link.target === '_blank' || /^https?:/.test(href)) return 'VISIT';
