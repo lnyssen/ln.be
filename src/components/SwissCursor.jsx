@@ -20,6 +20,11 @@ function labelFor(node) {
   if (miroir) {
     const style = getComputedStyle(miroir);
     const boite = miroir.getBoundingClientRect();
+    // La couleur est déclarée dans le balisage plutôt que relevée sur place :
+    // sous le doigt, le bouton a déjà viré à son état de survol, et le disque
+    // en héritait — de l'encre sombre sur son voile sombre. Le miroir montre
+    // le bouton tel qu'il est, pas tel qu'il réagit à lui-même.
+    const encre = miroir.dataset.cursorInk || 'var(--ink)';
     return {
       mot: miroir.dataset.cursorMirror || miroir.textContent.trim(),
       signe: miroir.dataset.cursorSign || 'VISIT',
@@ -28,14 +33,7 @@ function labelFor(node) {
         height: `${Math.round(boite.height)}px`,
         paddingLeft: style.paddingLeft,
         paddingRight: style.paddingRight,
-        borderColor: style.borderTopColor,
-        // Le fond du bouton survolé, et non le papier voilé du disque : le
-        // bouton passe à l'accent sous le doigt et sa couleur de texte suit.
-        // Reprendre l'une sans l'autre donnait de l'encre sombre sur un voile
-        // sombre, illisible. Un bouton sans fond garde le voile.
-        ...(/rgba?\(0, 0, 0, 0\)|transparent/.test(style.backgroundColor)
-          ? {}
-          : { backgroundColor: style.backgroundColor }),
+        borderColor: encre,
       },
       // L'écart entre le mot et le signe, et la taille du signe lui-même, se
       // relèvent aussi : sans eux le disque était six points plus large que
@@ -47,7 +45,7 @@ function labelFor(node) {
         fontWeight: style.fontWeight,
         letterSpacing: style.letterSpacing,
         textTransform: style.textTransform,
-        color: style.color,
+        color: encre,
       },
     };
   }
