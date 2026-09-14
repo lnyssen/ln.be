@@ -25,12 +25,19 @@ function labelFor(node) {
     // en héritait — de l'encre sombre sur son voile sombre. Le miroir montre
     // le bouton tel qu'il est, pas tel qu'il réagit à lui-même.
     const encre = miroir.dataset.cursorInk || 'var(--ink)';
+    const mot = miroir.dataset.cursorMirror || miroir.textContent.trim();
+    // Un bouton sans mot — une flèche, par exemple — prête son propre dessin
+    // plutôt qu'un signe du vocabulaire : c'est lui qu'il faut doubler, pas
+    // son équivalent le plus proche.
+    const dessin = mot ? null : miroir.innerHTML;
     return {
-      mot: miroir.dataset.cursorMirror || miroir.textContent.trim(),
-      signe: miroir.dataset.cursorSign || 'VISIT',
+      mot,
+      signe: mot ? miroir.dataset.cursorSign || 'VISIT' : null,
+      dessin,
       miroir: true,
       cadre: {
         height: `${Math.round(boite.height)}px`,
+        ...(dessin ? { width: `${Math.round(boite.width)}px` } : {}),
         paddingLeft: style.paddingLeft,
         paddingRight: style.paddingRight,
         borderColor: encre,
@@ -49,9 +56,6 @@ function labelFor(node) {
       },
     };
   }
-
-  // Les flèches de la loupe portent déjà leur signe : le disque reste nu.
-  if (node.closest('[data-loupe-nav]')) return null;
 
   // La loupe couvre tout : elle se referme d'un clic, où qu'il tombe.
   if (node.closest('[data-loupe]')) return 'CLOSE';
@@ -101,7 +105,10 @@ function labelFor(node) {
 const GLYPHS = {
   VIEW: 'M1.5 12S5.5 5 12 5s10.5 7 10.5 7-4 7-10.5 7S1.5 12 1.5 12Z M12 9.2a2.8 2.8 0 1 0 0 5.6 2.8 2.8 0 0 0 0-5.6Z',
   CLOSE: 'M6 6l12 12M18 6L6 18',
-  EXPLORE: 'M12 2.5a9.5 9.5 0 1 0 0 19 9.5 9.5 0 0 0 0-19Z M15.8 8.2l-2.1 5.5-5.5 2.1 2.1-5.5 5.5-2.1Z',
+  // Une étoile à quatre branches aux flancs creusés : le Lab n'est pas une
+  // exploration au compas, c'est de l'IA, et c'est son signe aujourd'hui. Les
+  // courbes la distinguent de l'astérisque droit du Polographe.
+  EXPLORE: 'M12 2.5c0 5.25 4.25 9.5 9.5 9.5-5.25 0-9.5 4.25-9.5 9.5 0-5.25-4.25-9.5-9.5-9.5 5.25 0 9.5-4.25 9.5-9.5Z',
   VISIT: 'M7 17 17 7M9 7h8v8',
   OPEN: 'M4 12h15M13 6l6 6-6 6',
   JUMP: 'M12 4.5v14M6 13l6 6 6-6',
@@ -194,6 +201,7 @@ export default function SwissCursor() {
   const cadre = miroir ? label.cadre : undefined;
   const lettres = miroir ? label.lettres : undefined;
   const taille = miroir ? label.taille : 13;
+  const dessin = miroir ? label.dessin : null;
 
   return (
     <div
@@ -216,7 +224,11 @@ export default function SwissCursor() {
         } ${label ? 'opacity-100' : 'opacity-0'}`}
         style={lettres}
       >
-        {mot}
+        {dessin ? (
+          <span className="flex items-center" dangerouslySetInnerHTML={{ __html: dessin }} />
+        ) : (
+          mot
+        )}
         {signe && GLYPHS[signe] && (
           <svg
             width={taille}

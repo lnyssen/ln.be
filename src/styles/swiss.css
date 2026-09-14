@@ -455,10 +455,22 @@
   /* Le visuel prend toute la place disponible, sans jamais se rogner : c'est
      le sens du geste. Il monte jusqu'au grand tirage, qui vient de la source
      et non d'un étirement. */
+  /* La scène ne fait que la taille du visuel affiché : c'est elle qui donne
+     aux flèches leur bord. Le visuel, lui, prend toute la place disponible
+     sans jamais se rogner. */
+  .swiss .loupe-scene {
+    position: relative;
+    display: flex;
+    max-width: 100%;
+    max-height: 100%;
+  }
+
   .swiss .loupe img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
     transform: scale(0.98);
     transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
   }
@@ -483,11 +495,11 @@
   }
 
   .swiss .loupe-nav-prev {
-    left: 20px;
+    left: 14px;
   }
 
   .swiss .loupe-nav-next {
-    right: 20px;
+    right: 14px;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -803,6 +815,16 @@
     background-color: color-mix(in srgb, var(--ink) 70%, transparent);
     -webkit-backdrop-filter: blur(6px);
     backdrop-filter: blur(6px);
+    transition:
+      background-color 200ms ease,
+      color 200ms ease;
+  }
+
+  /* Elles passent à l'accent sous le doigt, comme les commandes de la barre
+     du bas et les adresses des projets. */
+  .swiss .strip-nav:hover {
+    background-color: var(--accent);
+    color: var(--paper);
   }
 
   /* La grille se déplie colonne après colonne, les repères suivent. */

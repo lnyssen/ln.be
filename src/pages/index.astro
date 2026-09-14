@@ -543,6 +543,12 @@ function domainLabel(link: string) {
         cadre.className = 'loupe';
         cadre.dataset.loupe = '';
 
+        // La scène épouse le visuel : les flèches se posent sur ses bords à
+        // lui, et non sur ceux de la fenêtre, où elles flottaient loin de
+        // l'image dès qu'elle n'en remplissait pas toute la largeur.
+        const scene = document.createElement('div');
+        scene.className = 'loupe-scene';
+
         // On reprend le jeu de tailles de la planche en annonçant une tout
         // autre largeur d'affichage : le navigateur va donc chercher le grand
         // tirage, là où la bande se contentait d'une vignette.
@@ -560,7 +566,8 @@ function domainLabel(link: string) {
         };
 
         poser(rang);
-        cadre.append(grand);
+        scene.append(grand);
+        cadre.append(scene);
 
         // Les flèches ne paraissent qu'à partir de deux visuels, et portent la
         // matière de celles de la planche. Elles arrêtent le clic : lui, il
@@ -571,6 +578,8 @@ function domainLabel(link: string) {
             bouton.type = 'button';
             bouton.className = `strip-nav loupe-nav loupe-nav-${sens < 0 ? 'prev' : 'next'}`;
             bouton.dataset.loupeNav = '';
+            bouton.dataset.cursorMirror = '';
+            bouton.dataset.cursorInk = 'var(--paper)';
             bouton.setAttribute('aria-label', sens < 0 ? 'Visuel précédent' : 'Visuel suivant');
             bouton.innerHTML =
               '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
@@ -580,7 +589,7 @@ function domainLabel(link: string) {
               event.stopPropagation();
               poser(rang + sens);
             });
-            cadre.append(bouton);
+            scene.append(bouton);
           }
         }
 
