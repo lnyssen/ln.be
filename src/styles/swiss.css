@@ -647,8 +647,38 @@
   /* Panneau de navigation : il couvre la page, donc il porte le papier et
      son grain, calé sur le cadre comme celui du site pour que la texture ne
      s'interrompe pas. */
+  /* La carte se pose sous la barre, jamais dessus : la barre se gare à 14,
+     porte 14 de marge interne et 70 de haut, plus 10 d'écart. */
   .swiss .swiss-menu {
-    background-color: var(--paper);
+    top: calc(108px + 2 * env(safe-area-inset-top));
+  }
+
+  /* La carte du menu partage la matière de la barre : même verre, même
+     contour, même grain. */
+  .swiss .menu-card {
+    position: relative;
+    isolation: isolate;
+    border: 1px solid var(--rule);
+    background-color: var(--header-bg);
+    box-shadow: 0 10px 40px rgb(0 0 0 / 0.2);
+    -webkit-backdrop-filter: blur(20px) saturate(1.1);
+    backdrop-filter: blur(20px) saturate(1.1);
+  }
+
+  .swiss .menu-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image: url('/images/grain.png');
+    background-repeat: repeat;
+    background-size: 64px auto;
+    opacity: var(--grain);
+  }
+
+  .swiss .menu-card > nav > a:last-of-type {
+    border-bottom: 0;
   }
 
   /* L'attribut `hidden` ne suffit pas ici : il vient de la feuille du
@@ -672,16 +702,9 @@
 
   .swiss .menu-link {
     text-box: trim-both cap alphabetic;
-    padding-top: 22px;
-    padding-bottom: 22px;
   }
 
   /* Le fond ne défile plus derrière le panneau. */
-  .swiss.menu-open,
-  .swiss.menu-open body {
-    overflow: hidden;
-  }
-
   /* Les deux signes se relaient en fondu : la croix est tracée à ses
      coordonnées, elle croise donc au centre exact du cadre. Les deux règles
      visent des états qui s'excluent — ouvert, fermé — plutôt qu'une règle et
@@ -704,16 +727,6 @@
   .swiss.menu-open .swiss-dock,
   .swiss.menu-open .grid-overlay {
     display: none;
-  }
-
-  /* `sticky` n'a plus de port de défilement quand le corps est bloqué : la
-     barre partait avec la page dès que le menu s'ouvrait en cours de lecture,
-     emportant le signe qui devait le refermer. */
-  .swiss.menu-open body > header {
-    position: fixed;
-    top: calc(14px + env(safe-area-inset-top));
-    left: 0;
-    right: 0;
   }
 
   /* Planches d'affiches : colonnes égales, gouttière de la grille. Les
