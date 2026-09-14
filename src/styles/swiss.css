@@ -238,8 +238,9 @@
     outline-offset: 1px;
   }
 
-  /* Les lignes de l'index sont des <details> : ouverture sans JavaScript. */
-  .swiss summary {
+  /* Les lignes de l'index sont des <details> : ouverture sans JavaScript.
+     Le curseur « main » ne vaut que sans le disque, qui remplace la flèche. */
+  .swiss:not([data-swiss-cursor]) summary {
     cursor: pointer;
     list-style: none;
   }
@@ -250,7 +251,7 @@
 
   /* Le contenu d'une ligne ouverte se referme au clic : le pointeur y affiche
      CLOSE, sauf sur les liens qui gardent leur propre étiquette. */
-  .swiss details[open] > div {
+  .swiss:not([data-swiss-cursor]) details[open] > div {
     cursor: pointer;
   }
 
@@ -358,7 +359,7 @@
   }
 
   /* Les flèches ne referment pas la ligne : elles gardent leur propre curseur. */
-  .swiss .strip-nav {
+  .swiss:not([data-swiss-cursor]) .strip-nav {
     cursor: pointer;
   }
 
