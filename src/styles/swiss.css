@@ -359,6 +359,20 @@
     opacity: 0.5;
   }
 
+  /* Une colonne d'ours est une pile à écart unique, intitulé compris. Chaque
+     ligne est rognée à la hauteur capitale-ligne de base : sans ce rognage,
+     l'adresse, deux fois plus grosse que le reste, creuserait un écart plus
+     large que les lignes en dessous alors que l'écart déclaré est le même. */
+  .swiss .footer-col {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .swiss .footer-col > * {
+    text-box: trim-both cap alphabetic;
+  }
+
   /* Les colonnes du pied de page s'alignent sur le haut des capitales, pas sur
      le haut de la boîte : avec des corps de 9 à 36px, l'interligne décalerait
      chaque texte d'une valeur différente. */

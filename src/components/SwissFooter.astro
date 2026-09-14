@@ -3,7 +3,9 @@ import SwissArrow from './SwissArrow.astro';
 
 // Panneau violet fixé au fond : le contenu glisse par-dessus et le découvre en
 // fin de course. `main` porte un fond opaque, le body réserve la hauteur.
-// Disposition tabulaire : quatre colonnes d'ours, comme au bas d'un document.
+// Disposition tabulaire : trois colonnes d'ours, comme au bas d'un document.
+// Où l'on est et si l'on est disponible relèvent du contact : ces deux lignes
+// rejoignent la première colonne plutôt que d'en réclamer une nommée.
 const elsewhere = [
   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/laurentnyssen/' },
   { label: 'Spotify', href: 'https://open.spotify.com/user/laurentnyssen' },
@@ -14,62 +16,47 @@ const elsewhere = [
 <footer
   class="swiss-footer fixed inset-x-0 bottom-0 z-0 flex h-[var(--footer-h)] flex-col justify-center pb-[env(safe-area-inset-bottom)]"
 >
-  <div class="swiss-shell swiss-grid footer-cols items-start gap-y-8">
-    <div class="col-span-6 md:col-span-3">
+  <div class="swiss-shell swiss-grid footer-cols items-start gap-y-10">
+    <div class="footer-col col-span-6 md:col-span-4">
       <p class="swiss-meta footer-label">Contact</p>
       <a
         href="mailto:hello@laurentnyssen.be"
-        class="mt-[12px] block text-[clamp(1.0625rem,1.7vw,1.375rem)] font-medium tracking-[-0.025em] transition-colors duration-200 hover:text-[#141414]"
+        class="footer-mail text-[clamp(1.0625rem,1.7vw,1.375rem)] font-medium tracking-[-0.025em] transition-colors duration-200 hover:text-[#141414]"
       >
         hello@laurentnyssen.be
       </a>
-      <a href="tel:+32497305080" class="swiss-meta mt-[10px] block opacity-70 hover:opacity-100">
+      <a href="tel:+32497305080" class="swiss-meta opacity-70 hover:opacity-100">
         +32 (0)497 30 50 80
       </a>
+      <p class="swiss-meta opacity-70">Brussels — BE</p>
+      <p class="swiss-meta opacity-70">Available for commissions</p>
     </div>
 
-    <div class="col-span-3 md:col-span-2">
+    <div class="footer-col col-span-3 md:col-span-3">
       <p class="swiss-meta footer-label">Elsewhere</p>
-      <ul class="mt-[12px] space-y-[6px]">
-        {
-          elsewhere.map((item) => (
-            <li>
-              <a
-                href={item.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="swiss-meta inline-flex items-center gap-[7px] opacity-70 hover:opacity-100"
-              >
-                {item.label} <SwissArrow size={12} />
-              </a>
-            </li>
-          ))
-        }
-      </ul>
+      {
+        elsewhere.map((item) => (
+          <a
+            href={item.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="swiss-meta inline-flex w-fit items-center gap-[7px] opacity-70 hover:opacity-100"
+          >
+            {item.label} <SwissArrow size={12} />
+          </a>
+        ))
+      }
     </div>
 
-    <div class="col-span-3 md:col-span-3">
-      <p class="swiss-meta footer-label">Based</p>
-      <p class="swiss-meta mt-[12px] opacity-70">
-        Brussels — BE<br />Available for commissions
-      </p>
-    </div>
-
-    <div class="col-span-3 md:col-span-2">
+    <div class="footer-col col-span-3 md:col-span-3">
       <p class="swiss-meta footer-label">This site</p>
-      <ul class="mt-[12px] space-y-[6px]">
-        <li>
-          <a href="/colophon" class="swiss-meta underline decoration-1 underline-offset-[3px] opacity-70 hover:opacity-100">
-            Colophon
-          </a>
-        </li>
-        <li>
-          <a href="/privacy" class="swiss-meta underline decoration-1 underline-offset-[3px] opacity-70 hover:opacity-100">
-            Privacy
-          </a>
-        </li>
-        <li><p class="swiss-meta opacity-70">Set in Switzer</p></li>
-      </ul>
+      <a href="/colophon" class="swiss-meta w-fit underline decoration-1 underline-offset-[3px] opacity-70 hover:opacity-100">
+        Colophon
+      </a>
+      <a href="/privacy" class="swiss-meta w-fit underline decoration-1 underline-offset-[3px] opacity-70 hover:opacity-100">
+        Privacy
+      </a>
+      <p class="swiss-meta opacity-70">Set in Switzer</p>
     </div>
 
     <p class="swiss-meta col-span-3 opacity-70 md:col-span-2 md:justify-self-end md:text-right">
