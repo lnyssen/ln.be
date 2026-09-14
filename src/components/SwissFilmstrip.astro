@@ -6,9 +6,14 @@ import SwissArrow from './SwissArrow.astro';
 interface Props {
   images: string[];
   title: string;
+  // Les planches de projet sont des photographies, cadrées en 3:2. Une affiche
+  // ne se recadre pas : la variante « poster » fixe la hauteur et laisse
+  // chaque feuille prendre la largeur de son propre format.
+  variant?: 'landscape' | 'poster';
 }
 
-const { images, title } = Astro.props;
+const { images, title, variant = 'landscape' } = Astro.props;
+const poster = variant === 'poster';
 
 const resolved = images
   .map((path) => ({ path, asset: resolveImage(path) }))
@@ -28,16 +33,21 @@ const total = String(resolved.length).padStart(2, '0');
   >
     {
       resolved.map((entry, i) => (
-        <figure class="m-0 w-[78vw] shrink-0 snap-start md:w-[440px]">
+        <figure
+          class:list={[
+            'm-0 shrink-0 snap-start',
+            poster ? 'h-[64vw] max-h-[460px] md:h-[460px]' : 'w-[78vw] md:w-[440px]',
+          ]}
+        >
           <Image
             src={entry.asset!}
             alt={`${title} — visuel ${i + 1} sur ${resolved.length}`}
-            widths={[440, 720, 880]}
-            sizes="(min-width: 768px) 440px, 78vw"
+            widths={poster ? [340, 520, 700] : [440, 720, 880]}
+            sizes={poster ? '(min-width: 768px) 330px, 46vw' : '(min-width: 768px) 440px, 78vw'}
             format="webp"
-            quality={72}
+            quality={poster ? 82 : 72}
             loading="lazy"
-            class="aspect-[3/2] w-full object-cover"
+            class:list={[poster ? 'h-full w-auto object-contain' : 'aspect-[3/2] w-full object-cover']}
           />
         </figure>
       ))
