@@ -147,7 +147,7 @@ export default function SwissCursor() {
     <div
       ref={ref}
       aria-hidden="true"
-      className={`swiss-cursor pointer-events-none fixed left-0 top-0 z-[60] flex items-center justify-center overflow-hidden ${
+      className={`swiss-cursor pointer-events-none fixed left-0 top-0 z-[90] flex items-center justify-center overflow-hidden ${
         label
           ? 'is-labelled h-[34px] w-auto rounded-full bg-[var(--ink)] px-[18px]'
           : 'h-[21px] w-[21px] rounded-full bg-white px-0'
