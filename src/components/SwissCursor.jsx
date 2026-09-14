@@ -10,6 +10,14 @@ function labelFor(node) {
   // défileraient pour trois liens courts.
   if (node.closest('header')) return null;
 
+  // Certains boutons portent déjà leur libellé et leur flèche. Le disque n'a
+  // rien à leur ajouter : il devient le bouton, mot pour mot. L'étiquette
+  // est alors une reprise, pas une glose.
+  const miroir = node.closest('[data-cursor-mirror]');
+  if (miroir) {
+    return { mot: miroir.dataset.cursorMirror || miroir.textContent.trim(), signe: 'VISIT' };
+  }
+
   // La loupe couvre tout : elle se referme d'un clic, où qu'il tombe.
   if (node.closest('[data-loupe]')) return 'CLOSE';
 
@@ -143,6 +151,11 @@ export default function SwissCursor() {
     };
   }, []);
 
+  // L'étiquette est soit un verbe du site — le mot et son signe portent alors
+  // le même nom — soit les mots repris d'un bouton.
+  const mot = typeof label === 'string' ? label : label?.mot;
+  const signe = typeof label === 'string' ? label : label?.signe;
+
   return (
     <div
       ref={ref}
@@ -153,14 +166,15 @@ export default function SwissCursor() {
           : 'h-[21px] w-[21px] rounded-full bg-white px-0'
       } ${visible ? 'opacity-100' : 'opacity-0'}`}
     >
-      {/* L'étiquette quitte la fusion : sur le violet, « difference » virait au
-          vert olive. Elle devient une pastille pleine aux couleurs du thème. */}
+      {/* Le mot passe devant le signe, comme sur les boutons du site, où la
+          flèche suit toujours ce qu'elle annonce. */}
       <span
         className={`flex items-center gap-[7px] whitespace-nowrap text-[11px] font-semibold uppercase leading-none tracking-[0.14em] text-[var(--paper)] ${
           label ? 'opacity-100' : 'opacity-0'
         }`}
       >
-        {label && GLYPHS[label] && (
+        {mot}
+        {signe && GLYPHS[signe] && (
           <svg
             width="13"
             height="13"
@@ -173,13 +187,12 @@ export default function SwissCursor() {
             aria-hidden="true"
           >
             <path
-              d={GLYPHS[label]}
-              fill={label === 'WEIGHT' ? 'currentColor' : 'none'}
-              stroke={label === 'WEIGHT' ? 'none' : 'currentColor'}
+              d={GLYPHS[signe]}
+              fill={signe === 'WEIGHT' ? 'currentColor' : 'none'}
+              stroke={signe === 'WEIGHT' ? 'none' : 'currentColor'}
             />
           </svg>
         )}
-        {label ?? ''}
       </span>
     </div>
   );
