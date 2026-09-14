@@ -7,18 +7,41 @@ function labelFor(node) {
   if (!node) return null;
 
   // La barre de navigation garde le disque nu : trop d'étiquettes y
-  // défileraient pour trois liens courts.
-  if (node.closest('header')) return null;
+  // défileraient pour trois liens courts. Un bouton marqué en miroir fait
+  // exception — il est traité plus bas.
+  if (node.closest('header') && !node.closest('[data-cursor-mirror]')) return null;
 
-  // Certains boutons portent déjà leur libellé et leur flèche. Le disque n'a
-  // rien à leur ajouter : il devient le bouton, mot pour mot. L'étiquette
-  // est alors une reprise, pas une glose.
+  // Certains boutons portent déjà leur libellé et leur signe. Le disque n'a
+  // rien à leur ajouter : il devient le bouton, mot pour mot et trait pour
+  // trait. On relève son allure sur place plutôt que de la recopier dans la
+  // feuille de style — deux boutons n'ont pas le même corps ni la même
+  // couleur, et le disque doit épouser celui qu'il survole.
   const miroir = node.closest('[data-cursor-mirror]');
   if (miroir) {
+    const style = getComputedStyle(miroir);
+    const boite = miroir.getBoundingClientRect();
     return {
       mot: miroir.dataset.cursorMirror || miroir.textContent.trim(),
-      signe: 'VISIT',
+      signe: miroir.dataset.cursorSign || 'VISIT',
       miroir: true,
+      cadre: {
+        height: `${Math.round(boite.height)}px`,
+        paddingLeft: style.paddingLeft,
+        paddingRight: style.paddingRight,
+        borderColor: style.borderTopColor,
+      },
+      // L'écart entre le mot et le signe, et la taille du signe lui-même, se
+      // relèvent aussi : sans eux le disque était six points plus large que
+      // le bouton qu'il double.
+      taille: Number(miroir.querySelector('svg')?.getAttribute('width')) || 13,
+      lettres: {
+        columnGap: style.columnGap,
+        fontSize: style.fontSize,
+        fontWeight: style.fontWeight,
+        letterSpacing: style.letterSpacing,
+        textTransform: style.textTransform,
+        color: style.color,
+      },
     };
   }
 
@@ -160,6 +183,9 @@ export default function SwissCursor() {
   const mot = typeof label === 'string' ? label : label?.mot;
   const signe = typeof label === 'string' ? label : label?.signe;
   const miroir = typeof label === 'object' && label?.miroir;
+  const cadre = miroir ? label.cadre : undefined;
+  const lettres = miroir ? label.lettres : undefined;
+  const taille = miroir ? label.taille : 13;
 
   return (
     <div
@@ -168,27 +194,25 @@ export default function SwissCursor() {
       className={`swiss-cursor pointer-events-none fixed left-0 top-0 z-[90] flex items-center justify-center overflow-hidden ${
         label
           ? `is-labelled w-auto rounded-full ${
-              miroir
-                ? 'is-mirror h-[44px] border border-[var(--accent)] px-[24px]'
-                : 'h-[34px] bg-[var(--ink)] px-[18px]'
+              miroir ? 'is-mirror border' : 'h-[34px] bg-[var(--ink)] px-[18px]'
             }`
           : 'h-[21px] w-[21px] rounded-full bg-white px-0'
       } ${visible ? 'opacity-100' : 'opacity-0'}`}
+      style={cadre}
     >
       {/* Le mot passe devant le signe, comme sur les boutons du site, où la
           flèche suit toujours ce qu'elle annonce. */}
       <span
         className={`flex items-center whitespace-nowrap leading-none ${
-          miroir
-            ? 'gap-[10px] text-[15px] font-medium tracking-[-0.01em] text-[var(--accent)]'
-            : 'gap-[7px] text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--paper)]'
+          miroir ? '' : 'gap-[7px] text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--paper)]'
         } ${label ? 'opacity-100' : 'opacity-0'}`}
+        style={lettres}
       >
         {mot}
         {signe && GLYPHS[signe] && (
           <svg
-            width={miroir ? 16 : 13}
-            height={miroir ? 16 : 13}
+            width={taille}
+            height={taille}
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
