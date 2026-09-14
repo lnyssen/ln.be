@@ -1072,9 +1072,16 @@
   }
 
   /* La fusion est coupée sur l'étiquette : sur le violet, elle virait à
-     l'olive sur toute sa surface, ce qui rendait le mot illisible. */
-  .swiss-cursor.is-labelled {
+     l'olive sur toute sa surface, ce qui rendait le mot illisible.
+
+     Elle garde un voile de transparence — on doit sentir ce qu'elle recouvre,
+     c'est un curseur et non un panneau — avec un flou dessous pour que le mot
+     tienne sur un visuel chargé. */
+  .swiss .swiss-cursor.is-labelled {
     mix-blend-mode: normal;
+    background-color: color-mix(in srgb, var(--ink) 82%, transparent);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
   }
 
   .swiss-cursor span {

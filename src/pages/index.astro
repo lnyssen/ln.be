@@ -149,28 +149,41 @@ function domainLabel(link: string) {
                   </span>
                 </summary>
 
-                <div class="pb-[22px]">
-                  {Body && (
-                    <div class="swiss-grid mb-[22px]">
+                <!-- Quatre points de marge en haut : le contenu de la ligne
+                     est rogné à ras bord le temps de l'ouverture, et le
+                     contour du bouton y laissait son filet supérieur. -->
+                <div class="pt-[4px] pb-[22px]">
+                  <!-- L'adresse suit le texte dans sa colonne. Sous les
+                       visuels, elle n'était trouvée que par ceux qui poussaient
+                       la planche jusqu'au bout ; rangée dans la colonne de
+                       droite, elle flottait seule dans un pan vide. Ici elle
+                       tombe là où l'œil arrive en finissant de lire, et
+                       téléphone comme grand écran la placent au même endroit.
+                       Les visuels restent en dessous, donc vus avant qu'on
+                       parte. -->
+                  <div class="swiss-grid mb-[22px] gap-y-[20px]">
+                    {Body && (
                       <div class="project-body col-span-6 text-[16px] leading-[1.55] text-[var(--ink-soft)] md:col-span-7 md:text-[17px]">
                         <Body />
                       </div>
-                    </div>
-                  )}
+                    )}
+
+                    {project.data.link && (
+                      <div class="col-span-6 md:col-span-7">
+                        <a
+                          href={project.data.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          class="inline-flex items-center gap-[10px] rounded-full border border-[var(--accent)] px-[24px] py-[11px] text-[15px] font-medium tracking-[-0.01em] text-[var(--accent)] transition-colors duration-200 hover:bg-[var(--accent)] hover:text-[var(--paper)]"
+                        >
+                          {domainLabel(project.data.link)}
+                          <SwissArrow size={16} />
+                        </a>
+                      </div>
+                    )}
+                  </div>
 
                   <SwissFilmstrip images={project.data.images} title={project.data.title} />
-
-                  {project.data.link && (
-                    <a
-                      href={project.data.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class="mt-[18px] inline-flex items-center gap-[10px] rounded-full border border-[var(--accent)] px-[24px] py-[11px] text-[15px] font-medium tracking-[-0.01em] text-[var(--accent)] transition-colors duration-200 hover:bg-[var(--accent)] hover:text-[var(--paper)]"
-                    >
-                      {domainLabel(project.data.link)}
-                      <SwissArrow size={16} />
-                    </a>
-                  )}
                 </div>
               </details>
             ))
