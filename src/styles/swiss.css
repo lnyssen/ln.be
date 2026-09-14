@@ -141,47 +141,12 @@
      flou lissait la texture de ce qui passait dessous, si bien qu'elle se
      lisait comme un noir différent de celui qui l'entoure. Seuls son contour
      et sa forme la désignent désormais. */
-  /* ---- Planche de spécimen (T) ------------------------------------- */
-
-  .swiss .specimen-layer {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 0;
-    z-index: 55;
-    pointer-events: none;
-  }
-
-  .swiss .specimen-tag {
-    position: absolute;
-    transform: translateY(-100%);
-    margin-top: -3px;
-    padding: 2px 5px;
-    border: 1px solid var(--grid-line);
-    background-color: var(--paper);
-    color: var(--accent);
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-    font-size: 9px;
-    line-height: 1.3;
-    white-space: nowrap;
-    font-variant-numeric: tabular-nums;
-  }
-
-  /* Pas d'opacité sur le contenu : elle créerait un contexte d'empilement et
-     ferait remonter le pied de page fixé par-dessus. Les relevés portent leur
-     propre fond, ils se lisent sans qu'on efface ce qu'ils annotent. */
-  .swiss.specimen-on [data-reveal] {
-    opacity: 1 !important;
-    transform: none !important;
-  }
-
   /* ---- Réglette de graisse (W) -------------------------------------- */
 
   .swiss .weight-panel {
     position: fixed;
     left: 50%;
-    bottom: calc(20px + env(safe-area-inset-bottom));
+    bottom: calc(78px + env(safe-area-inset-bottom));
     z-index: 56;
     display: flex;
     align-items: center;
@@ -226,8 +191,11 @@
   .swiss .header-pill {
     position: relative;
     isolation: isolate;
-    background-color: var(--paper);
+    background-color: var(--header-bg);
     border: 1px solid var(--rule);
+    box-shadow: 0 6px 30px rgb(0 0 0 / 0.14);
+    -webkit-backdrop-filter: blur(20px) saturate(1.1);
+    backdrop-filter: blur(20px) saturate(1.1);
   }
 
   .swiss .header-pill::before {
@@ -240,7 +208,6 @@
     background-image: url('/images/grain.png');
     background-repeat: repeat;
     background-size: 64px auto;
-    background-attachment: fixed;
     opacity: var(--grain);
   }
 
@@ -261,12 +228,16 @@
     }
   }
 
-  .swiss .dock-capsule {
+  .swiss:not(.ink-on) .dock-capsule {
     --paper: #fdfdfb;
     --ink: #141414;
     --ink-soft: #727272;
     --rule: #141414;
     background-color: #fdfdfb;
+  }
+
+  .swiss .dock-capsule {
+    background-color: var(--paper);
     /* La couleur du texte s'hérite du corps, pas des jetons : sans cette
        ligne, l'icône de grille restait claire sur le blanc en thème sombre. */
     color: var(--ink);
@@ -317,7 +288,6 @@
     background-image: url('/images/grain.png');
     background-repeat: repeat;
     background-size: 64px auto;
-    background-attachment: fixed;
     opacity: var(--grain);
   }
 
@@ -697,7 +667,6 @@
     background-image: url('/images/grain.png');
     background-repeat: repeat;
     background-size: 64px auto;
-    background-attachment: fixed;
     opacity: var(--grain);
   }
 
@@ -742,7 +711,7 @@
      emportant le signe qui devait le refermer. */
   .swiss.menu-open body > header {
     position: fixed;
-    top: 0;
+    top: calc(14px + env(safe-area-inset-top));
     left: 0;
     right: 0;
   }
@@ -825,7 +794,6 @@
     background-image: url('/images/grain.png');
     background-repeat: repeat;
     background-size: 64px auto;
-    background-attachment: fixed;
     opacity: var(--grain);
   }
 

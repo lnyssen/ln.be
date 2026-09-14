@@ -28,6 +28,23 @@ import SwissThemeToggle from './SwissThemeToggle.jsx';
       </svg>
     </button>
 
+    <button
+      type="button"
+      data-weight-toggle
+      aria-pressed="false"
+      aria-label="Régler la graisse"
+      title="Graisse (W)"
+      class="swiss-meta flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-full border border-[var(--rule)] transition-colors duration-200 hover:border-[var(--accent)] hover:bg-[var(--accent)] hover:text-[var(--paper)] aria-pressed:bg-[var(--ink)] aria-pressed:text-[var(--paper)]"
+    >
+      <svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true">
+        <g stroke="currentColor" stroke-linecap="round">
+          <path d="M3 4h10" stroke-width="0.9" />
+          <path d="M3 8h10" stroke-width="1.8" />
+          <path d="M3 12h10" stroke-width="3" />
+        </g>
+      </svg>
+    </button>
+
     <SwissThemeToggle client:load />
   </div>
 </div>

@@ -1,25 +1,22 @@
 ---
-// Trois outils cachés derrière une touche, dans la lignée de la grille.
-// T : planche de spécimen — chaque texte dit son corps, sa graisse, son
-//     interlettrage.
-// W : réglette de graisse — Switzer est variable, autant le montrer.
+// Deux outils cachés, dans la lignée de la grille.
+// W : réglette de graisse — Switzer est variable, autant le montrer. Elle a
+//     son bouton dans la barre du bas, la touche reste un raccourci.
 // I : mode encre — le site simulé en risographie, deux encres et du grain.
 ---
-
-<div data-specimen hidden class="specimen-layer" aria-hidden="true"></div>
 
 <div data-weight-panel hidden class="weight-panel swiss-meta" aria-hidden="true">
   <span class="weight-label">Weight</span>
   <input
     type="range"
-    min="-300"
+    min="-150"
     max="200"
     step="10"
     value="0"
     data-weight-range
     aria-label="Décalage de graisse"
   />
-  <span data-weight-value class="weight-value tabular-nums">±0</span>
+  <span data-weight-value class="weight-value">±0</span>
 </div>
 
 <script is:inline data-astro-rerun>
@@ -34,63 +31,6 @@
       ['INPUT', 'TEXTAREA'].includes(event.target?.tagName) ||
       event.target?.isContentEditable;
 
-    /* ---------- T : planche de spécimen -------------------------------- */
-
-    // Un échantillon par famille de texte plutôt que tous les nœuds : la
-    // planche doit se lire, pas se noyer.
-    const CIBLES = [
-      'h1',
-      'h2',
-      'h3',
-      '.swiss-lede',
-      '.lab-teaser-title',
-      '.project-body p',
-      '.privacy-body p',
-      '.footer-mail',
-      '.marquee-track span span',
-      '[data-nav-link]',
-    ].join(',');
-
-    const couche = () => document.querySelector('[data-specimen]');
-
-    const dessiner = () => {
-      const calque = couche();
-      if (!calque) return;
-      calque.textContent = '';
-
-      const vus = new Set();
-      for (const el of document.querySelectorAll(CIBLES)) {
-        const r = el.getBoundingClientRect();
-        if (!r.width || !r.height) continue;
-
-        const s = getComputedStyle(el);
-        const corps = Math.round(parseFloat(s.fontSize));
-        const graisse = s.fontWeight;
-        const chasse = (parseFloat(s.letterSpacing) / corps || 0).toFixed(3);
-        const signature = `${corps}/${graisse}/${chasse}`;
-
-        // Deux fois la même volée n'apprend rien la seconde fois.
-        if (vus.has(signature)) continue;
-        vus.add(signature);
-
-        const etiquette = document.createElement('span');
-        etiquette.className = 'specimen-tag';
-        etiquette.textContent = `${corps}px · ${graisse} · ${chasse}em`;
-        etiquette.style.top = `${r.top + scrollY}px`;
-        etiquette.style.left = `${r.left + scrollX}px`;
-        calque.appendChild(etiquette);
-      }
-    };
-
-    const basculerSpecimen = () => {
-      const calque = couche();
-      if (!calque) return;
-      const ouvrir = calque.hidden;
-      calque.hidden = !ouvrir;
-      document.documentElement.classList.toggle('specimen-on', ouvrir);
-      if (ouvrir) dessiner();
-    };
-
     /* ---------- W : réglette de graisse --------------------------------- */
 
     // Le décalage est relatif : chaque texte garde son rang, toute la page
@@ -100,35 +40,40 @@
 
     const peser = (decalage) => {
       for (const el of document.querySelectorAll('body *')) {
-        if (!el.firstChild || el.closest('[data-specimen]')) continue;
+        if (!el.firstChild) continue;
         if (!socle.has(el)) {
           const w = parseFloat(getComputedStyle(el).fontWeight);
           if (!w) continue;
           socle.set(el, w);
         }
-        const base = socle.get(el);
         if (!decalage) {
           el.style.fontVariationSettings = '';
           continue;
         }
-        const cible = Math.min(900, Math.max(100, base + decalage));
+        const cible = Math.min(900, Math.max(200, socle.get(el) + decalage));
         el.style.fontVariationSettings = `"wght" ${Math.round(cible)}`;
       }
     };
 
     const panneau = () => document.querySelector('[data-weight-panel]');
+    const bouton = () => document.querySelector('[data-weight-toggle]');
 
     const basculerGraisse = () => {
       const p = panneau();
       if (!p) return;
       const ouvrir = p.hidden;
       p.hidden = !ouvrir;
+      bouton()?.setAttribute('aria-pressed', String(ouvrir));
       if (!ouvrir) {
         p.querySelector('[data-weight-range]').value = '0';
         p.querySelector('[data-weight-value]').textContent = '±0';
         peser(0);
       }
     };
+
+    document.addEventListener('click', (event) => {
+      if (event.target.closest?.('[data-weight-toggle]')) basculerGraisse();
+    });
 
     document.addEventListener('input', (event) => {
       const curseur = event.target.closest?.('[data-weight-range]');
@@ -143,24 +88,11 @@
 
     /* ---------- I : mode encre ----------------------------------------- */
 
-    const basculerEncre = () => {
-      document.documentElement.classList.toggle('ink-on');
-    };
-
-    /* ---------- Les trois touches --------------------------------------- */
-
     document.addEventListener('keydown', (event) => {
       if (saisie(event)) return;
       const k = event.key.toLowerCase();
-      if (k === 't') basculerSpecimen();
-      else if (k === 'w') basculerGraisse();
-      else if (k === 'i') basculerEncre();
-    });
-
-    // La planche est posée en coordonnées de document : elle suit le
-    // défilement, mais un changement de largeur la périme.
-    addEventListener('resize', () => {
-      if (!couche()?.hidden) dessiner();
+      if (k === 'w') basculerGraisse();
+      else if (k === 'i') document.documentElement.classList.toggle('ink-on');
     });
   })();
 </script>
