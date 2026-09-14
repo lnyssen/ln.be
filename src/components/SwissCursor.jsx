@@ -26,12 +26,31 @@ function labelFor(node) {
   if (!link) return node.closest('button') ? 'CLICK' : null;
 
   const href = link.getAttribute('href') || '';
+  // Le renvoi vers le Lab n'ouvre pas une page comme une autre : il propose.
+  if (href === '/lab') return 'EXPLORE';
   if (href.startsWith('mailto:')) return 'MAIL';
   if (href.startsWith('tel:')) return 'CALL';
   if (link.target === '_blank' || /^https?:/.test(href)) return 'VISIT';
   if (href.startsWith('#')) return 'JUMP';
   return 'OPEN';
 }
+
+// Un signe par verbe : l'étiquette dit ce qui va se passer, le signe le montre
+// avant même qu'on l'ait lue. Tous dessinés sur la même grille de 24, au même
+// trait, pour qu'ils pèsent pareil à côté des capitales.
+const GLYPHS = {
+  VIEW: 'M1.5 12S5.5 5 12 5s10.5 7 10.5 7-4 7-10.5 7S1.5 12 1.5 12Z M12 9.2a2.8 2.8 0 1 0 0 5.6 2.8 2.8 0 0 0 0-5.6Z',
+  CLOSE: 'M6 6l12 12M18 6L6 18',
+  EXPLORE: 'M12 2.5a9.5 9.5 0 1 0 0 19 9.5 9.5 0 0 0 0-19Z M15.8 8.2l-2.1 5.5-5.5 2.1 2.1-5.5 5.5-2.1Z',
+  VISIT: 'M7 17 17 7M9 7h8v8',
+  OPEN: 'M4 12h15M13 6l6 6-6 6',
+  JUMP: 'M12 4.5v14M6 13l6 6 6-6',
+  MAIL: 'M3.5 6.5h17v11h-17z M3.5 7l8.5 6 8.5-6',
+  CALL: 'M6.5 3.5h3l1.5 4-2 1.5a11 11 0 0 0 5 5l1.5-2 4 1.5v3a1.5 1.5 0 0 1-1.7 1.5A16.5 16.5 0 0 1 4.5 5.2 1.5 1.5 0 0 1 6 3.5Z',
+  THEME: 'M12 2.8a9.2 9.2 0 1 0 0 18.4 9.2 9.2 0 0 0 0-18.4Z M12 2.8v18.4',
+  GRID: 'M4.5 3.5v17M9.5 3.5v17M14.5 3.5v17M19.5 3.5v17',
+  CLICK: 'M6 3.5l12.5 8.2-5.4 1.2 2.6 5.6-2.4 1.1-2.6-5.6-3.7 4V3.5Z',
+};
 
 export default function SwissCursor() {
   const ref = useRef(null);
@@ -110,10 +129,25 @@ export default function SwissCursor() {
       {/* L'étiquette quitte la fusion : sur le violet, « difference » virait au
           vert olive. Elle devient une pastille pleine aux couleurs du thème. */}
       <span
-        className={`whitespace-nowrap text-[11px] font-semibold uppercase leading-none tracking-[0.14em] text-[var(--paper)] ${
+        className={`flex items-center gap-[7px] whitespace-nowrap text-[11px] font-semibold uppercase leading-none tracking-[0.14em] text-[var(--paper)] ${
           label ? 'opacity-100' : 'opacity-0'
         }`}
       >
+        {label && GLYPHS[label] && (
+          <svg
+            width="13"
+            height="13"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.9"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d={GLYPHS[label]} />
+          </svg>
+        )}
         {label ?? ''}
       </span>
     </div>
