@@ -27,8 +27,13 @@
      assez de vide pour qu'on devine le contenu passer dessous. */
   --header-bg: color-mix(in srgb, #f4f2ed 68%, transparent);
   /* Pied de page : violet de la marque, texte papier — 4,53:1. */
-  --footer-bg: #7b58e8;
-  --footer-fg: #f4f2ed;
+  /* Le pied est le seul aplat de couleur du site : il porte la teinte
+     choisie, exactement. Son texte prend le papier du thème — en clair les
+     accents sont soutenus et le papier est clair, en sombre ils sont
+     éclaircis et le papier est sombre : le contraste tient des deux côtés
+     sans qu'on ait à décider deux fois. */
+  --footer-bg: var(--accent);
+  --footer-fg: var(--paper);
   --footer-h: 280px;
   --header-h: 75px;
   /* Respiration unique : distance entre un filet et le texte, en haut comme

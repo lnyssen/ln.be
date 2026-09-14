@@ -30,13 +30,13 @@ const site = [
   <div class="swiss-shell swiss-grid footer-cols items-start gap-y-[26px]">
     <a
       href="mailto:hello@laurentnyssen.be"
-      class="footer-mail col-span-6 text-[clamp(1.25rem,2.4vw,2rem)] font-medium tracking-[-0.03em] transition-colors duration-200 hover:text-[#222222] md:col-span-12"
+      class="footer-mail col-span-6 text-[clamp(1.25rem,2.4vw,2rem)] font-medium tracking-[-0.03em] transition-colors duration-200 hover:underline hover:decoration-1 hover:underline-offset-[3px] md:col-span-12"
     >
       hello@laurentnyssen.be
     </a>
 
     <div class="footer-col col-span-3 md:col-span-3">
-      <a href="tel:+32497305080" class="swiss-meta w-fit transition-colors duration-200 hover:text-[#222222] ">
+      <a href="tel:+32497305080" class="swiss-meta w-fit transition-colors duration-200 hover:underline hover:decoration-1 hover:underline-offset-[3px] ">
         +32 (0)497 30 50 80
       </a>
       <p class="swiss-meta">Brussels — BE</p>
@@ -54,7 +54,7 @@ const site = [
               href={item.href}
               target={away ? '_blank' : undefined}
               rel={away ? 'noopener noreferrer' : undefined}
-              class="swiss-meta block w-fit transition-colors duration-200 hover:text-[#222222] "
+              class="swiss-meta block w-fit transition-colors duration-200 hover:underline hover:decoration-1 hover:underline-offset-[3px] "
             >
               {item.label}
               <span class="footer-arrow">
@@ -71,7 +71,7 @@ const site = [
         site.map((item) => (
           <a
             href={item.href}
-            class="swiss-meta block w-fit transition-colors duration-200 hover:text-[#222222] "
+            class="swiss-meta block w-fit transition-colors duration-200 hover:underline hover:decoration-1 hover:underline-offset-[3px] "
           >
             {item.label}
             <span class="footer-arrow">
@@ -84,7 +84,7 @@ const site = [
         href="https://www.typedump.com/font/switzer"
         target="_blank"
         rel="noopener noreferrer"
-        class="swiss-meta block w-fit transition-colors duration-200 hover:text-[#222222] "
+        class="swiss-meta block w-fit transition-colors duration-200 hover:underline hover:decoration-1 hover:underline-offset-[3px] "
       >
         Set in Switzer<span class="footer-arrow"><SwissArrow size={12} /></span>
       </a>
