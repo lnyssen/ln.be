@@ -107,9 +107,25 @@
      quoi le verre dépoli couvrirait toute la largeur. */
   .swiss body > header {
     background-color: transparent;
-    /* La plaque projetée par la pilule s'étend à l'infini : elle est bornée
-       ici, à la boîte de la barre, pour ne pas recouvrir la page. */
-    clip-path: inset(0);
+  }
+
+  /* Une ombre portée sans flou ni décalage, d'une portée démesurée : elle
+     remplit de papier tout ce qui entoure la pilule en épousant exactement sa
+     courbe, et le débordement est rogné à la boîte de la barre. Sans elle, le
+     contenu de la page ressortait net dans les quatre encoches d'angle, là où
+     la boîte rectangulaire déborde de la forme arrondie, et les lettres s'y
+     retrouvaient tranchées par la courbe. */
+  .swiss .header-plate {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .swiss .plate-hole {
+    height: 100%;
+    border-radius: 9999px;
+    box-shadow: 0 0 0 100vw var(--paper);
   }
 
   /* Pastille de page courante : un aplat d'encre très retenu, qui glisse
@@ -191,20 +207,13 @@
     filter: contrast(1.12) saturate(0.82);
   }
 
-  /* Une ombre portée sans flou ni décalage, d'une portée démesurée : elle
-     remplit de papier tout ce qui entoure la pilule, en épousant exactement
-     sa courbe. Le navigateur ne la peint pas sous la pilule, si bien que le
-     contenu continue de défiler derrière le verre — mais il ne ressort plus
-     dans les quatre coins, là où la boîte rectangulaire déborde de la forme
-     arrondie et tranchait les lettres au passage. */
   .swiss .header-pill {
     position: relative;
     isolation: isolate;
     background-color: var(--header-bg);
     border: 1px solid var(--rule);
-    box-shadow: 0 0 0 100vw var(--paper);
-    -webkit-backdrop-filter: blur(20px) saturate(1.1);
-    backdrop-filter: blur(20px) saturate(1.1);
+    -webkit-backdrop-filter: blur(64px) saturate(1.1);
+    backdrop-filter: blur(64px) saturate(1.1);
   }
 
   /* La capsule d'outils est un objet constant : elle reste blanche quel que
@@ -677,8 +686,8 @@
     border: 1px solid var(--rule);
     background-color: var(--header-bg);
     box-shadow: 0 10px 40px rgb(0 0 0 / 0.2);
-    -webkit-backdrop-filter: blur(26px) saturate(1.15);
-    backdrop-filter: blur(26px) saturate(1.15);
+    -webkit-backdrop-filter: blur(64px) saturate(1.15);
+    backdrop-filter: blur(64px) saturate(1.15);
   }
 
   .swiss .menu-card::before {

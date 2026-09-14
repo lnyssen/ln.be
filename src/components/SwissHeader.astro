@@ -17,6 +17,19 @@ const pages = [
 ---
 
 <header class="swiss-shell sticky top-0 z-50 pt-[calc(16px+env(safe-area-inset-top))]">
+  <!-- La plaque de papier qui entoure la pilule. Elle reprend les mêmes
+       gouttières et la même marge haute que la barre : son enfant a donc
+       exactement la géométrie de la pilule, et l'ombre qu'il projette épouse
+       sa courbe au pixel près. Elle est posée à part plutôt que portée par la
+       pilule elle-même, car il faut la rogner, et rogner un ancêtre de la
+       pilule la couperait de son arrière-plan : le flou disparaîtrait. -->
+  <div
+    class="header-plate swiss-shell pt-[calc(16px+env(safe-area-inset-top))]"
+    aria-hidden="true"
+  >
+    <div class="plate-hole"></div>
+  </div>
+
   <div class="header-pill flex items-center justify-between gap-4 rounded-full py-[15px] pl-[20px] pr-[12px] md:pl-[26px] md:pr-[14px]">
     <a href="/" class="flex items-center">
       <LogoLockup class="h-[32px] w-auto shrink-0 text-[var(--ink)] md:h-[36px]" />
