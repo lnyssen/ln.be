@@ -535,22 +535,55 @@ function domainLabel(link: string) {
       };
 
       const loupe = (img) => {
+        const bande = img.closest('.filmstrip');
+        const visuels = bande ? Array.from(bande.querySelectorAll('img')) : [img];
+        let rang = Math.max(0, visuels.indexOf(img));
+
         const cadre = document.createElement('div');
         cadre.className = 'loupe';
         cadre.dataset.loupe = '';
 
         // On reprend le jeu de tailles de la planche en annonçant une tout
         // autre largeur d'affichage : le navigateur va donc chercher le grand
-        // tirage, là où la bande se contentait d'une vignette. Sans cela la
-        // loupe agrandissait l'image de la bande, et montrait ses pixels.
+        // tirage, là où la bande se contentait d'une vignette.
         const grand = document.createElement('img');
-        grand.src = img.currentSrc || img.src;
-        if (img.srcset) {
-          grand.srcset = img.srcset;
-          grand.sizes = '92vw';
-        }
-        grand.alt = img.alt;
+
+        const poser = (i) => {
+          rang = (i + visuels.length) % visuels.length;
+          const source = visuels[rang];
+          grand.src = source.currentSrc || source.src;
+          if (source.srcset) {
+            grand.srcset = source.srcset;
+            grand.sizes = '92vw';
+          }
+          grand.alt = source.alt;
+        };
+
+        poser(rang);
         cadre.append(grand);
+
+        // Les flèches ne paraissent qu'à partir de deux visuels, et portent la
+        // matière de celles de la planche. Elles arrêtent le clic : lui, il
+        // referme.
+        if (visuels.length > 1) {
+          for (const sens of [-1, 1]) {
+            const bouton = document.createElement('button');
+            bouton.type = 'button';
+            bouton.className = `strip-nav loupe-nav loupe-nav-${sens < 0 ? 'prev' : 'next'}`;
+            bouton.dataset.loupeNav = '';
+            bouton.setAttribute('aria-label', sens < 0 ? 'Visuel précédent' : 'Visuel suivant');
+            bouton.innerHTML =
+              '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+              (sens < 0 ? '<path d="M15 5l-7 7 7 7"/>' : '<path d="M9 5l7 7-7 7"/>') +
+              '</svg>';
+            bouton.addEventListener('click', (event) => {
+              event.stopPropagation();
+              poser(rang + sens);
+            });
+            cadre.append(bouton);
+          }
+        }
+
         document.body.append(cadre);
         requestAnimationFrame(() => {
           cadre.classList.add('is-open');
@@ -569,8 +602,13 @@ function domainLabel(link: string) {
           );
           document.removeEventListener('keydown', surTouche);
         };
+
         const surTouche = (event) => {
           if (event.key === 'Escape') fermer();
+          else if (event.key === 'ArrowLeft') poser(rang - 1);
+          else if (event.key === 'ArrowRight') poser(rang + 1);
+          else return;
+          event.preventDefault();
         };
 
         cadre.addEventListener('click', fermer);

@@ -467,6 +467,29 @@
     transform: none;
   }
 
+  /* Les flèches de la loupe, posées aux bords de la fenêtre et non du visuel :
+     elles ne se déplacent pas d'un format à l'autre. */
+  .swiss .loupe-nav {
+    position: absolute;
+    top: 50%;
+    height: 44px;
+    width: 44px;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    color: var(--paper);
+  }
+
+  .swiss .loupe-nav-prev {
+    left: 20px;
+  }
+
+  .swiss .loupe-nav-next {
+    right: 20px;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .swiss .loupe,
     .swiss .loupe img {
@@ -965,8 +988,7 @@
       transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
   }
 
-  .swiss.menu-open .swiss-dock,
-  .swiss.pied-visible .swiss-dock {
+  .swiss.menu-open .swiss-dock {
     opacity: 0;
     transform: translate(-50%, 14px);
     pointer-events: none;

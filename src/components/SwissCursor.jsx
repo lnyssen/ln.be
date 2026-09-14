@@ -50,6 +50,9 @@ function labelFor(node) {
     };
   }
 
+  // Les flèches de la loupe portent déjà leur signe : le disque reste nu.
+  if (node.closest('[data-loupe-nav]')) return null;
+
   // La loupe couvre tout : elle se referme d'un clic, où qu'il tombe.
   if (node.closest('[data-loupe]')) return 'CLOSE';
 

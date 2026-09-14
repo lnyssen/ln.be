@@ -4,8 +4,10 @@ import SwissArrow from './SwissArrow.astro';
 // Panneau violet fixé au fond : le contenu glisse par-dessus et le découvre en
 // fin de course. `main` porte un fond opaque, le body réserve la hauteur.
 //
-// La capsule d'outils s'efface dès que ce panneau paraît : il n'a donc plus à
-// lui réserver sa bande, seulement à garder sa propre marge basse.
+// La capsule d'outils flotte au bas de la fenêtre et reste là jusqu'au bout :
+// c'est donc au panneau de lui laisser sa bande. Le contenu se centre dans ce
+// qui reste au-dessus d'elle, et le panneau est assez haut pour que ce
+// recentrage ne le colle pas à son bord supérieur.
 //
 // Sans intitulés, l'ours n'a plus qu'une règle : toutes les lignes ont le même
 // corps, donc la ligne n de chaque colonne tombe à la même hauteur que la
@@ -23,7 +25,7 @@ const site = [
 ---
 
 <footer
-  class="swiss-footer fixed inset-x-0 bottom-0 z-0 flex h-[var(--footer-h)] flex-col justify-center pb-[calc(28px+env(safe-area-inset-bottom))]"
+  class="swiss-footer fixed inset-x-0 bottom-0 z-0 flex h-[var(--footer-h)] flex-col justify-center pb-[calc(96px+env(safe-area-inset-bottom))]"
 >
   <div class="swiss-shell swiss-grid footer-cols items-start gap-y-[26px]">
     <a
