@@ -95,6 +95,19 @@
      soit le thème, pour se détacher du fond au lieu de s'y fondre. Redéfinir
      les jetons à l'intérieur suffit — ses commandes se composent alors comme
      sur du papier, sans qu'aucune n'ait à connaître le thème de la page. */
+  /* Le bord droit de la capsule tombe sur celui de la colonne de droite, pas
+     sur celui de l'écran : elle reprend la gouttière de la grille, qui passe
+     de 20 à 40px au-delà de 768. */
+  .swiss .swiss-dock {
+    right: max(20px, env(safe-area-inset-right));
+  }
+
+  @media (min-width: 768px) {
+    .swiss .swiss-dock {
+      right: max(40px, env(safe-area-inset-right));
+    }
+  }
+
   .swiss .dock-capsule {
     --paper: #fdfdfb;
     --ink: #141414;
@@ -189,13 +202,18 @@
     transition: background-color 200ms ease, color 200ms ease;
   }
 
-  /* Grain de papier : au-dessus de tout, y compris l'en-tête opaque, pour que
-     la texture soit continue. Inerte au pointeur. */
-  .swiss body::after {
+  /* Grain de papier. Il était posé au-dessus de tout, y compris des visuels
+     de projet, qu'il salissait. Il descend donc d'un cran : dans chaque
+     surface, il se glisse entre le fond et le contenu. Le papier est texturé,
+     les photographies restent nettes.
+     Il reste fixé au cadre plutôt qu'au document : la texture appartient à
+     l'écran qu'on regarde, elle ne défile pas avec le contenu. */
+  .swiss body > main::after,
+  .swiss .swiss-footer::after {
     content: '';
     position: fixed;
     inset: 0;
-    z-index: 50;
+    z-index: -1;
     pointer-events: none;
     background-image: url('/images/grain.png');
     background-repeat: repeat;
