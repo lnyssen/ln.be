@@ -56,7 +56,7 @@
 }
 
 .swiss[data-swiss-theme="dark"] {
-  --paper: #222222;
+  --paper: #1d1f21;
   --ink: #f2f0ef;
   --ink-soft: #d6d6d6;
   --rule: #f2f0ef;
@@ -64,7 +64,7 @@
      lavande, l'autre violet du site, qui remonte à 7,7:1. */
   --accent: #9e9eff;
   /* Le bruit se voit davantage sur l'encre : on le retient un peu. */
-  --header-bg: color-mix(in srgb, #222222 68%, transparent);
+  --header-bg: color-mix(in srgb, #1d1f21 68%, transparent);
 }
 
 /* Deux encres sur un papier chaud et un très léger
