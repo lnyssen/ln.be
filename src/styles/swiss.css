@@ -23,7 +23,7 @@
   --ink-soft: #727272;
   --rule: #141414;
   --accent: #7b58e8;
-  --grain: 0.6;
+  --grain: 0.48;
   /* Fond de la barre : assez de papier pour que la typographie reste lisible,
      assez de vide pour qu'on devine le contenu passer dessous. */
   --header-bg: color-mix(in srgb, #fdfdfb 68%, transparent);
@@ -65,7 +65,7 @@
      lavande, l'autre violet du site, qui remonte à 7,7:1. */
   --accent: #9e9eff;
   /* Le bruit se voit davantage sur l'encre : on le retient un peu. */
-  --grain: 0.5;
+  --grain: 0.4;
   --header-bg: color-mix(in srgb, #141414 68%, transparent);
 }
 
