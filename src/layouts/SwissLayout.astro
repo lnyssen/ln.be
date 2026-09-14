@@ -157,6 +157,15 @@ const ogImage = new URL('/og.png', Astro.site).href;
         apply();
         document.addEventListener('astro:after-swap', apply);
 
+        // Le défilement filé n'est armé qu'une fois la restauration passée :
+        // sinon le navigateur glisse jusqu'à la position d'où l'on venait au
+        // lieu de s'y poser.
+        const armerDefilement = () => {
+          requestAnimationFrame(() => document.documentElement.classList.add('pret'));
+        };
+        if (document.readyState === 'complete') armerDefilement();
+        else addEventListener('load', armerDefilement, { once: true });
+
         // Le thème peut changer sans passer par ici — l'interrupteur du bas,
         // la touche du mode encre. On suit l'attribut plutôt que celui qui le
         // pose.
