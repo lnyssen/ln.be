@@ -23,7 +23,11 @@ export default function SwissThemeToggle({ framed = true }) {
     // justement ce qu'on veut voir.
     root.dataset.themeSwitching = '';
     root.dataset.swissTheme = next;
-    localStorage.setItem('swiss-theme', next);
+    try {
+      localStorage.setItem('swiss-theme', next);
+    } catch {
+      // Navigation privée : le choix vaut pour la page, pas au-delà.
+    }
     setTheme(next);
 
     requestAnimationFrame(() => {

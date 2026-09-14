@@ -105,20 +105,34 @@ const ogImage = new URL('/og.png', Astro.site).href;
       // le thème avant que la nouvelle page ne s'affiche, sinon elle
       // apparaîtrait en clair le temps d'une image.
       (() => {
+        // Safari en navigation privée refuse le stockage local et lève une
+        // exception à la lecture. Sans garde, tout ce qui suit mourait avec
+        // elle : ni thème, ni teinte, ni couleur de barre. On lit donc à
+        // l'abri, quitte à retomber sur les réglages du système.
+        const retenu = (cle) => {
+          try {
+            return localStorage.getItem(cle);
+          } catch {
+            return null;
+          }
+        };
+
         const apply = () => {
           const root = document.documentElement;
-          const stored = localStorage.getItem('swiss-theme');
+          const stored = retenu('swiss-theme');
           root.dataset.swissTheme =
             stored ?? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-
-          poserBarre();
 
           // La teinte d'accent choisie par le visiteur, posée ici pour la
           // même raison que le thème : appliquée après coup, la page
           // paraîtrait violette le temps d'une image.
-          const teinte = localStorage.getItem('swiss-accent');
+          const teinte = retenu('swiss-accent');
           if (teinte) root.dataset.swissAccent = teinte;
           else delete root.dataset.swissAccent;
+
+          // La barre du navigateur est teintée après le thème et la teinte,
+          // pas avant : elle lit le papier réellement appliqué.
+          poserBarre();
 
           // Le disque remplace la flèche : on la masque dès maintenant, aux
           // seules conditions où le disque existera.
@@ -223,7 +237,9 @@ const ogImage = new URL('/og.png', Astro.site).href;
           overlay.hidden = !on;
           button.setAttribute('aria-pressed', String(on));
           button.setAttribute('aria-label', on ? 'Masquer la grille' : 'Afficher la grille');
-          localStorage.setItem('swiss-grid', on ? '1' : '0');
+          try {
+            localStorage.setItem('swiss-grid', on ? '1' : '0');
+          } catch {}
         };
 
         const toggle = () => {
@@ -240,7 +256,11 @@ const ogImage = new URL('/og.png', Astro.site).href;
           if (event.key === 'g' || event.key === 'G') toggle();
         });
 
-        apply(localStorage.getItem('swiss-grid') === '1');
+        let garde = null;
+        try {
+          garde = localStorage.getItem('swiss-grid');
+        } catch {}
+        apply(garde === '1');
       })();
 
       // Apparition au défilement. Le drapeau n'est posé que si l'on anime
