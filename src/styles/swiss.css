@@ -45,7 +45,7 @@
    placée dans @layer base perdrait contre eux. */
 @media (max-width: 767px) {
   .swiss {
-    --footer-h: 286px;
+    --footer-h: 318px;
   }
 }
 
