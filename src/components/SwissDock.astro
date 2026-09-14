@@ -1,25 +1,60 @@
 ---
 import SwissThemeToggle from './SwissThemeToggle.jsx';
 
-// Les deux outils du visiteur — la grille et le thème — ne sont pas de la
-// navigation : ils quittent la barre et se posent en capsule flottante, à
-// portée du pouce. Le contact n'y figure plus : la barre le porte sur grand
-// écran, le menu sur téléphone.
+interface Props {
+  current?: 'index' | 'lab' | 'polographe';
+}
+
+const { current = 'index' } = Astro.props;
+
+// La navigation quitte la barre et flotte : une seule pilule au bas de
+// l'écran, sous le pouce plutôt qu'en tête de page. Elle porte les trois
+// pages puis, après un filet, les deux outils du visiteur. Un seul objet
+// plutôt que deux, sinon ils se chevaucheraient sur un téléphone.
+const pages = [
+  { href: '/', label: 'Index', key: 'index' },
+  { href: '/lab', label: 'Lab', key: 'lab' },
+  { href: '/lepolographe', label: 'Le Polographe', key: 'polographe' },
+];
 ---
 
 <div
-  class="swiss-dock fixed bottom-[calc(20px+env(safe-area-inset-bottom))] z-40 flex items-center gap-[12px]"
+  class="swiss-dock fixed bottom-[calc(16px+env(safe-area-inset-bottom))] left-1/2 z-40 flex -translate-x-1/2 items-center"
 >
-  <div
-    class="dock-capsule flex items-center gap-[10px] rounded-full p-[7px]"
-  >
+  <div class="dock-capsule flex items-center gap-[2px] rounded-full p-[6px] sm:gap-[4px]">
+    <nav class="flex items-center" aria-label="Main">
+      {
+        pages.map((page) => (
+          <a
+            href={page.href}
+            class:list={[
+              'dock-link swiss-meta flex h-[38px] items-center rounded-full px-[9px] transition-colors duration-200 sm:px-[17px]',
+              current === page.key && 'is-current',
+            ]}
+            aria-current={current === page.key ? 'page' : undefined}
+          >
+            {page.key === 'polographe' ? (
+              <>
+                <span class="sm:hidden">Polographe</span>
+                <span class="hidden sm:inline">Le Polographe</span>
+              </>
+            ) : (
+              page.label
+            )}
+          </a>
+        ))
+      }
+    </nav>
+
+    <span class="dock-rule" aria-hidden="true"></span>
+
     <button
       type="button"
       data-grid-toggle
       aria-pressed="false"
       aria-label="Afficher la grille"
       title="Grille (G)"
-      class="swiss-meta flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-full border border-[var(--rule)] transition-colors duration-200 hover:border-[var(--accent)] hover:bg-[var(--accent)] hover:text-[var(--paper)] aria-pressed:bg-[var(--ink)] aria-pressed:text-[var(--paper)]"
+      class="dock-link swiss-meta flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-full transition-colors duration-200"
     >
       <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true">
         <g stroke="currentColor" stroke-width="1">
@@ -28,6 +63,6 @@ import SwissThemeToggle from './SwissThemeToggle.jsx';
       </svg>
     </button>
 
-    <SwissThemeToggle client:load />
+    <SwissThemeToggle client:load framed={false} />
   </div>
 </div>

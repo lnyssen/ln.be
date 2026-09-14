@@ -7,13 +7,8 @@ interface Props {
 
 const { current = 'index' } = Astro.props;
 
-// Une seule liste : la barre l'affiche en ligne sur grand écran, le panneau
-// la reprend en pleine page sur téléphone. Deux rendus, une source.
-const pages = [
-  { href: '/', label: 'Index', key: 'index' },
-  { href: '/lab', label: 'Lab', key: 'lab' },
-  { href: '/lepolographe', label: 'Le Polographe', key: 'polographe' },
-];
+// La barre ne porte plus que le nom et l'action : la navigation a migré dans
+// la pilule flottante, au bas de l'écran.
 ---
 
 <header class="swiss-shell sticky top-0 z-50 border-b border-[var(--rule)] pt-[env(safe-area-inset-top)]">
@@ -23,133 +18,15 @@ const pages = [
     </a>
 
     <div class="flex items-center gap-[16px]">
-      <nav class="swiss-meta nav-link hidden items-center gap-[16px] sm:flex" aria-label="Main">
-        {
-          pages.map((page) => (
-            <a
-              href={page.href}
-              class={current === page.key ? 'text-[var(--accent)]' : 'hover:text-[var(--accent)]'}
-              aria-current={current === page.key ? 'page' : undefined}
-            >
-              {page.label}
-            </a>
-          ))
-        }
-      </nav>
-
       <!-- La seule action de la barre : elle se distingue des repères de
            navigation par un cadre, à la hauteur des autres commandes. -->
       <a
         href="mailto:hello@laurentnyssen.be"
-        class="swiss-meta nav-link hidden h-[38px] shrink-0 items-center rounded-full border border-[var(--rule)] px-[18px] transition-colors duration-200 hover:border-[var(--accent)] hover:bg-[var(--accent)] hover:text-[var(--paper)] sm:inline-flex"
+        class="swiss-meta nav-link flex h-[38px] shrink-0 items-center rounded-full border border-[var(--rule)] px-[18px] transition-colors duration-200 hover:border-[var(--accent)] hover:bg-[var(--accent)] hover:text-[var(--paper)]"
       >
         Get in touch
       </a>
 
-      <!-- Sur téléphone, la barre n'a la place ni des trois repères ni du
-           bouton : ils passent derrière un seul signe. -->
-      <button
-        type="button"
-        data-menu-toggle
-        aria-expanded="false"
-        aria-controls="swiss-menu"
-        aria-label="Ouvrir le menu"
-        class="swiss-meta flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-full border border-[var(--rule)] transition-colors duration-200 sm:hidden"
-      >
-        <!-- Deux signes superposés plutôt qu'un seul qu'on plie : faire
-             pivoter un trait SVG dépend du cadre de référence, et la croix
-             finissait décentrée. Ici elle est dessinée, donc exacte. -->
-        <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" class="menu-icon">
-          <g stroke="currentColor" stroke-width="1.2" stroke-linecap="round" fill="none">
-            <g class="icon-bars">
-              <path d="M2 5h12" />
-              <path d="M2 11h12" />
-            </g>
-            <g class="icon-cross">
-              <path d="M4.6 4.6 11.4 11.4" />
-              <path d="M11.4 4.6 4.6 11.4" />
-            </g>
-          </g>
-        </svg>
-      </button>
     </div>
   </div>
 </header>
-
-<div
-  id="swiss-menu"
-  data-menu-panel
-  hidden
-  class="swiss-menu fixed inset-0 z-40 flex flex-col justify-between pt-[calc(78px+env(safe-area-inset-top))] pb-[calc(28px+env(safe-area-inset-bottom))] sm:hidden"
->
-  <nav class="swiss-shell" aria-label="Pages">
-    <ul>
-      {
-        pages.map((page) => (
-          <li class="border-b border-[var(--rule)] last:border-b-0">
-            <a
-              href={page.href}
-              class:list={[
-                'menu-link block py-[22px] text-[clamp(1.875rem,9vw,2.75rem)] font-medium tracking-[-0.035em]',
-                current === page.key ? 'text-[var(--accent)]' : '',
-              ]}
-              aria-current={current === page.key ? 'page' : undefined}
-            >
-              {page.label}
-            </a>
-          </li>
-        ))
-      }
-    </ul>
-  </nav>
-
-  <div class="swiss-shell">
-    <a
-      href="mailto:hello@laurentnyssen.be"
-      class="swiss-meta flex h-[52px] w-full items-center justify-center rounded-full border border-[var(--ink)] bg-[var(--ink)] font-semibold text-[var(--paper)]"
-    >
-      Get in touch
-    </a>
-
-    <p class="swiss-meta mt-[18px] flex justify-center gap-[18px] text-[var(--ink-soft)]">
-      <a href="/colophon" class="underline decoration-1 underline-offset-[3px]">Colophon</a>
-      <a href="/privacy" class="underline decoration-1 underline-offset-[3px]">Privacy</a>
-    </p>
-  </div>
-</div>
-
-<script is:inline data-astro-rerun>
-  // Panneau de navigation : ouvert par le signe, fermé par la touche
-  // d'échappement, par un second appui ou par le choix d'une page. Le corps
-  // cesse de défiler derrière lui.
-  (() => {
-    const button = document.querySelector('[data-menu-toggle]');
-    const panel = document.querySelector('[data-menu-panel]');
-    if (!button || !panel) return;
-
-    const setState = (open) => {
-      panel.hidden = !open;
-      button.setAttribute('aria-expanded', String(open));
-      button.setAttribute('aria-label', open ? 'Fermer le menu' : 'Ouvrir le menu');
-      document.documentElement.classList.toggle('menu-open', open);
-    };
-
-    button.addEventListener('click', () => setState(panel.hidden));
-
-    panel.addEventListener('click', (event) => {
-      if (event.target.closest('a')) setState(false);
-    });
-
-    document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape' && !panel.hidden) {
-        setState(false);
-        button.focus();
-      }
-    });
-
-    // Repasser en grand écran laisse le panneau ouvert derrière soi.
-    matchMedia('(min-width: 640px)').addEventListener('change', (event) => {
-      if (event.matches) setState(false);
-    });
-  })();
-</script>
