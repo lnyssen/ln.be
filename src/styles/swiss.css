@@ -246,6 +246,21 @@
     }
   }
 
+  /* Le contenu ne sort plus de sous la barre d'un coup de couteau. Le verre
+     est assez opaque pour qu'une lettre qui passe derrière disparaisse tout à
+     fait ; elle réapparaissait donc tranchée net au bord inférieur. Un voile
+     de papier de quelques points la laisse revenir en fondu. */
+  .swiss body > header::before {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    height: 18px;
+    pointer-events: none;
+    background-image: linear-gradient(to bottom, var(--paper), transparent);
+  }
+
   /* Le grain de la barre, en une seule couche par-dessus la plaque et la
      pilule : deux couches distinctes laissaient voir leur jointure. Il est
      calé sur le bord de la boîte, et non sur ses gouttières, pour rester en
@@ -621,24 +636,34 @@
      s'interrompe pas. */
   /* La carte se pose sous la barre, jamais dessus : 16 de marge interne,
      70 de pilule, 10 d'écart. */
+  /* Le fondu est porté par la carte et non par son conteneur : une opacité
+     sur un ancêtre en fait un backdrop root, ce qui coupe la carte de son
+     arrière-plan — le verre restait clair le temps de l'animation, puis le
+     flou s'allumait d'un coup à l'arrivée. */
   .swiss .swiss-menu {
     top: calc(96px + env(safe-area-inset-top));
-    opacity: 0;
     visibility: hidden;
     pointer-events: none;
     transform: translateY(-12px);
     transition:
-      opacity 240ms cubic-bezier(0.22, 1, 0.36, 1),
       transform 340ms cubic-bezier(0.22, 1, 0.36, 1),
       visibility 0s linear 340ms;
   }
 
+  .swiss .swiss-menu .menu-card {
+    opacity: 0;
+    transition: opacity 240ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
   .swiss .swiss-menu.is-open {
-    opacity: 1;
     visibility: visible;
     pointer-events: auto;
     transform: none;
     transition-delay: 0s;
+  }
+
+  .swiss .swiss-menu.is-open .menu-card {
+    opacity: 1;
   }
 
   /* Les lignes entrent l'une après l'autre, d'un cheveu : la carte se
@@ -672,6 +697,7 @@
 
   @media (prefers-reduced-motion: reduce) {
     .swiss .swiss-menu,
+    .swiss .swiss-menu .menu-card,
     .swiss .swiss-menu .menu-link,
     .swiss .swiss-menu .p-\[14px\] {
       transition: none;
