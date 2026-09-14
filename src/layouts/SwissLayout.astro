@@ -311,7 +311,11 @@ const ogImage = new URL('/og.png', Astro.site).href;
           if (child.nodeType === 3) {
             const frag = document.createDocumentFragment();
             for (const ch of child.textContent) {
-              if (ch === ' ') {
+              // Toute espace reste du texte nu, l'espace insécable et le
+              // retour à la ligne du balisage compris : enfermée dans un bloc
+              // en ligne, elle se réduirait à rien et laisserait un signe de
+              // largeur nulle au début du titre.
+              if (!ch.trim()) {
                 frag.appendChild(document.createTextNode(ch));
               } else {
                 const span = document.createElement('span');
