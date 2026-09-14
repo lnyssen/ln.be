@@ -17,14 +17,6 @@ const {
   noindex = false,
 } = Astro.props;
 
-// La page courante se lit dans l'adresse : aucune page n'a à la déclarer.
-const path = Astro.url.pathname;
-const current = path.startsWith('/lepolographe')
-  ? 'polographe'
-  : path.startsWith('/lab')
-    ? 'lab'
-    : 'index';
-
 // Fiche structurée, posée sur la seule page d'accueil : c'est elle qui
 // représente la personne, la répéter sur chaque page n'ajoute rien.
 const person = {
@@ -136,7 +128,7 @@ const ogImage = new URL('/og.png', Astro.site).href;
     <SwissGrid />
 
     <slot />
-    <SwissDock current={current} />
+    <SwissDock />
     <SwissCursor client:idle />
 
     <script is:inline data-astro-rerun>
