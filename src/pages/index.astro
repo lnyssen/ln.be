@@ -554,6 +554,27 @@ function domainLabel(link: string) {
         // tirage, là où la bande se contentait d'une vignette.
         const grand = document.createElement('img');
 
+        // `contain` laisse du vide autour du visuel dès que son format ne
+        // suit pas celui de la fenêtre. Les flèches doivent se poser sur ses
+        // bords à lui : on calcule donc la boîte réellement occupée à partir
+        // de ses proportions naturelles.
+        const caler = () => {
+          if (!grand.naturalWidth) return;
+          const boite = scene.getBoundingClientRect();
+          const rapport = grand.naturalWidth / grand.naturalHeight;
+          let large = boite.width;
+          let haut = large / rapport;
+          if (haut > boite.height) {
+            haut = boite.height;
+            large = haut * rapport;
+          }
+          const bord = Math.round((boite.width - large) / 2) + 14;
+          for (const fleche of scene.querySelectorAll('[data-loupe-nav]')) {
+            fleche.style[fleche.classList.contains('loupe-nav-prev') ? 'left' : 'right'] =
+              `${bord}px`;
+          }
+        };
+
         const poser = (i) => {
           rang = (i + visuels.length) % visuels.length;
           const source = visuels[rang];
@@ -563,7 +584,10 @@ function domainLabel(link: string) {
             grand.sizes = '92vw';
           }
           grand.alt = source.alt;
+          if (grand.complete) caler();
         };
+
+        grand.addEventListener('load', caler);
 
         poser(rang);
         scene.append(grand);
@@ -579,7 +603,7 @@ function domainLabel(link: string) {
             bouton.className = `strip-nav loupe-nav loupe-nav-${sens < 0 ? 'prev' : 'next'}`;
             bouton.dataset.loupeNav = '';
             bouton.dataset.cursorMirror = '';
-            bouton.dataset.cursorInk = 'var(--paper)';
+            bouton.dataset.cursorInk = 'var(--accent)';
             bouton.setAttribute('aria-label', sens < 0 ? 'Visuel précédent' : 'Visuel suivant');
             bouton.innerHTML =
               '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
@@ -596,8 +620,10 @@ function domainLabel(link: string) {
         document.body.append(cadre);
         requestAnimationFrame(() => {
           cadre.classList.add('is-open');
+          caler();
           relireLeCurseur();
         });
+        addEventListener('resize', caler);
 
         const fermer = () => {
           cadre.classList.remove('is-open');
@@ -610,6 +636,7 @@ function domainLabel(link: string) {
             { once: true },
           );
           document.removeEventListener('keydown', surTouche);
+          removeEventListener('resize', caler);
         };
 
         const surTouche = (event) => {

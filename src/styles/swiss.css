@@ -455,22 +455,22 @@
   /* Le visuel prend toute la place disponible, sans jamais se rogner : c'est
      le sens du geste. Il monte jusqu'au grand tirage, qui vient de la source
      et non d'un étirement. */
-  /* La scène ne fait que la taille du visuel affiché : c'est elle qui donne
-     aux flèches leur bord. Le visuel, lui, prend toute la place disponible
-     sans jamais se rogner. */
+  /* Le visuel prend toute la place disponible sans jamais se rogner ni
+     s'étirer : c'est `contain` qui garde ses proportions, et lui seul. Une
+     scène qui l'enveloppait pour donner leur bord aux flèches l'étirait, un
+     conteneur en flex imposant sa hauteur à ce qu'il contient. Les flèches
+     sont donc calées au chiffre, sur l'image telle qu'elle est rendue. */
   .swiss .loupe-scene {
     position: relative;
-    display: flex;
-    max-width: 100%;
-    max-height: 100%;
+    width: 100%;
+    height: 100%;
   }
 
   .swiss .loupe img {
     display: block;
-    width: auto;
-    height: auto;
-    max-width: 100%;
-    max-height: 100%;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
     transform: scale(0.98);
     transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
   }
