@@ -677,14 +677,10 @@
     animation: marquee 10s linear infinite;
   }
 
+  /* Au clavier, l'arrêt reste net : on n'y survole pas, on y arrive d'un
+     coup. Le survol, lui, est passé au JavaScript, qui sait ralentir. */
   .swiss .marquee:focus-within .marquee-track {
     animation-play-state: paused;
-  }
-
-  @media (hover: hover) {
-    .swiss .marquee:hover .marquee-track {
-      animation-play-state: paused;
-    }
   }
 
   @keyframes marquee {
@@ -718,41 +714,6 @@
   }
 
   @media (min-width: 768px) {
-    /* Bande défilante : le contenu est doublé, la piste recule d'exactement la
-     moitié — la boucle est donc invisible. */
-    .swiss .marquee-track {
-      animation: marquee 10s linear infinite;
-    }
-
-    .swiss .marquee:focus-within .marquee-track {
-      animation-play-state: paused;
-    }
-
-    @media (hover: hover) {
-      .swiss .marquee:hover .marquee-track {
-        animation-play-state: paused;
-      }
-    }
-
-    @keyframes marquee {
-      from {
-        transform: translateX(0);
-      }
-      to {
-        transform: translateX(-50%);
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .swiss .marquee-track {
-        animation: none;
-      }
-
-      .swiss .marquee {
-        overflow-x: auto;
-      }
-    }
-
     .swiss .filmstrip {
       scroll-padding-left: 40px;
     }

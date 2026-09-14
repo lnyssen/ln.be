@@ -300,6 +300,57 @@ function domainLabel(link: string) {
   <SwissFooter />
 
   <script is:inline data-astro-rerun>
+    // La bande des compétences s'arrête au survol, mais elle ne doit pas se
+    // planter net : une piste qui passe de pleine vitesse à zéro en une image
+    // se lit comme un à-coup. Le CSS ne sait faire que le tout ou rien, on
+    // règle donc la vitesse de lecture de son animation — elle reste la
+    // sienne, et tient sans JavaScript.
+    (() => {
+      const bande = document.querySelector('.marquee');
+      const piste = bande?.querySelector('.marquee-track');
+      if (!piste || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      const anim = piste.getAnimations?.()[0];
+      if (!anim) return;
+
+      // Le ralenti est réglé sur le temps et non sur les images : un simple
+      // rattrapage par fraction s'effondre en deux images sur un écran rapide
+      // — quatre-vingts millisecondes suffisaient à manger neuf dixièmes de la
+      // vitesse, et cela se lisait encore comme un arrêt sec. Une demi-seconde
+      // pleine, sur une courbe douce des deux bouts : le mot ralentit avant de
+      // se poser, et repart de même.
+      const DUREE = 520;
+      const doux = (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+
+      let depart = 1;
+      let cible = 1;
+      let debut = 0;
+      let tourne = false;
+
+      const suivre = (maintenant) => {
+        const avance = Math.min(1, (maintenant - debut) / DUREE);
+        anim.playbackRate = depart + (cible - depart) * doux(avance);
+        if (avance < 1) requestAnimationFrame(suivre);
+        else tourne = false;
+      };
+
+      const viser = (v) => {
+        if (cible === v) return;
+        depart = anim.playbackRate;
+        cible = v;
+        debut = performance.now();
+        if (!tourne) {
+          tourne = true;
+          requestAnimationFrame(suivre);
+        }
+      };
+
+      bande.addEventListener('pointerenter', () => viser(0));
+      bande.addEventListener('pointerleave', () => viser(1));
+    })();
+  </script>
+
+  <script is:inline data-astro-rerun>
     // Le point qui ferme le titre est la seule couleur de la page : en
     // cliquant dessus, le visiteur la fait tourner sur une petite gamme
     // arrêtée, et le site garde son choix sur son appareil. Rien ne l'annonce
