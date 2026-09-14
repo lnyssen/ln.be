@@ -112,7 +112,6 @@ export default function SwissCursor() {
     };
 
     window.addEventListener('pointermove', onMove);
-    window.addEventListener('keydown', onKey);
     document.addEventListener('pointerleave', onLeave);
     document.addEventListener('toggle', onToggle, true);
     frame = requestAnimationFrame(tick);
