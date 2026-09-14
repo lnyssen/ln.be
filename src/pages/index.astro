@@ -313,14 +313,35 @@ function domainLabel(link: string) {
         summaries[next]?.scrollIntoView({ block: 'center', behavior: 'smooth' });
       });
 
+      // Une ligne qui s'ouvre ou se ferme ne doit pas emporter la page. Son
+      // titre est collant tant qu'elle est ouverte : en se refermant il
+      // retrouve sa place naturelle, très au-dessus, et la vue sautait avec
+      // lui. On note où il est avant, et on rattrape l'écart au pixel après.
+      // Le défilement doit être sec : `scroll-behavior: smooth` s'applique
+      // aussi aux défilements programmés, et filerait sur toute la distance.
+      const pin = (row) => {
+        const summary = row.querySelector(':scope > summary');
+        if (!summary) return;
+        const before = summary.getBoundingClientRect().top;
+        requestAnimationFrame(() => {
+          const delta = summary.getBoundingClientRect().top - before;
+          if (Math.abs(delta) > 1) scrollBy({ top: delta, behavior: 'instant' });
+        });
+      };
+
       for (const row of document.querySelectorAll('#work details')) {
+        const summary = row.querySelector(':scope > summary');
+        // Le clic précède la bascule : c'est le moment de relever la position.
+        summary?.addEventListener('click', () => pin(row));
+
         const panel = row.querySelector(':scope > div');
         if (!panel) continue;
 
+        // Cliquer dans la planche referme la ligne, sans bouger la page.
         panel.addEventListener('click', (event) => {
           if (event.target.closest('a, button')) return;
+          pin(row);
           row.open = false;
-          row.scrollIntoView({ block: 'center', behavior: 'smooth' });
         });
       }
     })();
