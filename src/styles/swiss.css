@@ -102,14 +102,16 @@
     bottom: 0;
     width: 0;
     border-radius: 999px;
-    background-color: color-mix(in srgb, var(--ink) 13%, transparent);
+    background-color: var(--accent);
     transition:
       transform 420ms cubic-bezier(0.22, 1, 0.36, 1),
       width 420ms cubic-bezier(0.22, 1, 0.36, 1);
   }
 
-  .swiss [data-nav-link].is-current {
-    color: var(--ink);
+  /* Seul le mot recouvert par la pastille change de couleur, et il la reprend
+     dès qu'elle passe au suivant. */
+  .swiss [data-nav-link].is-lit {
+    color: var(--paper);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -118,11 +120,29 @@
     }
   }
 
+  /* La pilule porte le papier plein et son grain, pas un verre dépoli : le
+     flou lissait la texture de ce qui passait dessous, si bien qu'elle se
+     lisait comme un noir différent de celui qui l'entoure. Seuls son contour
+     et sa forme la désignent désormais. */
   .swiss .header-pill {
-    background-color: var(--header-bg);
+    position: relative;
+    isolation: isolate;
+    background-color: var(--paper);
     border: 1px solid var(--rule);
-    -webkit-backdrop-filter: blur(14px);
-    backdrop-filter: blur(14px);
+  }
+
+  .swiss .header-pill::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    border-radius: inherit;
+    background-image: url('/images/grain.png');
+    background-repeat: repeat;
+    background-size: 64px auto;
+    background-attachment: fixed;
+    opacity: var(--grain);
   }
 
   /* La capsule d'outils est un objet constant : elle reste blanche quel que
@@ -176,10 +196,10 @@
   .swiss body > header::before {
     content: '';
     position: absolute;
-    top: calc(-1 * env(safe-area-inset-top));
+    top: calc(-14px - 2 * env(safe-area-inset-top));
     left: 0;
     right: 0;
-    height: calc(28px + 2 * env(safe-area-inset-top));
+    height: calc(28px + 3 * env(safe-area-inset-top));
     pointer-events: none;
     background-color: var(--paper);
   }
@@ -190,10 +210,10 @@
   .swiss body > header::after {
     content: '';
     position: absolute;
-    top: calc(-1 * env(safe-area-inset-top));
+    top: calc(-14px - 2 * env(safe-area-inset-top));
     left: 0;
     right: 0;
-    height: calc(28px + 2 * env(safe-area-inset-top));
+    height: calc(28px + 3 * env(safe-area-inset-top));
     pointer-events: none;
     background-image: url('/images/grain.png');
     background-repeat: repeat;
