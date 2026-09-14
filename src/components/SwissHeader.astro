@@ -32,7 +32,7 @@ const pages = [
 
   <div class="header-pill flex items-center justify-between gap-4 rounded-full py-[15px] pl-[20px] pr-[12px] md:pl-[26px] md:pr-[14px]">
     <a href="/" class="flex items-center">
-      <LogoLockup class="h-[32px] w-auto shrink-0 text-[var(--ink)] md:h-[36px]" />
+      <LogoLockup class="h-[32px] w-auto shrink-0 text-[var(--ink)]" />
     </a>
 
     <div class="flex items-center gap-[16px]">
@@ -52,7 +52,7 @@ const pages = [
               href={page.href}
               data-nav-link
               data-key={page.key}
-              class="relative z-10 flex h-[32px] items-center rounded-full px-[13px] transition-colors duration-200"
+              class="relative z-10 flex h-[32px] items-center whitespace-nowrap rounded-full px-[13px] transition-colors duration-200"
               aria-current={current === page.key ? 'page' : undefined}
             >
               {page.label}

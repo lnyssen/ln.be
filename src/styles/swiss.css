@@ -246,25 +246,11 @@
     }
   }
 
-  /* Le contenu ne sort plus de sous la barre d'un coup de couteau. Le verre
-     est assez opaque pour qu'une lettre qui passe derrière disparaisse tout à
-     fait ; elle réapparaissait donc tranchée net au bord inférieur. Un voile
-     de papier de quelques points la laisse revenir en fondu. */
-  .swiss body > header::before {
-    content: '';
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    height: 18px;
-    pointer-events: none;
-    background-image: linear-gradient(to bottom, var(--paper), transparent);
-  }
-
   /* Le grain de la barre, en une seule couche par-dessus la plaque et la
      pilule : deux couches distinctes laissaient voir leur jointure. Il est
      calé sur le bord de la boîte, et non sur ses gouttières, pour rester en
-     phase avec le grain de la page. */
+     phase avec le grain de la page. Elle est un peu plus appuyée que celle de
+     la page : sous la pilule, le verre dépoli en mange une partie. */
   .swiss body > header::after {
     content: '';
     position: absolute;
@@ -275,7 +261,7 @@
     background-origin: border-box;
     background-position: 0 0;
     background-size: 64px auto;
-    opacity: var(--grain);
+    opacity: calc(var(--grain) * 1.5);
   }
 
   .swiss body {
