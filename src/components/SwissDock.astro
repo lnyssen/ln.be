@@ -48,3 +48,29 @@ import SwissThemeToggle from './SwissThemeToggle.jsx';
     <SwissThemeToggle client:load />
   </div>
 </div>
+
+<script is:inline data-astro-rerun>
+  // La capsule et le pied de page se disputaient la même bande : elle flotte
+  // au bas de la fenêtre, il s'y découvre en fin de course, et la dernière
+  // ligne passait dessous. Réserver de la place sous le texte ne suffisait
+  // pas — sur iPhone, la barre de Safari rogne encore la fenêtre et tout se
+  // resserre.
+  //
+  // Elle s'efface donc quand le panneau arrive. Ce sont les outils de lecture
+  // de la page ; au moment où l'on atteint le contact, on a fini de lire.
+  (() => {
+    const pied = document.querySelector('.swiss-footer');
+    if (!pied || !('IntersectionObserver' in window)) return;
+
+    const veille = new IntersectionObserver(
+      ([entree]) => {
+        document.documentElement.classList.toggle('pied-visible', entree.isIntersecting);
+      },
+      // Le panneau est fixé au fond : il ne « passe » pas, il se découvre. On
+      // le considère atteint dès qu'il en paraît un bon tiers.
+      { threshold: 0.34 },
+    );
+
+    veille.observe(pied);
+  })();
+</script>

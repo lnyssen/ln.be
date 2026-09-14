@@ -911,7 +911,8 @@
       transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
   }
 
-  .swiss.menu-open .swiss-dock {
+  .swiss.menu-open .swiss-dock,
+  .swiss.pied-visible .swiss-dock {
     opacity: 0;
     transform: translate(-50%, 14px);
     pointer-events: none;

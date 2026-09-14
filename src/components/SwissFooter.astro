@@ -4,9 +4,8 @@ import SwissArrow from './SwissArrow.astro';
 // Panneau violet fixé au fond : le contenu glisse par-dessus et le découvre en
 // fin de course. `main` porte un fond opaque, le body réserve la hauteur.
 //
-// La marge basse n'est pas du vide : la capsule d'outils flotte là, centrée,
-// et venait couper la troisième colonne. Le contenu est donc centré dans ce
-// qui reste au-dessus d'elle.
+// La capsule d'outils s'efface dès que ce panneau paraît : il n'a donc plus à
+// lui réserver sa bande, seulement à garder sa propre marge basse.
 //
 // Sans intitulés, l'ours n'a plus qu'une règle : toutes les lignes ont le même
 // corps, donc la ligne n de chaque colonne tombe à la même hauteur que la
@@ -24,7 +23,7 @@ const site = [
 ---
 
 <footer
-  class="swiss-footer fixed inset-x-0 bottom-0 z-0 flex h-[var(--footer-h)] flex-col justify-center pb-[calc(84px+env(safe-area-inset-bottom))]"
+  class="swiss-footer fixed inset-x-0 bottom-0 z-0 flex h-[var(--footer-h)] flex-col justify-center pb-[calc(28px+env(safe-area-inset-bottom))]"
 >
   <div class="swiss-shell swiss-grid footer-cols items-start gap-y-[26px]">
     <a
@@ -70,9 +69,12 @@ const site = [
         site.map((item) => (
           <a
             href={item.href}
-            class="swiss-meta w-fit underline decoration-dotted decoration-1 underline-offset-[3px] transition-colors duration-200 hover:text-[#222222] "
+            class="swiss-meta block w-fit transition-colors duration-200 hover:text-[#222222] "
           >
             {item.label}
+            <span class="footer-arrow">
+              <SwissArrow size={12} direction="right" />
+            </span>
           </a>
         ))
       }

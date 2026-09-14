@@ -313,10 +313,10 @@ function domainLabel(link: string) {
   <SwissFooter />
 
   <script is:inline data-astro-rerun>
-    // La bande des compétences s'arrête au survol, mais elle ne doit pas se
-    // planter net : une piste qui passe de pleine vitesse à zéro en une image
-    // se lit comme un à-coup. Le CSS ne sait faire que le tout ou rien, on
-    // règle donc la vitesse de lecture de son animation — elle reste la
+    // La bande des compétences ralentit au survol au lieu de s'arrêter : une
+    // piste qui se fige se lit comme une panne, une piste qui traîne se lit
+    // comme une invitation à lire. Le CSS ne sait faire que le tout ou rien,
+    // on règle donc la vitesse de lecture de son animation — elle reste la
     // sienne, et tient sans JavaScript.
     (() => {
       const bande = document.querySelector('.marquee');
@@ -358,7 +358,9 @@ function domainLabel(link: string) {
         }
       };
 
-      bande.addEventListener('pointerenter', () => viser(0));
+      // Un cinquième de l'allure : assez lent pour lire un intitulé au vol,
+      // assez vivant pour qu'on voie que rien n'est cassé.
+      bande.addEventListener('pointerenter', () => viser(0.2));
       bande.addEventListener('pointerleave', () => viser(1));
     })();
   </script>
