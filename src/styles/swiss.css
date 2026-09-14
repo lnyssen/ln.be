@@ -1143,13 +1143,14 @@
     letter-spacing: -0.02em;
   }
 
-  /* Les petites capitales passent de 11 à 12 points. Onze, avec le
-     dégagement de 0,14 em, tombait sous le seuil de lisibilité des outils de
-     vérification, et la ligne y gagne sans que la hiérarchie bouge. */
+  /* Les petites capitales passent de 11 à 12 points. Onze, avec le dégagement
+     de 0,14 em, tombait sous le seuil de lisibilité des outils de
+     vérification. Le dégagement descend d'autant : à 11 points il ouvrait le
+     mot, à 12 il le délitait. */
   .swiss .swiss-meta {
     font-size: 12px;
     line-height: 1.2;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
   }
 
