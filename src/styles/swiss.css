@@ -297,23 +297,120 @@
     outline: none;
   }
 
-  /* Les dessins des deux renvois. Rien ne bouge au repos : le trait est une
-     légende, pas une animation. Au survol, le carré du Lab remonte d'un
-     cheveu — les trois figures se recouvrent davantage, c'est la collision.
-     Le Polographe ne bouge pas : sa ligne touche la grille en quatre points,
-     la déplacer la décrocherait. */
-  .swiss .teaser-mark .mark-milieu {
-    transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+  /* Les dessins des deux renvois tournent en boucle plutôt qu'au survol :
+     sur téléphone il n'y a pas de survol, et c'est là qu'ils seraient perdus.
+     Le cycle est long et l'essentiel du temps se passe à l'arrêt — un geste
+     qui revient toutes les sept secondes se remarque, un geste continu
+     fatigue. */
+
+  /* Lab : les trois figures se rapprochent puis se séparent. Elles se
+     percutent, c'est la phrase. */
+  .swiss .teaser-mark .mark-haut {
+    animation: mark-gauche 7s cubic-bezier(0.45, 0, 0.25, 1) infinite;
   }
 
-  .swiss .teaser:hover .teaser-mark .mark-milieu {
-    transform: translateY(-7px);
+  .swiss .teaser-mark .mark-milieu {
+    animation: mark-monte 7s cubic-bezier(0.45, 0, 0.25, 1) infinite;
+  }
+
+  .swiss .teaser-mark .mark-bas {
+    animation: mark-descend 7s cubic-bezier(0.45, 0, 0.25, 1) infinite;
+  }
+
+  @keyframes mark-gauche {
+    0%,
+    62%,
+    100% {
+      transform: none;
+    }
+    28%,
+    44% {
+      transform: translateX(10px);
+    }
+  }
+
+  @keyframes mark-monte {
+    0%,
+    62%,
+    100% {
+      transform: none;
+    }
+    28%,
+    44% {
+      transform: translateY(-9px);
+    }
+  }
+
+  @keyframes mark-descend {
+    0%,
+    62%,
+    100% {
+      transform: none;
+    }
+    28%,
+    44% {
+      transform: translateX(-10px);
+    }
+  }
+
+  /* Polographe : les formes ne se déplacent pas — elles touchent la grille et
+     se touchent l'une l'autre, les bouger les décrocherait. Elles se
+     retracent, le carré puis la courbe. Chacune déclare une longueur de cent
+     par `pathLength`, si bien qu'un seul réglage vaut pour les deux quelle
+     que soit leur taille réelle. */
+  .swiss .teaser-mark .mark-formes > path {
+    stroke-dasharray: 100;
+    animation: mark-retrace 7s cubic-bezier(0.65, 0, 0.35, 1) infinite backwards;
+  }
+
+  /* Elles se tracent l'une après l'autre, de la première case à la dernière,
+     comme la plume d'une table traçante. */
+  .swiss .teaser-mark .mark-formes > path:nth-child(2) {
+    animation-delay: 90ms;
+  }
+
+  .swiss .teaser-mark .mark-formes > path:nth-child(3) {
+    animation-delay: 180ms;
+  }
+
+  .swiss .teaser-mark .mark-formes > path:nth-child(4) {
+    animation-delay: 270ms;
+  }
+
+  .swiss .teaser-mark .mark-formes > path:nth-child(5) {
+    animation-delay: 360ms;
+  }
+
+  .swiss .teaser-mark .mark-formes > path:nth-child(6) {
+    animation-delay: 450ms;
+  }
+
+  .swiss .teaser-mark .mark-formes > path:nth-child(7) {
+    animation-delay: 540ms;
+  }
+
+  .swiss .teaser-mark .mark-formes > path:nth-child(8) {
+    animation-delay: 630ms;
+  }
+
+  @keyframes mark-retrace {
+    0% {
+      stroke-dashoffset: 100;
+    }
+    22%,
+    100% {
+      stroke-dashoffset: 0;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .swiss .teaser-mark .mark-milieu {
-      transition: none;
+    .swiss .teaser-mark .mark-haut,
+    .swiss .teaser-mark .mark-milieu,
+    .swiss .teaser-mark .mark-bas,
+    .swiss .teaser-mark .mark-formes > path {
+      animation: none;
       transform: none;
+      stroke-dashoffset: 0;
     }
   }
 

@@ -236,16 +236,16 @@ function domainLabel(link: string) {
                Elles se percutent comme les trois matières de la phrase, et
                aucune ne cède le passage à l'autre. -->
           <svg
-            class="teaser-mark h-[54px] w-auto shrink-0 text-[var(--ink-soft)] group-hover:text-[var(--accent)] sm:h-[76px]"
+            class="teaser-mark h-[54px] w-auto shrink-0 text-[var(--accent)] sm:h-[76px]"
             viewBox="0 0 150 76"
             fill="none"
             stroke="currentColor"
-            stroke-width="1.25"
+            stroke-width="2"
             aria-hidden="true"
           >
-            <circle cx="34" cy="38" r="26" />
+            <circle class="mark-haut" cx="34" cy="38" r="26" />
             <rect class="mark-milieu" x="44" y="12" width="52" height="52" />
-            <path d="M88 64h52L114 12Z" />
+            <path class="mark-bas" d="M88 64h52L114 12Z" />
           </svg>
         </a>
       </div>
@@ -264,25 +264,32 @@ function domainLabel(link: string) {
             </p>
           </span>
 
-          <!-- Une seule ligne, faite de quatre quarts de cercle qui se
-               relaient d'une case à l'autre. Chacun part où le précédent
-               s'arrête, aux coins de la grille : rien ne flotte, rien n'est
-               plein, et la grille reste lisible dessous. C'est la règle des
-               affiches — le même rayon partout, seule l'orientation
-               change. -->
+          <!-- Huit cases, huit formes : quarts de cercle, cercle, demi-cercle
+               et carrés, tous tirés du même petit jeu, seule l'orientation
+               change. C'est la règle des affiches. Les carrés sont posés au
+               centre de leur case plutôt que sur ses bords, sans quoi ils se
+               confondraient avec la grille. Même cadre que le dessin du Lab,
+               au point près, pour que les deux renvois pèsent pareil. -->
           <svg
-            class="teaser-mark h-[54px] w-auto shrink-0 text-[var(--ink-soft)] group-hover:text-[var(--accent)] sm:h-[76px]"
-            viewBox="0 0 156 76"
+            class="teaser-mark h-[54px] w-auto shrink-0 text-[var(--ink-soft)] sm:h-[76px]"
+            viewBox="0 0 150 76"
             fill="none"
             stroke="currentColor"
             stroke-width="1.25"
             aria-hidden="true"
           >
-            <g stroke-opacity="0.7">
-              <path d="M2 0v76M40 0v76M78 0v76M116 0v76M154 0v76" />
-              <path d="M2 0h152M2 38h152M2 76h152" />
+            <path d="M1 1v74M38 1v74M75 1v74M112 1v74M149 1v74" />
+            <path d="M1 1h148M1 38h148M1 75h148" />
+            <g class="mark-formes" stroke="var(--accent)" stroke-width="2">
+              <path pathLength="100" d="M1 38A37 37 0 0 1 38 1" />
+              <path pathLength="100" d="M38 19.5a18.5 18.5 0 1 0 37 0a18.5 18.5 0 1 0-37 0" />
+              <path pathLength="100" d="M75 1A37 37 0 0 1 112 38" />
+              <path pathLength="100" d="M121.25 10.25h18.5v18.5h-18.5Z" />
+              <path pathLength="100" d="M10.25 47.25h18.5v18.5h-18.5Z" />
+              <path pathLength="100" d="M38 75A37 37 0 0 1 75 38" />
+              <path pathLength="100" d="M75 75A18.5 18.5 0 0 1 112 75" />
+              <path pathLength="100" d="M112 38A37 37 0 0 1 149 75" />
             </g>
-            <path d="M2 38a38 38 0 0 1 38-38 38 38 0 0 1 38 38 38 38 0 0 1 38 38 38 38 0 0 1 38-38" />
           </svg>
         </a>
       </div>
