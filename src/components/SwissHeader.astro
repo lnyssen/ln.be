@@ -7,6 +7,11 @@ interface Props {
 
 const { current = 'index' } = Astro.props;
 
+// Sur la page où l'on se trouve déjà, le logo ne renvoie nulle part : deux
+// liens voisins vers la même adresse — lui et le repère « Index » — n'aident
+// personne, et un lecteur d'écran les annonce deux fois.
+const accueil = Astro.url.pathname === '/';
+
 // Une seule liste : la barre l'affiche en ligne sur grand écran, le panneau
 // la reprend en pleine page sur téléphone. Deux rendus, une source.
 const pages = [
@@ -31,9 +36,17 @@ const pages = [
   </div>
 
   <div class="header-pill flex items-center justify-between gap-4 rounded-full py-[15px] pl-[20px] pr-[12px] md:pl-[26px] md:pr-[14px]">
-    <a href="/" class="flex items-center">
-      <LogoLockup class="h-[32px] w-auto shrink-0 text-[var(--ink)]" />
-    </a>
+    {
+      accueil ? (
+        <span class="flex items-center">
+          <LogoLockup class="h-[32px] w-auto shrink-0 text-[var(--ink)]" />
+        </span>
+      ) : (
+        <a href="/" class="flex items-center">
+          <LogoLockup class="h-[32px] w-auto shrink-0 text-[var(--ink)]" />
+        </a>
+      )
+    }
 
     <div class="flex items-center gap-[16px]">
       <!-- La page courante est marquée par une pastille qui glisse d'un

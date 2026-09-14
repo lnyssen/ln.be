@@ -31,11 +31,11 @@ const site = [
     </a>
 
     <div class="footer-col col-span-3 md:col-span-3">
-      <a href="tel:+32497305080" class="swiss-meta w-fit opacity-70 transition-colors duration-200 hover:text-[#141414] hover:opacity-100">
+      <a href="tel:+32497305080" class="swiss-meta w-fit transition-colors duration-200 hover:text-[#141414] ">
         +32 (0)497 30 50 80
       </a>
-      <p class="swiss-meta opacity-70">Brussels — BE</p>
-      <p class="swiss-meta opacity-70">Available for commissions</p>
+      <p class="swiss-meta">Brussels — BE</p>
+      <p class="swiss-meta">Available for commissions</p>
     </div>
 
     <div class="footer-col col-span-3 md:col-span-3">
@@ -49,7 +49,7 @@ const site = [
               href={item.href}
               target={away ? '_blank' : undefined}
               rel={away ? 'noopener noreferrer' : undefined}
-              class="swiss-meta block w-fit opacity-70 transition-colors duration-200 hover:text-[#141414] hover:opacity-100"
+              class="swiss-meta block w-fit transition-colors duration-200 hover:text-[#141414] "
             >
               {item.label}
               <span class="footer-arrow">
@@ -66,7 +66,7 @@ const site = [
         site.map((item) => (
           <a
             href={item.href}
-            class="swiss-meta w-fit underline decoration-dotted decoration-1 underline-offset-[3px] opacity-70 transition-colors duration-200 hover:text-[#141414] hover:opacity-100"
+            class="swiss-meta w-fit underline decoration-dotted decoration-1 underline-offset-[3px] transition-colors duration-200 hover:text-[#141414] "
           >
             {item.label}
           </a>
@@ -76,14 +76,14 @@ const site = [
         href="https://www.typedump.com/font/switzer"
         target="_blank"
         rel="noopener noreferrer"
-        class="swiss-meta block w-fit opacity-70 transition-colors duration-200 hover:text-[#141414] hover:opacity-100"
+        class="swiss-meta block w-fit transition-colors duration-200 hover:text-[#141414] "
       >
         Set in Switzer<span class="footer-arrow"><SwissArrow size={12} /></span>
       </a>
     </div>
 
     <div class="footer-col col-span-3 md:col-span-2 md:items-end md:text-right">
-      <p class="swiss-meta opacity-70">© {new Date().getFullYear()} LN</p>
+      <p class="swiss-meta">© {new Date().getFullYear()} LN</p>
     </div>
   </div>
 </footer>

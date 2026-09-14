@@ -140,6 +140,10 @@ const ogImage = new URL('/og.png', Astro.site).href;
     <ClientRouter />
   </head>
   <body>
+    <!-- Au clavier, il faut sinon traverser la barre entière avant d'atteindre
+         la page. Le lien ne se voit qu'une fois atteint par la tabulation. -->
+    <a href="#contenu" class="skip-link">Skip to content</a>
+
     <!-- Mesure d'audience Vercel : sans cookie, sans identifiant persistant,
          sans donnée personnelle. Le script n'existe que si la fonction est
          activée sur le projet. -->
