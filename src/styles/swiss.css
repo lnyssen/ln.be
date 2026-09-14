@@ -91,19 +91,26 @@
     backdrop-filter: blur(14px);
   }
 
-  /* La capsule d'outils reprend le verre dépoli de la barre : elle flotte
-     au-dessus du contenu, elle doit le laisser deviner. */
+  /* La capsule d'outils est un objet constant : elle reste blanche quel que
+     soit le thème, pour se détacher du fond au lieu de s'y fondre. Redéfinir
+     les jetons à l'intérieur suffit — ses commandes se composent alors comme
+     sur du papier, sans qu'aucune n'ait à connaître le thème de la page. */
   .swiss .dock-capsule {
-    background-color: var(--header-bg);
-    -webkit-backdrop-filter: blur(14px);
-    backdrop-filter: blur(14px);
+    --paper: #fdfdfb;
+    --ink: #141414;
+    --ink-soft: #727272;
+    --rule: #141414;
+    background-color: #fdfdfb;
+    /* La couleur du texte s'hérite du corps, pas des jetons : sans cette
+       ligne, l'icône de grille restait claire sur le blanc en thème sombre. */
+    color: var(--ink);
+    box-shadow: 0 4px 24px rgb(0 0 0 / 0.18);
   }
 
   /* Quand le système demande moins de transparence, la barre redevient
      pleine plutôt que floue. */
   @media (prefers-reduced-transparency: reduce) {
-    .swiss body > header,
-    .swiss .dock-capsule {
+    .swiss body > header {
       background-color: var(--paper);
       -webkit-backdrop-filter: none;
       backdrop-filter: none;
