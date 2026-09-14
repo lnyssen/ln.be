@@ -91,10 +91,19 @@
     backdrop-filter: blur(14px);
   }
 
+  /* La capsule d'outils reprend le verre dépoli de la barre : elle flotte
+     au-dessus du contenu, elle doit le laisser deviner. */
+  .swiss .dock-capsule {
+    background-color: var(--header-bg);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+  }
+
   /* Quand le système demande moins de transparence, la barre redevient
      pleine plutôt que floue. */
   @media (prefers-reduced-transparency: reduce) {
-    .swiss body > header {
+    .swiss body > header,
+    .swiss .dock-capsule {
       background-color: var(--paper);
       -webkit-backdrop-filter: none;
       backdrop-filter: none;

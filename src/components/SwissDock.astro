@@ -1,0 +1,47 @@
+---
+import SwissThemeToggle from './SwissThemeToggle.jsx';
+
+// Les deux outils du visiteur — la grille et le thème — ne sont pas de la
+// navigation : ils quittent la barre et se posent en capsule flottante, à
+// portée du pouce. Une seule ligne de contour pour les deux, comme le verre
+// dépoli de la barre, pour qu'ils ne se lisent pas comme deux boutons de
+// plus mais comme un seul instrument.
+---
+
+<div
+  class="swiss-dock fixed bottom-[calc(20px+env(safe-area-inset-bottom))] right-[20px] z-40 flex flex-col items-end gap-[12px]"
+>
+  <!-- Sur mobile, « Get in touch » quitte la barre, trop étroite, et devient
+       une pilule au-dessus des outils. -->
+  <a
+    href="mailto:hello@laurentnyssen.be"
+    class="swiss-meta flex items-center gap-[10px] rounded-full border border-[var(--ink)] bg-[var(--ink)] px-[20px] py-[14px] font-semibold text-[var(--paper)] shadow-[0_4px_20px_rgba(0,0,0,0.3)] transition-colors duration-200 hover:border-[var(--accent)] hover:bg-[var(--accent)] sm:hidden"
+  >
+    Get in touch
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M3.5 6.5h17v11h-17z" />
+      <path d="M3.5 7l8.5 6 8.5-6" />
+    </svg>
+  </a>
+
+  <div
+    class="dock-capsule flex items-center gap-[10px] rounded-full p-[7px]"
+  >
+    <button
+      type="button"
+      data-grid-toggle
+      aria-pressed="false"
+      aria-label="Afficher la grille"
+      title="Grille (G)"
+      class="swiss-meta flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-full border border-[var(--rule)] transition-colors duration-200 hover:border-[var(--accent)] hover:bg-[var(--accent)] hover:text-[var(--paper)] aria-pressed:bg-[var(--ink)] aria-pressed:text-[var(--paper)]"
+    >
+      <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true">
+        <g stroke="currentColor" stroke-width="1">
+          <path d="M2.5 1.5v13M6 1.5v13M9.5 1.5v13M13 1.5v13" />
+        </g>
+      </svg>
+    </button>
+
+    <SwissThemeToggle client:load />
+  </div>
+</div>

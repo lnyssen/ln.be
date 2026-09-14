@@ -3,6 +3,7 @@ import { ClientRouter } from 'astro:transitions';
 import '../styles/swiss.css';
 import SwissCursor from '../components/SwissCursor.jsx';
 import SwissGrid from '../components/SwissGrid.astro';
+import SwissDock from '../components/SwissDock.astro';
 
 interface Props {
   title?: string;
@@ -81,6 +82,7 @@ const ogImage = new URL('/og.png', Astro.site).href;
     <SwissGrid />
 
     <slot />
+    <SwissDock />
     <SwissCursor client:idle />
 
     <script is:inline data-astro-rerun>

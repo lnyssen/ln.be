@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 // Interrupteur clair/sombre. Géométrie exacte : piste 56×28 bordée de 1px,
 // gouttière de 3px, deux moitiés de 24×20 — le curseur couvre pile une moitié
 // et les marges sont égales des deux côtés.
-export default function SwissThemeToggle() {
+export default function SwissThemeToggle({ framed = true }) {
   const [theme, setTheme] = useState('light');
 
   useEffect(() => {
@@ -41,7 +41,7 @@ export default function SwissThemeToggle() {
       aria-checked={isDark}
       aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
       title={isDark ? 'Light mode' : 'Dark mode'}
-      className="relative box-content h-[30px] w-[60px] shrink-0 rounded-full border border-[var(--rule)] p-[3px] transition-colors duration-200 hover:border-[var(--accent)]"
+      className={`relative box-content h-[30px] w-[60px] shrink-0 rounded-full border p-[3px] transition-colors duration-200 ${framed ? 'border-[var(--rule)] hover:border-[var(--accent)]' : 'border-transparent'}`}
     >
       {/* Les deux repères, chacun centré dans sa moitié de 24px. */}
       <span className="pointer-events-none absolute inset-[3px] flex text-[var(--ink-soft)]">
