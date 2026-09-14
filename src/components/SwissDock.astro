@@ -1,14 +1,14 @@
 ---
 import SwissThemeToggle from './SwissThemeToggle.jsx';
 
-// Les deux outils du visiteur — la grille et le thème — ne sont pas de la
-// navigation : ils quittent la barre et se posent en capsule flottante, à
-// portée du pouce. Le contact n'y figure plus : la barre le porte sur grand
-// écran, le menu sur téléphone.
+// Les outils du visiteur — la grille, la graisse et le thème — ne sont pas de
+// la navigation : ils quittent la barre et se posent en capsule flottante,
+// centrée au bas de l'écran et à portée du pouce. Le contact n'y figure pas :
+// la barre le porte sur grand écran, la carte du menu sur téléphone.
 ---
 
 <div
-  class="swiss-dock fixed bottom-[calc(20px+env(safe-area-inset-bottom))] z-40 flex items-center gap-[12px]"
+  class="swiss-dock fixed bottom-[calc(20px+env(safe-area-inset-bottom))] left-1/2 z-40 flex -translate-x-1/2 items-center gap-[12px]"
 >
   <div
     class="dock-capsule flex items-center gap-[10px] rounded-full p-[7px]"
