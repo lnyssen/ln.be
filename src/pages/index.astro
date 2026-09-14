@@ -265,13 +265,13 @@ function domainLabel(link: string) {
           </span>
 
           <!-- Huit cases, huit formes : quarts de cercle, cercle, demi-cercle
-               et carrés, tous tirés du même petit jeu, seule l'orientation
-               change. C'est la règle des affiches. Les carrés sont posés au
+               triangle et carré, tous tirés du même petit jeu, seule
+               l'orientation change. C'est la règle des affiches. Les carrés sont posés au
                centre de leur case plutôt que sur ses bords, sans quoi ils se
                confondraient avec la grille. Même cadre que le dessin du Lab,
                au point près, pour que les deux renvois pèsent pareil. -->
           <svg
-            class="teaser-mark h-[54px] w-auto shrink-0 text-[var(--ink-soft)] sm:h-[76px]"
+            class="teaser-mark h-[54px] w-auto shrink-0 text-[var(--accent)] sm:h-[76px]"
             viewBox="0 0 150 76"
             fill="none"
             stroke="currentColor"
@@ -280,12 +280,12 @@ function domainLabel(link: string) {
           >
             <path d="M1 1v74M38 1v74M75 1v74M112 1v74M149 1v74" />
             <path d="M1 1h148M1 38h148M1 75h148" />
-            <g class="mark-formes" stroke="var(--accent)" stroke-width="2">
+            <g class="mark-formes" stroke-width="2">
               <path pathLength="100" d="M1 38A37 37 0 0 1 38 1" />
               <path pathLength="100" d="M38 19.5a18.5 18.5 0 1 0 37 0a18.5 18.5 0 1 0-37 0" />
               <path pathLength="100" d="M75 1A37 37 0 0 1 112 38" />
               <path pathLength="100" d="M121.25 10.25h18.5v18.5h-18.5Z" />
-              <path pathLength="100" d="M10.25 47.25h18.5v18.5h-18.5Z" />
+              <path pathLength="100" d="M1 75 19.5 38 38 75Z" />
               <path pathLength="100" d="M38 75A37 37 0 0 1 75 38" />
               <path pathLength="100" d="M75 75A18.5 18.5 0 0 1 112 75" />
               <path pathLength="100" d="M112 38A37 37 0 0 1 149 75" />

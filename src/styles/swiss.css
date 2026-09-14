@@ -4,8 +4,8 @@
    fichier de 42 Ko couvre 100 à 900 ; les cinq graisses statiques qu'il
    remplace en pesaient 91. */
 @font-face {
-  font-family: 'Switzer';
-  src: url('/fonts/switzer-variable.woff2') format('woff2');
+  font-family: "Switzer";
+  src: url("/fonts/switzer-variable.woff2") format("woff2");
   font-weight: 100 900;
   font-style: normal;
   font-display: swap;
@@ -16,14 +16,13 @@
 @tailwind utilities;
 
 /* Variante suisse : papier, encre, un seul accent violet. Pas de dégradé ni
-   d'ombre — la grille et la typographie portent tout, le grain fait le papier. */
+   d'ombre — la grille et la typographie portent tout. */
 .swiss {
   --paper: #fdfdfb;
   --ink: #141414;
   --ink-soft: #727272;
   --rule: #141414;
   --accent: #7b58e8;
-  --grain: 0.48;
   /* Fond de la barre : assez de papier pour que la typographie reste lisible,
      assez de vide pour qu'on devine le contenu passer dessous. */
   --header-bg: color-mix(in srgb, #fdfdfb 68%, transparent);
@@ -56,7 +55,7 @@
   }
 }
 
-.swiss[data-swiss-theme='dark'] {
+.swiss[data-swiss-theme="dark"] {
   --paper: #141414;
   --ink: #fdfdfb;
   --ink-soft: #d6d6d6;
@@ -65,11 +64,10 @@
      lavande, l'autre violet du site, qui remonte à 7,7:1. */
   --accent: #9e9eff;
   /* Le bruit se voit davantage sur l'encre : on le retient un peu. */
-  --grain: 0.4;
   --header-bg: color-mix(in srgb, #141414 68%, transparent);
 }
 
-/* Deux encres sur un papier chaud, le grain poussé, et un très léger
+/* Deux encres sur un papier chaud et un très léger
    décalage de repérage sur les grands textes : ce qui trahit une riso. */
 .swiss.ink-on {
   --paper: #f2ead9;
@@ -77,7 +75,6 @@
   --ink-soft: #6a5f8c;
   --rule: #2b2350;
   --accent: #ff4d6d;
-  --grain: 0.95;
   --footer-bg: #ff4d6d;
   --footer-fg: #f2ead9;
   --header-bg: color-mix(in srgb, #f2ead9 68%, transparent);
@@ -132,35 +129,35 @@
      point du titre. Chacune vient par paire : la sombre est éclaircie, sans
      quoi elle s'éteindrait sur le fond noir. Le mode encre garde les siennes
      — c'est une simulation d'impression, pas un thème à décorer. */
-  .swiss:not(.ink-on)[data-swiss-accent='vermillon'] {
+  .swiss:not(.ink-on)[data-swiss-accent="vermillon"] {
     --accent: #d63a1e;
   }
 
-  .swiss:not(.ink-on)[data-swiss-accent='vermillon'][data-swiss-theme='dark'] {
+  .swiss:not(.ink-on)[data-swiss-accent="vermillon"][data-swiss-theme="dark"] {
     --accent: #ff7a5c;
   }
 
-  .swiss:not(.ink-on)[data-swiss-accent='outremer'] {
+  .swiss:not(.ink-on)[data-swiss-accent="outremer"] {
     --accent: #1f45d6;
   }
 
-  .swiss:not(.ink-on)[data-swiss-accent='outremer'][data-swiss-theme='dark'] {
+  .swiss:not(.ink-on)[data-swiss-accent="outremer"][data-swiss-theme="dark"] {
     --accent: #7aa2ff;
   }
 
-  .swiss:not(.ink-on)[data-swiss-accent='veronese'] {
+  .swiss:not(.ink-on)[data-swiss-accent="veronese"] {
     --accent: #0c7d54;
   }
 
-  .swiss:not(.ink-on)[data-swiss-accent='veronese'][data-swiss-theme='dark'] {
+  .swiss:not(.ink-on)[data-swiss-accent="veronese"][data-swiss-theme="dark"] {
     --accent: #43d2a0;
   }
 
-  .swiss:not(.ink-on)[data-swiss-accent='safran'] {
+  .swiss:not(.ink-on)[data-swiss-accent="safran"] {
     --accent: #b86a00;
   }
 
-  .swiss:not(.ink-on)[data-swiss-accent='safran'][data-swiss-theme='dark'] {
+  .swiss:not(.ink-on)[data-swiss-accent="safran"][data-swiss-theme="dark"] {
     --accent: #f5b13d;
   }
 
@@ -299,57 +296,49 @@
 
   /* Les dessins des deux renvois tournent en boucle plutôt qu'au survol :
      sur téléphone il n'y a pas de survol, et c'est là qu'ils seraient perdus.
-     Le cycle est long et l'essentiel du temps se passe à l'arrêt — un geste
-     qui revient toutes les sept secondes se remarque, un geste continu
-     fatigue. */
+     Le mouvement ne s'arrête jamais. */
 
   /* Lab : les trois figures se rapprochent puis se séparent. Elles se
      percutent, c'est la phrase. */
   .swiss .teaser-mark .mark-haut {
-    animation: mark-gauche 7s cubic-bezier(0.45, 0, 0.25, 1) infinite;
+    animation: mark-gauche 5s ease-in-out infinite;
   }
 
   .swiss .teaser-mark .mark-milieu {
-    animation: mark-monte 7s cubic-bezier(0.45, 0, 0.25, 1) infinite;
+    animation: mark-monte 5s ease-in-out infinite;
   }
 
   .swiss .teaser-mark .mark-bas {
-    animation: mark-descend 7s cubic-bezier(0.45, 0, 0.25, 1) infinite;
+    animation: mark-descend 5s ease-in-out infinite;
   }
 
   @keyframes mark-gauche {
     0%,
-    62%,
     100% {
       transform: none;
     }
-    28%,
-    44% {
-      transform: translateX(10px);
+    50% {
+      transform: translateX(11px);
     }
   }
 
   @keyframes mark-monte {
     0%,
-    62%,
     100% {
       transform: none;
     }
-    28%,
-    44% {
-      transform: translateY(-9px);
+    50% {
+      transform: translateY(-10px);
     }
   }
 
   @keyframes mark-descend {
     0%,
-    62%,
     100% {
       transform: none;
     }
-    28%,
-    44% {
-      transform: translateX(-10px);
+    50% {
+      transform: translateX(-11px);
     }
   }
 
@@ -360,46 +349,50 @@
      que soit leur taille réelle. */
   .swiss .teaser-mark .mark-formes > path {
     stroke-dasharray: 100;
-    animation: mark-retrace 7s cubic-bezier(0.65, 0, 0.35, 1) infinite backwards;
+    animation: mark-retrace 5s ease-in-out infinite backwards;
   }
 
   /* Elles se tracent l'une après l'autre, de la première case à la dernière,
      comme la plume d'une table traçante. */
   .swiss .teaser-mark .mark-formes > path:nth-child(2) {
-    animation-delay: 90ms;
-  }
-
-  .swiss .teaser-mark .mark-formes > path:nth-child(3) {
     animation-delay: 180ms;
   }
 
-  .swiss .teaser-mark .mark-formes > path:nth-child(4) {
-    animation-delay: 270ms;
-  }
-
-  .swiss .teaser-mark .mark-formes > path:nth-child(5) {
+  .swiss .teaser-mark .mark-formes > path:nth-child(3) {
     animation-delay: 360ms;
   }
 
-  .swiss .teaser-mark .mark-formes > path:nth-child(6) {
-    animation-delay: 450ms;
-  }
-
-  .swiss .teaser-mark .mark-formes > path:nth-child(7) {
+  .swiss .teaser-mark .mark-formes > path:nth-child(4) {
     animation-delay: 540ms;
   }
 
-  .swiss .teaser-mark .mark-formes > path:nth-child(8) {
-    animation-delay: 630ms;
+  .swiss .teaser-mark .mark-formes > path:nth-child(5) {
+    animation-delay: 720ms;
   }
 
+  .swiss .teaser-mark .mark-formes > path:nth-child(6) {
+    animation-delay: 900ms;
+  }
+
+  .swiss .teaser-mark .mark-formes > path:nth-child(7) {
+    animation-delay: 1080ms;
+  }
+
+  .swiss .teaser-mark .mark-formes > path:nth-child(8) {
+    animation-delay: 1260ms;
+  }
+
+  /* La plume entre par un bout et ressort par l'autre : la forme se trace,
+     puis s'efface dans le même sens. Rien ne s'arrête jamais. */
   @keyframes mark-retrace {
     0% {
       stroke-dashoffset: 100;
     }
-    22%,
-    100% {
+    50% {
       stroke-dashoffset: 0;
+    }
+    100% {
+      stroke-dashoffset: -100;
     }
   }
 
@@ -442,7 +435,7 @@
     }
   }
 
-  /* La pilule porte le papier plein et son grain, pas un verre dépoli : le
+  /* La pilule porte le papier plein, pas un verre dépoli : le
      flou lissait la texture de ce qui passait dessous, si bien qu'elle se
      lisait comme un noir différent de celui qui l'entoure. Seuls son contour
      et sa forme la désignent désormais. */
@@ -469,7 +462,7 @@
     display: none;
   }
 
-  .swiss .weight-panel input[type='range'] {
+  .swiss .weight-panel input[type="range"] {
     width: 160px;
     accent-color: var(--accent);
   }
@@ -532,29 +525,9 @@
     }
   }
 
-  /* Le grain de la barre, en une seule couche par-dessus la plaque et la
-     pilule : deux couches distinctes laissaient voir leur jointure. Il est
-     calé sur le bord de la boîte, et non sur ses gouttières, pour rester en
-     phase avec le grain de la page. Elle est un peu plus appuyée que celle de
-     la page : sous la pilule, le verre dépoli en mange une partie. */
-  .swiss body > header::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background-image: url('/images/grain.png');
-    background-repeat: repeat;
-    background-origin: border-box;
-    background-position: 0 0;
-    background-size: 64px auto;
-    opacity: calc(var(--grain) * 1.5);
-  }
-
   .swiss body {
     padding-bottom: var(--footer-h);
   }
-
-
 
   /* La barre de défilement du navigateur entre dans le système : filet
      d'encre sur le papier, et non le gris du système. Elle suit donc le
@@ -601,11 +574,13 @@
   .swiss body {
     background-color: var(--paper);
     color: var(--ink);
-    font-family: Switzer, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: Switzer, "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 15px;
     line-height: 1.35;
     -webkit-font-smoothing: antialiased;
-    transition: background-color 200ms ease, color 200ms ease;
+    transition:
+      background-color 200ms ease,
+      color 200ms ease;
   }
 
   /* Grain de papier. Il était posé au-dessus de tout, y compris des visuels
@@ -614,19 +589,6 @@
      les photographies restent nettes.
      Il reste fixé au cadre plutôt qu'au document : la texture appartient à
      l'écran qu'on regarde, elle ne défile pas avec le contenu. */
-  .swiss body > main::after,
-  .swiss .swiss-footer::after {
-    content: '';
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    pointer-events: none;
-    background-image: url('/images/grain.png');
-    background-repeat: repeat;
-    background-size: 64px auto;
-    opacity: var(--grain);
-  }
-
   /* Filet de sécurité pour un titre sans classe. Tous ceux du site en portent
      une, qui règle déjà corps, graisse et interlettrage : la règle générique
      ne doit pas passer devant. */
@@ -723,40 +685,40 @@
   @media (min-width: 768px) {
     /* Bande défilante : le contenu est doublé, la piste recule d'exactement la
      moitié — la boucle est donc invisible. */
-  .swiss .marquee-track {
-    animation: marquee 10s linear infinite;
-  }
+    .swiss .marquee-track {
+      animation: marquee 10s linear infinite;
+    }
 
-  .swiss .marquee:focus-within .marquee-track {
-    animation-play-state: paused;
-  }
-
-  @media (hover: hover) {
-    .swiss .marquee:hover .marquee-track {
+    .swiss .marquee:focus-within .marquee-track {
       animation-play-state: paused;
     }
-  }
 
-  @keyframes marquee {
-    from {
-      transform: translateX(0);
-    }
-    to {
-      transform: translateX(-50%);
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .swiss .marquee-track {
-      animation: none;
+    @media (hover: hover) {
+      .swiss .marquee:hover .marquee-track {
+        animation-play-state: paused;
+      }
     }
 
-    .swiss .marquee {
-      overflow-x: auto;
+    @keyframes marquee {
+      from {
+        transform: translateX(0);
+      }
+      to {
+        transform: translateX(-50%);
+      }
     }
-  }
 
-  .swiss .filmstrip {
+    @media (prefers-reduced-motion: reduce) {
+      .swiss .marquee-track {
+        animation: none;
+      }
+
+      .swiss .marquee {
+        overflow-x: auto;
+      }
+    }
+
+    .swiss .filmstrip {
       scroll-padding-left: 40px;
     }
   }
@@ -852,7 +814,7 @@
   }
 
   /* Le rythme, en une seule valeur. */
-  .swiss main section > [class*='border-t'] {
+  .swiss main section > [class*="border-t"] {
     padding-top: var(--section-space);
   }
 
@@ -885,27 +847,26 @@
      curseur, alors c'est le curseur qui prend le mauve. Même promesse que les
      deux autres commandes, tenue autrement. */
   @media (hover: hover) {
-    .swiss [role='switch']:hover .theme-knob {
+    .swiss [role="switch"]:hover .theme-knob {
       background-color: var(--accent);
     }
 
-    .swiss [role='switch']:hover .theme-icons {
+    .swiss [role="switch"]:hover .theme-icons {
       color: var(--accent);
     }
   }
 
   .swiss .theme-knob {
     transform: translateX(0);
-    transition: transform 200ms ease-out, background-color 200ms ease-out;
+    transition:
+      transform 200ms ease-out,
+      background-color 200ms ease-out;
   }
 
-  .swiss[data-swiss-theme='dark'] .theme-knob {
+  .swiss[data-swiss-theme="dark"] .theme-knob {
     transform: translateX(30px);
   }
 
-  /* Panneau de navigation : il couvre la page, donc il porte le papier et
-     son grain, calé sur le cadre comme celui du site pour que la texture ne
-     s'interrompe pas. */
   /* La carte se pose sous la barre, jamais dessus : 16 de marge interne,
      70 de pilule, 10 d'écart. */
   /* Le fondu est porté par la carte et non par son conteneur : une opacité
@@ -977,7 +938,7 @@
   }
 
   /* La carte du menu partage la matière de la barre : même verre, même
-     contour, même grain. */
+     contour. */
   .swiss .menu-card {
     position: relative;
     isolation: isolate;
@@ -986,36 +947,6 @@
     box-shadow: 0 10px 40px rgb(0 0 0 / 0.2);
     -webkit-backdrop-filter: blur(64px) saturate(1.15);
     backdrop-filter: blur(64px) saturate(1.15);
-  }
-
-  .swiss .menu-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    pointer-events: none;
-    background-image: url('/images/grain.png');
-    background-repeat: repeat;
-    background-size: 64px auto;
-    opacity: var(--grain);
-  }
-
-  /* La carte laisse voir son grain à travers le verre : on retient un peu le
-     bruit pour que le flou reste lisible dessous. */
-  .swiss .menu-card::before {
-    opacity: calc(var(--grain) * 0.7);
-  }
-
-  .swiss .swiss-menu::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    pointer-events: none;
-    background-image: url('/images/grain.png');
-    background-repeat: repeat;
-    background-size: 64px auto;
-    opacity: var(--grain);
   }
 
   .swiss .menu-link {
@@ -1032,11 +963,11 @@
     transition: opacity 180ms ease;
   }
 
-  .swiss [data-menu-toggle][aria-expanded='false'] .icon-cross {
+  .swiss [data-menu-toggle][aria-expanded="false"] .icon-cross {
     opacity: 0;
   }
 
-  .swiss [data-menu-toggle][aria-expanded='true'] .icon-bars {
+  .swiss [data-menu-toggle][aria-expanded="true"] .icon-bars {
     opacity: 0;
   }
 
@@ -1107,25 +1038,9 @@
     top: calc(var(--header-h) + env(safe-area-inset-top));
     z-index: 20;
     /* Le bandeau doit masquer ce qui défile derrière lui sans se voir quand
-       rien ne passe. Un fond translucide flouté lissait le grain et laissait
-       un rectangle lisse en plein papier ; un fond opaque nu l'interrompait
-       tout autant. Il porte donc son propre grain, calé sur le cadre comme
-       celui de la page : les deux textures sont en phase, la jointure ne se
-       voit pas. */
+       rien ne passe : le papier plein, ni verre ni transparence. */
     background-color: var(--paper);
     isolation: isolate;
-  }
-
-  .swiss details[open] > summary::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    pointer-events: none;
-    background-image: url('/images/grain.png');
-    background-repeat: repeat;
-    background-size: 64px auto;
-    opacity: var(--grain);
   }
 
   /* Ouverture filée : le contenu passe de 0 à sa hauteur réelle. Sur un
@@ -1297,13 +1212,12 @@
   }
 
   .swiss,
-  .swiss[data-swiss-theme='dark'] {
+  .swiss[data-swiss-theme="dark"] {
     --paper: #ffffff;
     --ink: #000000;
     --ink-soft: #4a4a4a;
     --rule: #000000;
     --accent: #000000;
-    --grain: 0;
   }
 
   .swiss body {
@@ -1312,7 +1226,7 @@
   }
 
   /* Commandes, décors et repères d'écran : rien de tout cela n'existe sur
-     papier. Le grain non plus, il ne ferait qu'encrasser l'impression. */
+     papier. */
   .swiss body > header,
   .swiss body::after,
   .swiss .grid-overlay,
@@ -1366,9 +1280,9 @@
 
   /* Un lien imprimé qui ne dit pas où il mène ne sert à rien. Les boutons en
      portent déjà le domaine, on ne le répète pas. */
-  .swiss .also-list a[href^='http']::after,
-  .swiss .project-body a[href^='http']::after {
-    content: ' · ' attr(href);
+  .swiss .also-list a[href^="http"]::after,
+  .swiss .project-body a[href^="http"]::after {
+    content: " · " attr(href);
     font-size: 0.75em;
     letter-spacing: 0.02em;
     word-break: break-all;
