@@ -1135,6 +1135,14 @@
     backdrop-filter: blur(6px);
   }
 
+  /* En miroir d'un bouton, le disque en reprend le corps, le contour et la
+     couleur — il ne le commente pas, il le double. Son fond reste du papier
+     voilé : il faut bien qu'il se détache de ce qu'il survole, sans quoi il
+     ne serait plus un curseur mais un calque. */
+  .swiss .swiss-cursor.is-mirror {
+    background-color: color-mix(in srgb, var(--paper) 78%, transparent);
+  }
+
   .swiss-cursor span {
     transition: opacity 160ms ease;
   }

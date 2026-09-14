@@ -15,7 +15,11 @@ function labelFor(node) {
   // est alors une reprise, pas une glose.
   const miroir = node.closest('[data-cursor-mirror]');
   if (miroir) {
-    return { mot: miroir.dataset.cursorMirror || miroir.textContent.trim(), signe: 'VISIT' };
+    return {
+      mot: miroir.dataset.cursorMirror || miroir.textContent.trim(),
+      signe: 'VISIT',
+      miroir: true,
+    };
   }
 
   // La loupe couvre tout : elle se referme d'un clic, où qu'il tombe.
@@ -155,6 +159,7 @@ export default function SwissCursor() {
   // le même nom — soit les mots repris d'un bouton.
   const mot = typeof label === 'string' ? label : label?.mot;
   const signe = typeof label === 'string' ? label : label?.signe;
+  const miroir = typeof label === 'object' && label?.miroir;
 
   return (
     <div
@@ -162,22 +167,28 @@ export default function SwissCursor() {
       aria-hidden="true"
       className={`swiss-cursor pointer-events-none fixed left-0 top-0 z-[90] flex items-center justify-center overflow-hidden ${
         label
-          ? 'is-labelled h-[34px] w-auto rounded-full bg-[var(--ink)] px-[18px]'
+          ? `is-labelled w-auto rounded-full ${
+              miroir
+                ? 'is-mirror h-[44px] border border-[var(--accent)] px-[24px]'
+                : 'h-[34px] bg-[var(--ink)] px-[18px]'
+            }`
           : 'h-[21px] w-[21px] rounded-full bg-white px-0'
       } ${visible ? 'opacity-100' : 'opacity-0'}`}
     >
       {/* Le mot passe devant le signe, comme sur les boutons du site, où la
           flèche suit toujours ce qu'elle annonce. */}
       <span
-        className={`flex items-center gap-[7px] whitespace-nowrap text-[11px] font-semibold uppercase leading-none tracking-[0.14em] text-[var(--paper)] ${
-          label ? 'opacity-100' : 'opacity-0'
-        }`}
+        className={`flex items-center whitespace-nowrap leading-none ${
+          miroir
+            ? 'gap-[10px] text-[15px] font-medium tracking-[-0.01em] text-[var(--accent)]'
+            : 'gap-[7px] text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--paper)]'
+        } ${label ? 'opacity-100' : 'opacity-0'}`}
       >
         {mot}
         {signe && GLYPHS[signe] && (
           <svg
-            width="13"
-            height="13"
+            width={miroir ? 16 : 13}
+            height={miroir ? 16 : 13}
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
