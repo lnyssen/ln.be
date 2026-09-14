@@ -40,7 +40,7 @@ const pages = [
            repère à l'autre. Le nœud traverse les transitions de vue, sans
            quoi elle sauterait au lieu de glisser. -->
       <nav
-        class="nav-track swiss-meta nav-link relative hidden items-center gap-[2px] sm:flex"
+        class="nav-track swiss-meta nav-link relative hidden items-center gap-[2px] min-[820px]:flex"
         aria-label="Main"
         data-nav
         transition:persist="nav"
@@ -65,20 +65,22 @@ const pages = [
            navigation par un cadre, à la hauteur des autres commandes. -->
       <a
         href="mailto:hello@laurentnyssen.be"
-        class="swiss-meta nav-link hidden h-[38px] shrink-0 items-center rounded-full border border-[var(--rule)] px-[18px] transition-colors duration-200 hover:border-[var(--accent)] hover:bg-[var(--accent)] hover:text-[var(--paper)] sm:inline-flex"
+        class="swiss-meta nav-link hidden h-[38px] shrink-0 items-center rounded-full border border-[var(--rule)] px-[18px] transition-colors duration-200 hover:border-[var(--accent)] hover:bg-[var(--accent)] hover:text-[var(--paper)] min-[820px]:inline-flex"
       >
         Get in touch
       </a>
 
-      <!-- Sur téléphone, la barre n'a la place ni des trois repères ni du
-           bouton : ils passent derrière un seul signe. -->
+      <!-- Tant que la barre n'a pas la place des trois repères et du bouton,
+           ils passent derrière un seul signe. Le seuil est mesuré, non
+           supposé : il faut 685 points de contenu, soit 765 de fenêtre aux
+           gouttières de 40, et l'on prend 820 pour laisser respirer. -->
       <button
         type="button"
         data-menu-toggle
         aria-expanded="false"
         aria-controls="swiss-menu"
         aria-label="Ouvrir le menu"
-        class="swiss-meta flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-full border border-[var(--rule)] transition-colors duration-200 sm:hidden"
+        class="swiss-meta flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-full border border-[var(--rule)] transition-colors duration-200 min-[820px]:hidden"
       >
         <!-- Deux signes superposés plutôt qu'un seul qu'on plie : faire
              pivoter un trait SVG dépend du cadre de référence, et la croix
@@ -106,7 +108,7 @@ const pages = [
   id="swiss-menu"
   data-menu-panel
   aria-hidden="true"
-  class="swiss-menu swiss-shell fixed inset-x-0 z-40 sm:hidden"
+  class="swiss-menu swiss-shell fixed inset-x-0 z-40 min-[820px]:hidden"
 >
   <div class="menu-card overflow-hidden rounded-[26px] pt-[8px]">
     <nav aria-label="Pages">
@@ -175,7 +177,7 @@ const pages = [
     });
 
     // Repasser en grand écran laisse le panneau ouvert derrière soi.
-    matchMedia('(min-width: 640px)').addEventListener('change', (event) => {
+    matchMedia('(min-width: 820px)').addEventListener('change', (event) => {
       if (event.matches) setState(false);
     });
   })();
