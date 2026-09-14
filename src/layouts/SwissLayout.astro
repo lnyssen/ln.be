@@ -84,7 +84,13 @@ const ogImage = new URL('/og.png', Astro.site).href;
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
 
-    <meta name="theme-color" content="#1d1f21" />
+    <!-- Safari teinte ses barres avec cette valeur. Sans elle, il échantillonne
+         le bas de la page — c'est-à-dire le violet du pied, qui débordait dans
+         la barre d'adresse. Les deux déclarations couvrent le réglage du
+         système ; le script ci-dessous les remplace par le thème réellement
+         appliqué, que le visiteur l'ait choisi ou non. -->
+    <meta name="theme-color" content="#f4f2ed" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#1d1f21" media="(prefers-color-scheme: dark)" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
@@ -105,6 +111,8 @@ const ogImage = new URL('/og.png', Astro.site).href;
           root.dataset.swissTheme =
             stored ?? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
 
+          poserBarre();
+
           // La teinte d'accent choisie par le visiteur, posée ici pour la
           // même raison que le thème : appliquée après coup, la page
           // paraîtrait violette le temps d'une image.
@@ -121,8 +129,41 @@ const ogImage = new URL('/og.png', Astro.site).href;
             root.dataset.swissCursor = '';
           }
         };
+
+        // Safari teinte ses barres avec cette valeur, et c'est ce qui fait
+        // déborder le violet du pied de page dans la barre d'adresse quand on
+        // ne la lui donne pas. Les deux déclarations conditionnelles du
+        // document cèdent la place à une seule, sans condition : le visiteur
+        // peut avoir choisi l'inverse de son système, et c'est son choix qui
+        // doit se voir jusque dans le chrome du navigateur. On lit le papier
+        // réellement appliqué plutôt qu'une table, pour que le mode encre
+        // l'emporte aussi.
+        const teintes = { light: '#f4f2ed', dark: '#1d1f21' };
+        const poserBarre = () => {
+          const root = document.documentElement;
+          for (const balise of document.querySelectorAll('meta[name="theme-color"][media]')) {
+            balise.remove();
+          }
+          let barre = document.querySelector('meta[name="theme-color"]');
+          if (!barre) {
+            barre = document.createElement('meta');
+            barre.name = 'theme-color';
+            document.head.append(barre);
+          }
+          const papier = getComputedStyle(root).getPropertyValue('--paper').trim();
+          barre.setAttribute('content', papier || teintes[root.dataset.swissTheme] || teintes.light);
+        };
+
         apply();
         document.addEventListener('astro:after-swap', apply);
+
+        // Le thème peut changer sans passer par ici — l'interrupteur du bas,
+        // la touche du mode encre. On suit l'attribut plutôt que celui qui le
+        // pose.
+        new MutationObserver(poserBarre).observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ['data-swiss-theme', 'class'],
+        });
 
         // Le logo ne se trace qu'à la première page vue : le revoir se
         // dessiner à chaque navigation lasserait. Le drapeau est posé avant
