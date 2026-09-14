@@ -17,6 +17,37 @@ const {
   noindex = false,
 } = Astro.props;
 
+// Fiche structurée, posée sur la seule page d'accueil : c'est elle qui
+// représente la personne, la répéter sur chaque page n'ajoute rien.
+const person = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Laurent Nyssen',
+  alternateName: 'LN',
+  jobTitle: 'Multidisciplinary Designer',
+  url: 'https://laurentnyssen.be',
+  email: 'mailto:hello@laurentnyssen.be',
+  telephone: '+32497305080',
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Brussels',
+    addressCountry: 'BE',
+  },
+  knowsAbout: [
+    'Brand strategy',
+    'Creative direction',
+    'Visual identity',
+    'UX/UI design',
+    'Editorial and print design',
+    'Design systems',
+  ],
+  sameAs: [
+    'https://www.linkedin.com/in/laurentnyssen/',
+    'https://www.instagram.com/lepolographe/',
+    'https://open.spotify.com/user/116697393',
+  ],
+};
+
 // Adresses absolues : les réseaux sociaux refusent les chemins relatifs.
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const ogImage = new URL('/og.png', Astro.site).href;
@@ -29,6 +60,11 @@ const ogImage = new URL('/og.png', Astro.site).href;
     <meta name="description" content={description} />
     <title>{title}</title>
     <link rel="canonical" href={canonical} />
+    {
+      Astro.url.pathname === '/' && (
+        <script type="application/ld+json" set:html={JSON.stringify(person)} />
+      )
+    }
     {noindex && <meta name="robots" content="noindex" />}
 
     <meta property="og:type" content="website" />

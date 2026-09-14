@@ -63,7 +63,8 @@ function domainLabel(link: string) {
       </h1>
 
       <div class="swiss-grid mt-[40px] gap-y-6 border-t border-[var(--rule)]" data-reveal data-reveal-slow data-reveal-delay="140">
-        <p class="section-label swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">Profile</p>
+        <h2 class="section-label swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">Profile
+        </h2>
 
         <p class="swiss-lede col-span-6 md:col-span-7">
           I'm a Brussels-based designer creating bold identities and digital
@@ -84,9 +85,9 @@ function domainLabel(link: string) {
          même bloc que son intitulé pour suivre le rythme des autres sections. -->
     <section class="swiss-shell">
       <div class="swiss-grid gap-y-4 border-t border-[var(--rule)]" data-reveal>
-        <p class="section-label swiss-meta col-start-1 col-span-6 row-start-1 text-[var(--ink-soft)] md:col-span-2">
+        <h2 class="section-label swiss-meta col-start-1 col-span-6 row-start-1 text-[var(--ink-soft)] md:col-span-2">
           Skills
-        </p>
+        </h2>
 
         <div class="marquee col-start-1 col-span-6 row-start-2 overflow-hidden md:col-span-12">
           <div class="marquee-track flex w-max">
@@ -111,9 +112,9 @@ function domainLabel(link: string) {
          au clic, donc au doigt comme à la souris, sans JavaScript. -->
     <section id="work" class="swiss-shell">
       <div class="swiss-grid gap-y-4 border-t border-[var(--rule)]" data-reveal>
-        <p class="section-label swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">
+        <h2 class="section-label swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">
           Selected work
-        </p>
+        </h2>
 
         <div class="col-span-6 md:col-span-10">
           {
@@ -123,7 +124,7 @@ function domainLabel(link: string) {
                      mobile. Colonne 1 le numéro, colonne 2 le titre et les
                      tags calés dessous, l'étiquette toujours à droite. -->
                 <summary class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-[9px] py-[26px] hover:text-[var(--accent)] sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]">
-                  <span class="swiss-row-title col-start-1 row-start-1">{project.data.title}</span>
+                  <h3 class="swiss-row-title col-start-1 row-start-1">{project.data.title}</h3>
 
                   <span class="swiss-meta col-start-1 col-end-2 row-start-2 text-[var(--ink-soft)] sm:col-start-2 sm:col-end-3 sm:row-start-1">
                     {project.data.tags.join(', ')}
@@ -176,7 +177,8 @@ function domainLabel(link: string) {
     <!-- And also : même grammaire tabulaire, en plus petit. -->
     <section class="swiss-shell">
       <div class="swiss-grid gap-y-4 border-t border-[var(--rule)]" data-reveal>
-        <p class="section-label swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">And also</p>
+        <h2 class="section-label swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">And also
+        </h2>
 
         <ul class="also-list col-span-6 md:col-span-10">
           {
@@ -188,9 +190,9 @@ function domainLabel(link: string) {
                   rel="noopener noreferrer"
                   class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-[9px] py-[22px] hover:text-[var(--accent)] sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]"
                 >
-                  <span class="also-title col-start-1 row-start-1 text-[clamp(1.125rem,1.8vw,1.5rem)] font-medium tracking-[-0.025em]">
+                  <h3 class="also-title col-start-1 row-start-1 text-[clamp(1.125rem,1.8vw,1.5rem)] font-medium tracking-[-0.025em]">
                     {item.title}
-                  </span>
+                  </h3>
 
                   <span class="swiss-meta col-start-1 col-end-2 row-start-2 text-[var(--ink-soft)] sm:col-start-2 sm:col-end-3 sm:row-start-1">
                     {item.tags.join(', ')}
@@ -211,14 +213,16 @@ function domainLabel(link: string) {
     <section class="swiss-shell">
       <div class="swiss-grid gap-y-[34px] border-t border-[var(--rule)]" data-reveal>
         <a href="/lab" class="teaser group col-span-6 md:col-span-6">
-          <p class="section-label swiss-meta text-[var(--ink-soft)]">Studies</p>
+          <h2 class="section-label swiss-meta text-[var(--ink-soft)]">Studies
+        </h2>
           <p class="lab-teaser-title mt-[16px] text-[clamp(1.375rem,2.6vw,2rem)] font-medium leading-[1.1] tracking-[-0.035em] group-hover:text-[var(--accent)]">
             Experiments where AI, design and code collide <SwissArrow direction="right" size={24} />
           </p>
         </a>
 
         <a href="/lepolographe" class="teaser group col-span-6 md:col-span-6">
-          <p class="section-label swiss-meta text-[var(--ink-soft)]">Le Polographe</p>
+          <h2 class="section-label swiss-meta text-[var(--ink-soft)]">Le Polographe
+        </h2>
           <p class="lab-teaser-title mt-[16px] text-[clamp(1.375rem,2.6vw,2rem)] font-medium leading-[1.1] tracking-[-0.035em] group-hover:text-[var(--accent)]">
             Risograph posters, printed twenty at a time <SwissArrow direction="right" size={24} />
           </p>

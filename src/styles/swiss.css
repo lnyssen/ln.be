@@ -221,9 +221,10 @@
     opacity: var(--grain);
   }
 
-  .swiss h1,
-  .swiss h2,
-  .swiss h3 {
+  /* Filet de sécurité pour un titre sans classe. Tous ceux du site en portent
+     une, qui règle déjà corps, graisse et interlettrage : la règle générique
+     ne doit pas passer devant. */
+  .swiss :is(h1, h2, h3):not([class]) {
     font-weight: 500;
     letter-spacing: -0.035em;
   }
