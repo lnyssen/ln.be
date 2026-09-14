@@ -534,20 +534,21 @@
     overflow: hidden;
   }
 
-  /* Le signe s'emplit et ses deux barres se croisent tant que le panneau est
-     ouvert : le même bouton ouvre et referme. */
-  .swiss .menu-icon .bar-top,
-  .swiss .menu-icon .bar-bottom {
-    transform-origin: center;
-    transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1);
+  /* Les deux signes se relaient en fondu : la croix est tracée à ses
+     coordonnées, elle croise donc au centre exact du cadre. Les deux règles
+     visent des états qui s'excluent — ouvert, fermé — plutôt qu'une règle et
+     son exception, qui se disputaient la priorité. */
+  .swiss .menu-icon .icon-bars,
+  .swiss .menu-icon .icon-cross {
+    transition: opacity 180ms ease;
   }
 
-  .swiss [data-menu-toggle][aria-expanded='true'] .bar-top {
-    transform: translateY(3px) rotate(45deg);
+  .swiss [data-menu-toggle][aria-expanded='false'] .icon-cross {
+    opacity: 0;
   }
 
-  .swiss [data-menu-toggle][aria-expanded='true'] .bar-bottom {
-    transform: translateY(-3px) rotate(-45deg);
+  .swiss [data-menu-toggle][aria-expanded='true'] .icon-bars {
+    opacity: 0;
   }
 
   /* La capsule d'outils et le calque de grille s'effacent derrière le

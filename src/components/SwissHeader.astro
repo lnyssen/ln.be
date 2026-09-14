@@ -56,10 +56,19 @@ const pages = [
         aria-label="Ouvrir le menu"
         class="swiss-meta flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-full border border-[var(--rule)] transition-colors duration-200 sm:hidden"
       >
+        <!-- Deux signes superposés plutôt qu'un seul qu'on plie : faire
+             pivoter un trait SVG dépend du cadre de référence, et la croix
+             finissait décentrée. Ici elle est dessinée, donc exacte. -->
         <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" class="menu-icon">
-          <g stroke="currentColor" stroke-width="1.2" stroke-linecap="round">
-            <path d="M2 5h12" class="bar-top" />
-            <path d="M2 11h12" class="bar-bottom" />
+          <g stroke="currentColor" stroke-width="1.2" stroke-linecap="round" fill="none">
+            <g class="icon-bars">
+              <path d="M2 5h12" />
+              <path d="M2 11h12" />
+            </g>
+            <g class="icon-cross">
+              <path d="M4.6 4.6 11.4 11.4" />
+              <path d="M11.4 4.6 4.6 11.4" />
+            </g>
           </g>
         </svg>
       </button>
