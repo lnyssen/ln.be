@@ -107,6 +107,9 @@
      quoi le verre dépoli couvrirait toute la largeur. */
   .swiss body > header {
     background-color: transparent;
+    /* La plaque projetée par la pilule s'étend à l'infini : elle est bornée
+       ici, à la boîte de la barre, pour ne pas recouvrir la page. */
+    clip-path: inset(0);
   }
 
   /* Pastille de page courante : un aplat d'encre très retenu, qui glisse
@@ -188,26 +191,20 @@
     filter: contrast(1.12) saturate(0.82);
   }
 
+  /* Une ombre portée sans flou ni décalage, d'une portée démesurée : elle
+     remplit de papier tout ce qui entoure la pilule, en épousant exactement
+     sa courbe. Le navigateur ne la peint pas sous la pilule, si bien que le
+     contenu continue de défiler derrière le verre — mais il ne ressort plus
+     dans les quatre coins, là où la boîte rectangulaire déborde de la forme
+     arrondie et tranchait les lettres au passage. */
   .swiss .header-pill {
     position: relative;
     isolation: isolate;
     background-color: var(--header-bg);
     border: 1px solid var(--rule);
+    box-shadow: 0 0 0 100vw var(--paper);
     -webkit-backdrop-filter: blur(20px) saturate(1.1);
     backdrop-filter: blur(20px) saturate(1.1);
-  }
-
-  .swiss .header-pill::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    pointer-events: none;
-    border-radius: inherit;
-    background-image: url('/images/grain.png');
-    background-repeat: repeat;
-    background-size: 64px auto;
-    opacity: var(--grain);
   }
 
   /* La capsule d'outils est un objet constant : elle reste blanche quel que
@@ -240,39 +237,19 @@
     }
   }
 
-  /* Tout ce qui se trouve au-dessus de l'en-tête collant est masqué par son
-     propre fond. Sur iOS, la page défile sous la barre d'état et la valeur de
-     env(safe-area-inset-top) ne suffit pas toujours à la couvrir ; cette bande
-     le fait quel que soit le décalage réel. */
-  /* La pilule ne masque plus toute la largeur : sans cette bande, le contenu
-     passerait dans la marge au-dessus d'elle et se couperait net au bord de
-     l'écran. Elle est franche plutôt que dégradée — un fondu laissait
-     subsister un liseré de texte — et porte le grain de la page pour ne pas
-     se lire elle-même. Elle couvre aussi la zone sûre d'iOS. */
-  .swiss body > header::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: calc(16px + env(safe-area-inset-top));
-    pointer-events: none;
-    background-color: var(--paper);
-  }
-
-  /* Le grain de la bande, calé sur le cadre comme celui de la page : sans
-     lui, elle se lisait comme une lisière plus claire, puisqu'elle couvrait
-     la texture sans la remplacer. */
+  /* Le grain de la barre, en une seule couche par-dessus la plaque et la
+     pilule : deux couches distinctes laissaient voir leur jointure. Il est
+     calé sur le bord de la boîte, et non sur ses gouttières, pour rester en
+     phase avec le grain de la page. */
   .swiss body > header::after {
     content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: calc(16px + env(safe-area-inset-top));
+    position: absolute;
+    inset: 0;
     pointer-events: none;
     background-image: url('/images/grain.png');
     background-repeat: repeat;
+    background-origin: border-box;
+    background-position: 0 0;
     background-size: 64px auto;
     opacity: var(--grain);
   }
