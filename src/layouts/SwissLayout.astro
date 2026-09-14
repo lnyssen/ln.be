@@ -116,6 +116,17 @@ const ogImage = new URL('/og.png', Astro.site).href;
         };
         apply();
         document.addEventListener('astro:after-swap', apply);
+
+        // Le logo ne se trace qu'à la première page vue : le revoir se
+        // dessiner à chaque navigation lasserait. Le drapeau est posé avant
+        // le premier paint, sinon le logo paraîtrait entier le temps d'une
+        // image avant de s'effacer.
+        try {
+          if (!sessionStorage.getItem('swiss-logo-vu')) {
+            document.documentElement.classList.add('logo-draw');
+            sessionStorage.setItem('swiss-logo-vu', '1');
+          }
+        } catch {}
       })();
     </script>
 
