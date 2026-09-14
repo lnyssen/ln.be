@@ -29,6 +29,13 @@ function labelFor(node) {
         paddingLeft: style.paddingLeft,
         paddingRight: style.paddingRight,
         borderColor: style.borderTopColor,
+        // Le fond du bouton survolé, et non le papier voilé du disque : le
+        // bouton passe à l'accent sous le doigt et sa couleur de texte suit.
+        // Reprendre l'une sans l'autre donnait de l'encre sombre sur un voile
+        // sombre, illisible. Un bouton sans fond garde le voile.
+        ...(/rgba?\(0, 0, 0, 0\)|transparent/.test(style.backgroundColor)
+          ? {}
+          : { backgroundColor: style.backgroundColor }),
       },
       // L'écart entre le mot et le signe, et la taille du signe lui-même, se
       // relèvent aussi : sans eux le disque était six points plus large que

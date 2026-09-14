@@ -630,7 +630,11 @@
     scroll-behavior: smooth;
   }
 
+  /* Le papier est porté par la racine et non seulement par le corps : c'est
+     elle que le navigateur regarde pour teinter ses propres barres, et sous
+     la barre d'adresse d'iOS il trouvait le violet du pied de page. */
   .swiss {
+    background-color: var(--paper);
     /* Autorise l'animation de `height: auto` sur l'accordéon. */
     interpolate-size: allow-keywords;
   }

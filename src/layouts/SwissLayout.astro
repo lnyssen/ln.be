@@ -141,17 +141,24 @@ const ogImage = new URL('/og.png', Astro.site).href;
         const teintes = { light: '#f4f2ed', dark: '#1d1f21' };
         const poserBarre = () => {
           const root = document.documentElement;
-          for (const balise of document.querySelectorAll('meta[name="theme-color"][media]')) {
-            balise.remove();
-          }
-          let barre = document.querySelector('meta[name="theme-color"]');
-          if (!barre) {
-            barre = document.createElement('meta');
-            barre.name = 'theme-color';
-            document.head.append(barre);
-          }
           const papier = getComputedStyle(root).getPropertyValue('--paper').trim();
-          barre.setAttribute('content', papier || teintes[root.dataset.swissTheme] || teintes.light);
+          const couleur = papier || teintes[root.dataset.swissTheme] || teintes.light;
+
+          // Les deux déclarations restent en place, on ne fait qu'en réécrire
+          // la valeur. Les retirer pour en poser une autre marchait dans le
+          // navigateur, pas dans Safari : il lit la balise au chargement et ne
+          // suit pas toujours son remplacement. Les deux portent désormais la
+          // même couleur, celle du thème réellement appliqué — quelle que
+          // soit celle qu'il retient, il retient la bonne.
+          const balises = document.querySelectorAll('meta[name="theme-color"]');
+          if (!balises.length) {
+            const barre = document.createElement('meta');
+            barre.name = 'theme-color';
+            barre.setAttribute('content', couleur);
+            document.head.append(barre);
+            return;
+          }
+          for (const balise of balises) balise.setAttribute('content', couleur);
         };
 
         apply();

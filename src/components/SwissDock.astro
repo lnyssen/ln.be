@@ -53,24 +53,37 @@ import SwissThemeToggle from './SwissThemeToggle.jsx';
   // La capsule et le pied de page se disputaient la même bande : elle flotte
   // au bas de la fenêtre, il s'y découvre en fin de course, et la dernière
   // ligne passait dessous. Réserver de la place sous le texte ne suffisait
-  // pas — sur iPhone, la barre de Safari rogne encore la fenêtre et tout se
-  // resserre.
+  // pas — sur iPhone, la barre de Safari rogne encore la fenêtre.
   //
-  // Elle s'efface donc quand le panneau arrive. Ce sont les outils de lecture
-  // de la page ; au moment où l'on atteint le contact, on a fini de lire.
+  // Elle s'efface donc quand le panneau se découvre. Ce sont les outils de
+  // lecture de la page ; au moment où l'on atteint le contact, on a fini de
+  // lire.
+  //
+  // On mesure la fin de la course et non la présence du panneau à l'écran :
+  // il est fixé au fond, donc toujours là du point de vue d'un observateur
+  // d'intersection, qui le déclarait visible dès la première image et faisait
+  // disparaître la capsule sur toute la page.
   (() => {
     const pied = document.querySelector('.swiss-footer');
-    if (!pied || !('IntersectionObserver' in window)) return;
+    if (!pied) return;
 
-    const veille = new IntersectionObserver(
-      ([entree]) => {
-        document.documentElement.classList.toggle('pied-visible', entree.isIntersecting);
-      },
-      // Le panneau est fixé au fond : il ne « passe » pas, il se découvre. On
-      // le considère atteint dès qu'il en paraît un bon tiers.
-      { threshold: 0.34 },
-    );
+    let prevu = false;
 
-    veille.observe(pied);
+    const juger = () => {
+      prevu = false;
+      const hauteur = pied.offsetHeight;
+      const reste = document.documentElement.scrollHeight - (window.scrollY + window.innerHeight);
+      document.documentElement.classList.toggle('pied-visible', reste < hauteur * 0.62);
+    };
+
+    const planifier = () => {
+      if (prevu) return;
+      prevu = true;
+      requestAnimationFrame(juger);
+    };
+
+    addEventListener('scroll', planifier, { passive: true });
+    addEventListener('resize', planifier, { passive: true });
+    juger();
   })();
 </script>
