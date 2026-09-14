@@ -10,6 +10,11 @@ function labelFor(node) {
   // défileraient pour trois liens courts.
   if (node.closest('header')) return null;
 
+  // Une page peut nommer elle-même ce que le disque doit dire, quand aucun
+  // verbe général ne convient.
+  const dit = node.closest('[data-cursor]');
+  if (dit) return dit.dataset.cursor;
+
   const summary = node.closest('summary');
   if (summary) {
     return summary.closest('details')?.open ? 'CLOSE' : 'VIEW';
@@ -55,6 +60,8 @@ const GLYPHS = {
   // les trace donc pleines.
   WEIGHT: 'M4 5.6h16v1.3H4zM4 10.8h16v2.2H4zM4 16.6h16v3.4H4z',
   CLICK: 'M6 3.5l12.5 8.2-5.4 1.2 2.6 5.6-2.4 1.1-2.6-5.6-3.7 4V3.5Z',
+  // Un astérisque à six branches : rien à faire, seulement à regarder.
+  ENJOY: 'M12 3.5v17M4.6 7.75l14.8 8.5M19.4 7.75l-14.8 8.5',
   // Une goutte : le geste change l'encre du site.
   TINT: 'M12 3.2c3.4 4 5.6 6.9 5.6 9.6a5.6 5.6 0 0 1-11.2 0c0-2.7 2.2-5.6 5.6-9.6Z',
 };
