@@ -9,13 +9,13 @@ import SwissThemeToggle from './SwissThemeToggle.jsx';
 ---
 
 <div
-  class="swiss-dock fixed bottom-[calc(20px+env(safe-area-inset-bottom))] right-[20px] z-40 flex flex-col items-end gap-[12px]"
+  class="swiss-dock fixed bottom-[calc(20px+env(safe-area-inset-bottom))] right-[20px] z-40 flex items-center gap-[12px]"
 >
-  <!-- Sur mobile, « Get in touch » quitte la barre, trop étroite, et devient
-       une pilule au-dessus des outils. -->
+  <!-- Sur mobile, « Get in touch » quitte la barre, trop étroite, et se pose
+       à côté des outils, à la même hauteur qu'eux. -->
   <a
     href="mailto:hello@laurentnyssen.be"
-    class="swiss-meta flex items-center gap-[10px] rounded-full border border-[var(--ink)] bg-[var(--ink)] px-[20px] py-[14px] font-semibold text-[var(--paper)] shadow-[0_4px_20px_rgba(0,0,0,0.3)] transition-colors duration-200 hover:border-[var(--accent)] hover:bg-[var(--accent)] sm:hidden"
+    class="swiss-meta flex h-[52px] items-center gap-[10px] rounded-full border border-[var(--ink)] bg-[var(--ink)] px-[22px] font-semibold text-[var(--paper)] shadow-[0_4px_24px_rgba(0,0,0,0.18)] transition-colors duration-200 hover:border-[var(--accent)] hover:bg-[var(--accent)] sm:hidden"
   >
     Get in touch
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">

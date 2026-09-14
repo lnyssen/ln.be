@@ -22,10 +22,7 @@ const OUT = '↗︎';
       <nav class="swiss-meta nav-link flex items-center gap-[16px]" aria-label="Main">
         <a
           href={current === 'index' ? '#work' : '/#work'}
-          class:list={[
-            'hidden sm:inline',
-            current === 'index' ? 'text-[var(--accent)]' : 'hover:text-[var(--accent)]',
-          ]}
+          class={current === 'index' ? 'text-[var(--accent)]' : 'hover:text-[var(--accent)]'}
           aria-current={current === 'index' ? 'page' : undefined}
         >
           Index
