@@ -63,9 +63,19 @@ const ogImage = new URL('/og.png', Astro.site).href;
       // apparaîtrait en clair le temps d'une image.
       (() => {
         const apply = () => {
+          const root = document.documentElement;
           const stored = localStorage.getItem('swiss-theme');
-          document.documentElement.dataset.swissTheme =
+          root.dataset.swissTheme =
             stored ?? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+
+          // Le disque remplace la flèche : on la masque dès maintenant, aux
+          // seules conditions où le disque existera.
+          if (
+            matchMedia('(pointer: fine)').matches &&
+            !matchMedia('(prefers-reduced-motion: reduce)').matches
+          ) {
+            root.dataset.swissCursor = '';
+          }
         };
         apply();
         document.addEventListener('astro:after-swap', apply);

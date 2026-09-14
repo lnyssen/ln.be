@@ -62,8 +62,10 @@ export default function SwissCursor() {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (!fine || reduced) return undefined;
 
-    const root = document.documentElement;
-    root.dataset.swissCursor = '';
+    // Le drapeau est déjà posé avant la peinture par la mise en page ; on le
+    // confirme seulement, sans jamais le retirer, pour qu'une transition de
+    // vue ne laisse pas réapparaître la flèche.
+    document.documentElement.dataset.swissCursor = '';
 
     const target = { x: 0, y: 0 };
     const current = { x: 0, y: 0 };
@@ -112,7 +114,6 @@ export default function SwissCursor() {
       document.removeEventListener('pointerleave', onLeave);
       document.removeEventListener('toggle', onToggle, true);
       cancelAnimationFrame(frame);
-      delete root.dataset.swissCursor;
     };
   }, []);
 
