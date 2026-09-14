@@ -130,7 +130,12 @@
      quoi elle s'éteindrait sur le fond noir. Le mode encre garde les siennes
      — c'est une simulation d'impression, pas un thème à décorer. */
   .swiss:not(.ink-on)[data-swiss-accent="vermillon"] {
-    --accent: #d63a1e;
+    --accent: #c2341b;
+    /* Le pied de page est le seul aplat de couleur du site : il suit la teinte
+       choisie. Il garde la version soutenue même en thème sombre — l'éclaircie
+       est faite pour se lire sur du noir, elle ne tiendrait pas sous du texte
+       clair. */
+    --footer-bg: #c2341b;
   }
 
   .swiss:not(.ink-on)[data-swiss-accent="vermillon"][data-swiss-theme="dark"] {
@@ -139,6 +144,11 @@
 
   .swiss:not(.ink-on)[data-swiss-accent="outremer"] {
     --accent: #1f45d6;
+    /* Le pied de page est le seul aplat de couleur du site : il suit la teinte
+       choisie. Il garde la version soutenue même en thème sombre — l'éclaircie
+       est faite pour se lire sur du noir, elle ne tiendrait pas sous du texte
+       clair. */
+    --footer-bg: #1f45d6;
   }
 
   .swiss:not(.ink-on)[data-swiss-accent="outremer"][data-swiss-theme="dark"] {
@@ -147,6 +157,11 @@
 
   .swiss:not(.ink-on)[data-swiss-accent="veronese"] {
     --accent: #0c7d54;
+    /* Le pied de page est le seul aplat de couleur du site : il suit la teinte
+       choisie. Il garde la version soutenue même en thème sombre — l'éclaircie
+       est faite pour se lire sur du noir, elle ne tiendrait pas sous du texte
+       clair. */
+    --footer-bg: #0c7d54;
   }
 
   .swiss:not(.ink-on)[data-swiss-accent="veronese"][data-swiss-theme="dark"] {
@@ -154,7 +169,12 @@
   }
 
   .swiss:not(.ink-on)[data-swiss-accent="safran"] {
-    --accent: #b86a00;
+    --accent: #9a5800;
+    /* Le pied de page est le seul aplat de couleur du site : il suit la teinte
+       choisie. Il garde la version soutenue même en thème sombre — l'éclaircie
+       est faite pour se lire sur du noir, elle ne tiendrait pas sous du texte
+       clair. */
+    --footer-bg: #9a5800;
   }
 
   .swiss:not(.ink-on)[data-swiss-accent="safran"][data-swiss-theme="dark"] {
@@ -900,6 +920,7 @@
   /* Tous les textes en tête ou en pied de bloc sont rognés à la hauteur
      capitale-ligne de base : leur boîte ne contient plus d'interligne, donc
      une marge identique produit un écart identique, quel que soit le corps. */
+  .swiss .swiss-display,
   .swiss .swiss-row-title,
   .swiss .also-title,
   .swiss .section-label,
