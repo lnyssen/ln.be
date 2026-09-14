@@ -365,9 +365,15 @@ const ogImage = new URL('/og.png', Astro.site).href;
       // la graisse. Elles s'épaississent au passage du pointeur et poussent
       // leurs voisines, puis reviennent. C'est la typographie qui réagit en
       // tant que typographie.
+      // Le titre ne maigrit plus. Les lettres loin du pointeur descendaient à
+      // 560, si bien qu'au moindre survol deux lignes sur trois s'amincissaient
+      // d'un coup : ce n'était pas un mouvement, c'était le titre entier qui se
+      // déformait, et c'est cela qu'on lisait comme un vrillage. Le repos est
+      // désormais le plancher — rien ne s'allège, seules les lettres sous le
+      // pointeur s'épaississent, et d'un cran plus retenu.
       const REST = 700;
-      const LOW = 560;
-      const PEAK = 900;
+      const LOW = 700;
+      const PEAK = 820;
 
       const tick = () => {
         const size = parseFloat(getComputedStyle(h1).fontSize);
