@@ -29,7 +29,7 @@
   /* Pied de page : violet de la marque, texte papier — 4,53:1. */
   --footer-bg: #7b58e8;
   --footer-fg: #f4f2ed;
-  --footer-h: 240px;
+  --footer-h: 280px;
   --header-h: 75px;
   /* Respiration unique : distance entre un filet et le texte, en haut comme
      en bas de chaque section. */
@@ -45,7 +45,7 @@
    placée dans @layer base perdrait contre eux. */
 @media (max-width: 767px) {
   .swiss {
-    --footer-h: 318px;
+    --footer-h: 352px;
   }
 }
 
