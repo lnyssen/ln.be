@@ -27,7 +27,13 @@ function labelFor(node) {
   const link = node.closest('a');
   if (!link) return node.closest('button') ? 'CLICK' : null;
 
+  // Les petits liens en capitales gardent le disque nu. L'étiquette y était
+  // plus large que le lien qu'elle commente : à ce rapport de taille elle
+  // n'aide plus, elle couvre. Le mail et le téléphone du pied de page font
+  // exception — ce sont les deux seules actions du site qui en sortent.
   const href = link.getAttribute('href') || '';
+  const petit = link.closest('.swiss-meta');
+  if (petit && !href.startsWith('mailto:') && !href.startsWith('tel:')) return null;
   // Les deux terrains personnels n'ouvrent pas une page comme une autre :
   // l'un propose, l'autre n'attend rien qu'un regard.
   if (href === '/lab') return 'EXPLORE';
