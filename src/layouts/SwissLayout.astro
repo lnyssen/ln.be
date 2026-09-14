@@ -322,7 +322,9 @@ const ogImage = new URL('/og.png', Astro.site).href;
               }
             }
             child.replaceWith(frag);
-          } else if (child.nodeName !== 'BR') {
+          } else if (child.nodeName !== 'BR' && child.dataset?.accentCycle === undefined) {
+            // Le point qui ferme le titre est une commande, pas un signe de
+            // plus : il garde sa graisse et son geste à lui.
             split(child);
           }
         });
@@ -333,6 +335,20 @@ const ogImage = new URL('/og.png', Astro.site).href;
       let pointer = null;
       let frame = null;
       let boxes = [];
+
+      // Chaque signe est figé à la largeur qu'il a au repos. Sans cela, une
+      // lettre qui s'épaissit pousse ses voisines, la ligne se recompose sous
+      // le pointeur et le titre paraît vriller. La graisse change désormais
+      // dans une boîte qui ne bouge pas : le signe grossit sur place, centré,
+      // et rien d'autre ne se déplace.
+      const figer = () => {
+        for (const { el } of glyphs) el.style.width = '';
+        const largeurs = glyphs.map(({ el }) => el.getBoundingClientRect().width);
+        glyphs.forEach(({ el }, i) => {
+          el.style.width = `${largeurs[i]}px`;
+          el.style.textAlign = 'center';
+        });
+      };
 
       const measure = () => {
         boxes = glyphs.map(({ el }) => {
@@ -377,9 +393,6 @@ const ogImage = new URL('/og.png', Astro.site).href;
           }
         });
 
-        // Les largeurs ont changé, donc les centres aussi.
-        if (pointer) measure();
-
         if (pointer || moving) {
           frame = requestAnimationFrame(tick);
         } else {
@@ -406,7 +419,14 @@ const ogImage = new URL('/og.png', Astro.site).href;
         start();
       });
 
-      addEventListener('resize', measure);
+      addEventListener('resize', () => {
+        figer();
+        measure();
+      });
+
+      // Les largeurs ne valent que si la fonte est arrivée.
+      if (document.fonts?.ready) document.fonts.ready.then(figer);
+      else figer();
     })();
   </script>
   </body>
