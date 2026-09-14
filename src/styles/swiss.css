@@ -1000,9 +1000,14 @@
 
   /* Le disque inverse ce qu'il couvre ; la largeur s'anime grâce à
      `interpolate-size` déjà posé sur .swiss. */
+  /* Le disque était en fusion « difference » : il inversait ce qu'il
+     survolait, ce qui le rendait lisible partout sans rien savoir du thème.
+     Mais inverser une couleur, c'est en prendre la complémentaire : sur le
+     violet du pied de page il virait au vert olive. Il porte donc maintenant
+     l'encre du thème, cerclée de papier — deux valeurs franches qui se
+     détachent aussi bien du blanc que du noir ou du violet, et qui le mettent
+     d'accord avec l'étiquette, déjà à l'encre. */
   .swiss-cursor {
-    mix-blend-mode: difference;
-    /* La fusion est coupée sur l'étiquette : voir le composant. */
     transition:
       width 260ms cubic-bezier(0.22, 1, 0.36, 1),
       height 260ms cubic-bezier(0.22, 1, 0.36, 1),
@@ -1011,8 +1016,9 @@
       opacity 150ms ease;
   }
 
-  .swiss-cursor.is-labelled {
-    mix-blend-mode: normal;
+  .swiss-cursor:not(.is-labelled) {
+    background-color: var(--ink);
+    box-shadow: 0 0 0 1.5px var(--paper);
   }
 
   .swiss-cursor span {

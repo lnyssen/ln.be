@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 
-// Disque en fusion « difference » : il inverse ce qu'il survole, donc il reste
-// lisible dans les deux thèmes sans rien savoir d'eux. Sur un élément
-// interactif, il s'étire en étiquette qui dit ce qui va se passer.
+// Disque à l'encre du thème, cerclé de papier : il se détache de tout fond,
+// clair, sombre ou coloré. Sur un élément interactif, il s'étire en étiquette
+// qui dit ce qui va se passer.
 function labelFor(node) {
   if (!node) return null;
 
@@ -141,7 +141,7 @@ export default function SwissCursor() {
       className={`swiss-cursor pointer-events-none fixed left-0 top-0 z-[60] flex items-center justify-center overflow-hidden ${
         label
           ? 'is-labelled h-[34px] w-auto rounded-full bg-[var(--ink)] px-[18px]'
-          : 'h-[21px] w-[21px] rounded-full bg-white px-0'
+          : 'h-[21px] w-[21px] rounded-full px-0'
       } ${visible ? 'opacity-100' : 'opacity-0'}`}
     >
       {/* L'étiquette quitte la fusion : sur le violet, « difference » virait au
