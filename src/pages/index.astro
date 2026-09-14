@@ -264,10 +264,12 @@ function domainLabel(link: string) {
             </p>
           </span>
 
-          <!-- La phrase, dessinée. La grille reste la même d'un bout à
-               l'autre ; c'est l'empilement qui change. La première case est
-               vide, la deuxième reçoit une forme, et l'on finit par en
-               entasser quatre dans la dernière, jusqu'au noir. -->
+          <!-- Une seule ligne, faite de quatre quarts de cercle qui se
+               relaient d'une case à l'autre. Chacun part où le précédent
+               s'arrête, aux coins de la grille : rien ne flotte, rien n'est
+               plein, et la grille reste lisible dessous. C'est la règle des
+               affiches — le même rayon partout, seule l'orientation
+               change. -->
           <svg
             class="teaser-mark h-[54px] w-auto shrink-0 text-[var(--ink-soft)] group-hover:text-[var(--accent)] sm:h-[76px]"
             viewBox="0 0 156 76"
@@ -280,16 +282,7 @@ function domainLabel(link: string) {
               <path d="M2 0v76M40 0v76M78 0v76M116 0v76M154 0v76" />
               <path d="M2 0h152M2 38h152M2 76h152" />
             </g>
-            <g class="mark-formes">
-              <path d="M40 38a38 38 0 0 1 38-38" />
-              <path d="M78 0a38 38 0 0 1 38 38" />
-              <path d="M78 76a38 38 0 0 0 38-38" />
-              <path d="M116 38a38 38 0 0 1 38-38" />
-              <path d="M116 38a38 38 0 0 0 38 38" />
-              <circle cx="135" cy="19" r="11" />
-              <path d="M116 57h38" />
-              <rect x="126" y="47" width="19" height="19" fill="currentColor" stroke="none" />
-            </g>
+            <path d="M2 38a38 38 0 0 1 38-38 38 38 0 0 1 38 38 38 38 0 0 1 38 38 38 38 0 0 1 38-38" />
           </svg>
         </a>
       </div>

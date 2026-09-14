@@ -298,12 +298,11 @@
   }
 
   /* Les dessins des deux renvois. Rien ne bouge au repos : le trait est une
-     légende, pas une animation. Au survol, le cercle du milieu remonte d'un
-     cheveu — ils se recouvrent, c'est la collision du Lab — et les quarts de
-     cercle du Polographe glissent d'un cran, comme on déplace une forme sur
-     la grille. */
-  .swiss .teaser-mark .mark-milieu,
-  .swiss .teaser-mark .mark-formes {
+     légende, pas une animation. Au survol, le carré du Lab remonte d'un
+     cheveu — les trois figures se recouvrent davantage, c'est la collision.
+     Le Polographe ne bouge pas : sa ligne touche la grille en quatre points,
+     la déplacer la décrocherait. */
+  .swiss .teaser-mark .mark-milieu {
     transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
   }
 
@@ -311,13 +310,8 @@
     transform: translateY(-7px);
   }
 
-  .swiss .teaser:hover .teaser-mark .mark-formes {
-    transform: translateX(6px);
-  }
-
   @media (prefers-reduced-motion: reduce) {
-    .swiss .teaser-mark .mark-milieu,
-    .swiss .teaser-mark .mark-formes {
+    .swiss .teaser-mark .mark-milieu {
       transition: none;
       transform: none;
     }
