@@ -18,17 +18,17 @@
 /* Variante suisse : papier, encre, un seul accent violet. Pas de dégradé ni
    d'ombre — la grille et la typographie portent tout. */
 .swiss {
-  --paper: #fdfdfb;
-  --ink: #141414;
-  --ink-soft: #727272;
-  --rule: #141414;
+  --paper: #f2f0ef;
+  --ink: #222222;
+  --ink-soft: #6a6a6a;
+  --rule: #222222;
   --accent: #7b58e8;
   /* Fond de la barre : assez de papier pour que la typographie reste lisible,
      assez de vide pour qu'on devine le contenu passer dessous. */
-  --header-bg: color-mix(in srgb, #fdfdfb 68%, transparent);
+  --header-bg: color-mix(in srgb, #f2f0ef 68%, transparent);
   /* Pied de page : violet de la marque, texte papier — 4,53:1. */
   --footer-bg: #7b58e8;
-  --footer-fg: #fdfdfb;
+  --footer-fg: #f2f0ef;
   --footer-h: 240px;
   --header-h: 75px;
   /* Respiration unique : distance entre un filet et le texte, en haut comme
@@ -56,15 +56,15 @@
 }
 
 .swiss[data-swiss-theme="dark"] {
-  --paper: #141414;
-  --ink: #fdfdfb;
+  --paper: #222222;
+  --ink: #f2f0ef;
   --ink-soft: #d6d6d6;
-  --rule: #fdfdfb;
+  --rule: #f2f0ef;
   /* Le violet de la marque tombe à 3,9:1 sur fond noir : on passe à la
      lavande, l'autre violet du site, qui remonte à 7,7:1. */
   --accent: #9e9eff;
   /* Le bruit se voit davantage sur l'encre : on le retient un peu. */
-  --header-bg: color-mix(in srgb, #141414 68%, transparent);
+  --header-bg: color-mix(in srgb, #222222 68%, transparent);
 }
 
 /* Deux encres sur un papier chaud et un très léger
@@ -294,6 +294,15 @@
     outline: none;
   }
 
+  /* Le trait des dessins est celui des filets entre les sections : un point,
+     quelle que soit la taille à laquelle le dessin est rendu. Sans cette
+     règle, l'épaisseur suivrait l'échelle du cadre et le trait maigrirait sur
+     téléphone, où le dessin est plus petit. */
+  .swiss .teaser-mark path,
+  .swiss .teaser-mark circle {
+    vector-effect: non-scaling-stroke;
+  }
+
   /* Les dessins des deux renvois tournent en boucle plutôt qu'au survol :
      sur téléphone il n'y a pas de survol, et c'est là qu'ils seraient perdus.
      Le mouvement ne s'arrête jamais. */
@@ -500,11 +509,11 @@
      les jetons à l'intérieur suffit — ses commandes se composent alors comme
      sur du papier, sans qu'aucune n'ait à connaître le thème de la page. */
   .swiss:not(.ink-on) .dock-capsule {
-    --paper: #fdfdfb;
-    --ink: #141414;
+    --paper: #f2f0ef;
+    --ink: #222222;
     --ink-soft: #727272;
-    --rule: #141414;
-    background-color: #fdfdfb;
+    --rule: #222222;
+    background-color: #f2f0ef;
   }
 
   .swiss .dock-capsule {
