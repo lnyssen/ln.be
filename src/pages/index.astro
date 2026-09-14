@@ -207,19 +207,24 @@ function domainLabel(link: string) {
         </ul>
       </div>
     </section>
-    <!-- Renvoi vers le Lab, qui a sa page. -->
+    <!-- Les deux terrains personnels, côte à côte : ils se répondent, autant
+         les proposer ensemble plutôt que l'un sous l'autre. -->
     <section class="swiss-shell">
-      <a
-        href="/lab"
-        class="swiss-grid group items-start gap-y-3 border-t border-[var(--rule)]"
-        data-reveal
-      >
-        <p class="section-label swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">Creative lab</p>
+      <div class="swiss-grid gap-y-[34px] border-t border-[var(--rule)]" data-reveal>
+        <a href="/lab" class="teaser group col-span-6 md:col-span-6">
+          <p class="section-label swiss-meta text-[var(--ink-soft)]">Creative lab</p>
+          <p class="lab-teaser-title mt-[16px] text-[clamp(1.375rem,2.6vw,2rem)] font-medium leading-[1.1] tracking-[-0.035em] group-hover:text-[var(--accent)]">
+            Experiments where AI, design and code collide <SwissArrow direction="right" size={24} />
+          </p>
+        </a>
 
-        <p class="lab-teaser-title col-span-6 text-[clamp(1.5rem,4vw,3rem)] font-medium leading-[1.05] tracking-[-0.04em] group-hover:text-[var(--accent)] md:col-span-8">
-          Experiments where AI, design and code collide <SwissArrow direction="right" size={30} />
-        </p>
-      </a>
+        <a href="/lepolographe" class="teaser group col-span-6 md:col-span-6">
+          <p class="section-label swiss-meta text-[var(--ink-soft)]">Le Polographe</p>
+          <p class="lab-teaser-title mt-[16px] text-[clamp(1.375rem,2.6vw,2rem)] font-medium leading-[1.1] tracking-[-0.035em] group-hover:text-[var(--accent)]">
+            Risograph posters, printed twenty at a time <SwissArrow direction="right" size={24} />
+          </p>
+        </a>
+      </div>
     </section>
 
   </main>

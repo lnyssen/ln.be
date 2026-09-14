@@ -2,7 +2,7 @@
 import LogoLockup from './LogoLockup.astro';
 
 interface Props {
-  current?: 'index' | 'lab';
+  current?: 'index' | 'lab' | 'polographe';
 }
 
 const { current = 'index' } = Astro.props;
@@ -33,6 +33,16 @@ const OUT = '↗︎';
           aria-current={current === 'lab' ? 'page' : undefined}
         >
           Lab
+        </a>
+        <a
+          href="/lepolographe"
+          class:list={[
+            'hidden sm:inline',
+            current === 'polographe' ? 'text-[var(--accent)]' : 'hover:text-[var(--accent)]',
+          ]}
+          aria-current={current === 'polographe' ? 'page' : undefined}
+        >
+          Polographe
         </a>
       </nav>
 
