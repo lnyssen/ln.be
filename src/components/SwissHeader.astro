@@ -95,14 +95,14 @@ const pages = [
   aria-hidden="true"
   class="swiss-menu swiss-shell fixed inset-x-0 z-40 sm:hidden"
 >
-  <div class="menu-card overflow-hidden rounded-[26px]">
+  <div class="menu-card overflow-hidden rounded-[26px] pt-[8px]">
     <nav aria-label="Pages">
       {
         pages.map((page) => (
           <a
             href={page.href}
             class:list={[
-              'menu-link flex items-center justify-between border-b border-[var(--rule)] px-[20px] py-[17px] text-[1.375rem] font-medium tracking-[-0.03em]',
+              'menu-link flex items-center px-[20px] py-[15px] text-[1.375rem] font-medium tracking-[-0.03em]',
               current === page.key ? 'text-[var(--accent)]' : '',
             ]}
             aria-current={current === page.key ? 'page' : undefined}

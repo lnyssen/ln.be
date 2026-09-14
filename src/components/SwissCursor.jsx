@@ -20,6 +20,7 @@ function labelFor(node) {
   if (open && !node.closest('a, button')) return 'CLOSE';
 
   if (node.closest('[data-grid-toggle]')) return 'GRID';
+  if (node.closest('[data-weight-toggle]')) return 'WEIGHT';
   if (node.closest('[role="switch"]')) return 'THEME';
 
   const link = node.closest('a');
@@ -49,6 +50,9 @@ const GLYPHS = {
   CALL: 'M6.5 3.5h3l1.5 4-2 1.5a11 11 0 0 0 5 5l1.5-2 4 1.5v3a1.5 1.5 0 0 1-1.7 1.5A16.5 16.5 0 0 1 4.5 5.2 1.5 1.5 0 0 1 6 3.5Z',
   THEME: 'M12 2.8a9.2 9.2 0 1 0 0 18.4 9.2 9.2 0 0 0 0-18.4Z M12 2.8v18.4',
   GRID: 'M4.5 3.5v17M9.5 3.5v17M14.5 3.5v17M19.5 3.5v17',
+  // Trois barres qui épaississent : le trait seul ne peut pas varier, on
+  // les trace donc pleines.
+  WEIGHT: 'M4 5.6h16v1.3H4zM4 10.8h16v2.2H4zM4 16.6h16v3.4H4z',
   CLICK: 'M6 3.5l12.5 8.2-5.4 1.2 2.6 5.6-2.4 1.1-2.6-5.6-3.7 4V3.5Z',
 };
 
@@ -146,7 +150,11 @@ export default function SwissCursor() {
             strokeLinejoin="round"
             aria-hidden="true"
           >
-            <path d={GLYPHS[label]} />
+            <path
+              d={GLYPHS[label]}
+              fill={label === 'WEIGHT' ? 'currentColor' : 'none'}
+              stroke={label === 'WEIGHT' ? 'none' : 'currentColor'}
+            />
           </svg>
         )}
         {label ?? ''}

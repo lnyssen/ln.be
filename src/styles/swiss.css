@@ -717,10 +717,6 @@
     opacity: var(--grain);
   }
 
-  .swiss .menu-card > nav > a:last-of-type {
-    border-bottom: 0;
-  }
-
   /* La carte laisse voir son grain à travers le verre : on retient un peu le
      bruit pour que le flou reste lisible dessous. */
   .swiss .menu-card::before {
