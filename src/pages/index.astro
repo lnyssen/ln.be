@@ -505,6 +505,33 @@ function domainLabel(link: string) {
       // ne s'agrandit pas au-delà de sa taille réelle — une image tirée plus
       // grand qu'elle n'est ne montre rien de plus, elle montre juste ses
       // pixels.
+      // Le disque ne relit ce qu'il survole qu'au mouvement de la souris. En
+      // ouvrant la loupe sans bouger le doigt, il gardait donc son ZOOM alors
+      // qu'il n'y avait plus rien à agrandir. On lui renvoie un mouvement à la
+      // position réelle du pointeur, à l'ouverture comme à la fermeture : il
+      // relit, et dit CLOSE.
+      let sourisX = 0;
+      let sourisY = 0;
+      addEventListener(
+        'pointermove',
+        (event) => {
+          sourisX = event.clientX;
+          sourisY = event.clientY;
+        },
+        { passive: true },
+      );
+
+      const relireLeCurseur = () => {
+        const sous = document.elementFromPoint(sourisX, sourisY);
+        sous?.dispatchEvent(
+          new PointerEvent('pointermove', {
+            clientX: sourisX,
+            clientY: sourisY,
+            bubbles: true,
+          }),
+        );
+      };
+
       const loupe = (img) => {
         const cadre = document.createElement('div');
         cadre.className = 'loupe';
@@ -523,11 +550,21 @@ function domainLabel(link: string) {
         grand.alt = img.alt;
         cadre.append(grand);
         document.body.append(cadre);
-        requestAnimationFrame(() => cadre.classList.add('is-open'));
+        requestAnimationFrame(() => {
+          cadre.classList.add('is-open');
+          relireLeCurseur();
+        });
 
         const fermer = () => {
           cadre.classList.remove('is-open');
-          cadre.addEventListener('transitionend', () => cadre.remove(), { once: true });
+          cadre.addEventListener(
+            'transitionend',
+            () => {
+              cadre.remove();
+              relireLeCurseur();
+            },
+            { once: true },
+          );
           document.removeEventListener('keydown', surTouche);
         };
         const surTouche = (event) => {

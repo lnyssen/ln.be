@@ -769,6 +769,15 @@
     cursor: pointer;
   }
 
+  /* Les flèches de la planche prennent la matière de l'étiquette du curseur :
+     même encre voilée, même flou dessous. Elles sont posées sur les visuels
+     comme lui, elles n'ont pas de raison d'être plus opaques. */
+  .swiss .strip-nav {
+    background-color: color-mix(in srgb, var(--ink) 70%, transparent);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+  }
+
   /* La grille se déplie colonne après colonne, les repères suivent. */
   .swiss .grid-overlay .grid-col {
     opacity: 0;
