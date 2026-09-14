@@ -535,7 +535,19 @@
     position: sticky;
     top: calc(var(--header-h) + env(safe-area-inset-top));
     z-index: 20;
-    background-color: var(--paper);
+    /* Le titre garée reste lisible sans masquer ce qui défile dessous : même
+       verre dépoli que la barre, plutôt qu'un aplat de papier. */
+    background-color: var(--header-bg);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+  }
+
+  @media (prefers-reduced-transparency: reduce) {
+    .swiss details[open] > summary {
+      background-color: var(--paper);
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
   }
 
   /* Ouverture filée : le contenu passe de 0 à sa hauteur réelle. Sur un
