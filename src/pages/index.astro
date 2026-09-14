@@ -59,7 +59,12 @@ function domainLabel(link: string) {
     <!-- Titre pleine largeur, calé au filet. -->
     <section class="swiss-shell pt-[40px] md:pt-[72px]">
       <h1 class="swiss-display" data-reveal data-reveal-slow>
-        Bold identities<br />and digital<br />experiences<span class="text-[var(--accent)]">.</span>
+        Bold identities<br />and digital<br />experiences<button
+          type="button"
+          data-accent-cycle
+          aria-label="Changer la couleur d'accent du site"
+          title="Changer la couleur d'accent"
+        >.</button>
       </h1>
 
       <div class="swiss-grid mt-[40px] gap-y-6 border-t border-[var(--rule)]" data-reveal data-reveal-slow data-reveal-delay="140">
@@ -234,59 +239,26 @@ function domainLabel(link: string) {
   <SwissFooter />
 
   <script is:inline data-astro-rerun>
-    // La bande des compétences suit la molette. Elle garde son allure de
-    // croisière tant qu'on ne touche à rien, accélère avec le geste et repart
-    // en arrière quand on remonte la page. Rien ne s'affiche : cela se sent
-    // plutôt que cela se voit.
-    //
-    // Le mouvement reste l'animation CSS — elle tient toute seule sans
-    // JavaScript, et c'est elle qui s'arrête déjà au survol. On ne fait ici
-    // qu'en régler la vitesse de lecture, négative pour le retour.
+    // Le point qui ferme le titre est la seule couleur de la page : en
+    // cliquant dessus, le visiteur la fait tourner sur une petite gamme
+    // arrêtée, et le site garde son choix sur son appareil. Rien ne l'annonce
+    // — le curseur le dit au survol, ce qui suffit à qui regarde.
     (() => {
-      const piste = document.querySelector('.marquee-track');
-      if (!piste || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const point = document.querySelector('[data-accent-cycle]');
+      if (!point) return;
 
-      const bande = piste.getAnimations?.()[0];
-      if (!bande) return;
+      const gamme = ['', 'vermillon', 'outremer', 'veronese', 'safran'];
 
-      const CROISIERE = 1;
-      const POINTE = 8;
-
-      let cible = CROISIERE;
-      let dernierY = window.scrollY;
-      let dernierT = performance.now();
-      let repos;
-
-      addEventListener(
-        'scroll',
-        () => {
-          const t = performance.now();
-          const dy = window.scrollY - dernierY;
-          // Une borne basse sur l'intervalle : deux événements peuvent tomber
-          // dans la même milliseconde, et la vitesse partirait à l'infini.
-          const dt = Math.max(16, t - dernierT);
-          dernierY = window.scrollY;
-          dernierT = t;
-          if (!dy) return;
-
-          const vitesse = Math.abs(dy) / dt;
-          const sens = dy > 0 ? 1 : -1;
-          cible = sens * Math.min(POINTE, CROISIERE + vitesse * 6);
-
-          clearTimeout(repos);
-          repos = setTimeout(() => (cible = CROISIERE), 140);
-        },
-        { passive: true },
-      );
-
-      // La vitesse rejoint sa cible par un dixième à chaque image : le geste
-      // pousse la bande, il ne la fait pas sauter.
-      const suivre = () => {
-        const ecart = cible - bande.playbackRate;
-        if (Math.abs(ecart) > 0.01) bande.playbackRate += ecart * 0.1;
-        requestAnimationFrame(suivre);
-      };
-      requestAnimationFrame(suivre);
+      point.addEventListener('click', () => {
+        const root = document.documentElement;
+        const suivante = gamme[(gamme.indexOf(root.dataset.swissAccent || '') + 1) % gamme.length];
+        if (suivante) root.dataset.swissAccent = suivante;
+        else delete root.dataset.swissAccent;
+        try {
+          if (suivante) localStorage.setItem('swiss-accent', suivante);
+          else localStorage.removeItem('swiss-accent');
+        } catch {}
+      });
     })();
   </script>
 

@@ -19,6 +19,7 @@ function labelFor(node) {
   const open = node.closest('details[open]');
   if (open && !node.closest('a, button')) return 'CLOSE';
 
+  if (node.closest('[data-accent-cycle]')) return 'TINT';
   if (node.closest('[data-grid-toggle]')) return 'GRID';
   if (node.closest('[data-weight-toggle]')) return 'WEIGHT';
   if (node.closest('[role="switch"]')) return 'THEME';
@@ -54,12 +55,44 @@ const GLYPHS = {
   // les trace donc pleines.
   WEIGHT: 'M4 5.6h16v1.3H4zM4 10.8h16v2.2H4zM4 16.6h16v3.4H4z',
   CLICK: 'M6 3.5l12.5 8.2-5.4 1.2 2.6 5.6-2.4 1.1-2.6-5.6-3.7 4V3.5Z',
+  // Une goutte : le geste change l'encre du site.
+  TINT: 'M12 3.2c3.4 4 5.6 6.9 5.6 9.6a5.6 5.6 0 0 1-11.2 0c0-2.7 2.2-5.6 5.6-9.6Z',
 };
+
+// Mode réglette : le disque cesse de nommer les gestes et mesure ce qu'il
+// survole. Un texte donne son corps et son interligne, tout le reste ses
+// dimensions. Les valeurs sont celles que le navigateur applique vraiment,
+// pas celles qu'on croit avoir écrites.
+function mesurer(node) {
+  const el = node?.nodeType === 1 ? node : node?.parentElement;
+  if (!el) return null;
+
+  const style = getComputedStyle(el);
+  const porteDuTexte = Array.from(el.childNodes).some(
+    (n) => n.nodeType === 3 && n.textContent.trim(),
+  );
+
+  if (porteDuTexte) {
+    const corps = Math.round(parseFloat(style.fontSize));
+    // « normal » ne se lit pas en pixels : on retombe alors sur le rapport
+    // que le navigateur applique de lui-même.
+    const interligne = Math.round(parseFloat(style.lineHeight)) || Math.round(corps * 1.2);
+    return `${corps} / ${interligne}`;
+  }
+
+  const boite = el.getBoundingClientRect();
+  return `${Math.round(boite.width)} × ${Math.round(boite.height)}`;
+}
 
 export default function SwissCursor() {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
   const [label, setLabel] = useState(null);
+  const [regle, setRegle] = useState(false);
+  // La touche bascule pendant que la souris bouge : le gestionnaire de
+  // déplacement doit lire l'état courant, pas celui de son rendu.
+  const regleRef = useRef(false);
+  const survole = useRef(null);
 
   useEffect(() => {
     const fine = window.matchMedia('(pointer: fine)').matches;
@@ -84,8 +117,9 @@ export default function SwissCursor() {
         current.y = target.y;
         started = true;
       }
+      survole.current = event.target;
       setVisible(true);
-      setLabel(labelFor(event.target));
+      setLabel(regleRef.current ? mesurer(event.target) : labelFor(event.target));
     };
 
     const onLeave = () => setVisible(false);
@@ -108,13 +142,35 @@ export default function SwissCursor() {
       frame = requestAnimationFrame(tick);
     };
 
+    // R comme règle, dans la lignée de G, W et I.
+    const onKey = (event) => {
+      if (
+        event.metaKey ||
+        event.ctrlKey ||
+        event.altKey ||
+        ['INPUT', 'TEXTAREA'].includes(event.target?.tagName) ||
+        event.target?.isContentEditable ||
+        event.key.toLowerCase() !== 'r'
+      ) {
+        return;
+      }
+      regleRef.current = !regleRef.current;
+      setRegle(regleRef.current);
+      // La mesure paraît sous le pointeur immobile : sans cela il faudrait
+      // bouger d'un pixel pour voir que la touche a fait quelque chose.
+      const cible = survole.current;
+      if (cible) setLabel(regleRef.current ? mesurer(cible) : labelFor(cible));
+    };
+
     window.addEventListener('pointermove', onMove);
+    window.addEventListener('keydown', onKey);
     document.addEventListener('pointerleave', onLeave);
     document.addEventListener('toggle', onToggle, true);
     frame = requestAnimationFrame(tick);
 
     return () => {
       window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('keydown', onKey);
       document.removeEventListener('pointerleave', onLeave);
       document.removeEventListener('toggle', onToggle, true);
       cancelAnimationFrame(frame);
@@ -127,7 +183,9 @@ export default function SwissCursor() {
       aria-hidden="true"
       className={`swiss-cursor pointer-events-none fixed left-0 top-0 z-[60] flex items-center justify-center overflow-hidden ${
         label
-          ? 'is-labelled h-[34px] w-auto rounded-full bg-[var(--ink)] px-[18px]'
+          ? `is-labelled h-[34px] w-auto rounded-full px-[18px] ${
+              regle ? 'bg-[var(--accent)]' : 'bg-[var(--ink)]'
+            }`
           : 'h-[21px] w-[21px] rounded-full bg-white px-0'
       } ${visible ? 'opacity-100' : 'opacity-0'}`}
     >

@@ -128,6 +128,56 @@
     box-shadow: 0 0 0 100vw var(--paper);
   }
 
+  /* Les teintes d'accent, que le visiteur fait tourner en cliquant sur le
+     point du titre. Chacune vient par paire : la sombre est éclaircie, sans
+     quoi elle s'éteindrait sur le fond noir. Le mode encre garde les siennes
+     — c'est une simulation d'impression, pas un thème à décorer. */
+  .swiss:not(.ink-on)[data-swiss-accent='vermillon'] {
+    --accent: #d63a1e;
+  }
+
+  .swiss:not(.ink-on)[data-swiss-accent='vermillon'][data-swiss-theme='dark'] {
+    --accent: #ff7a5c;
+  }
+
+  .swiss:not(.ink-on)[data-swiss-accent='outremer'] {
+    --accent: #1f45d6;
+  }
+
+  .swiss:not(.ink-on)[data-swiss-accent='outremer'][data-swiss-theme='dark'] {
+    --accent: #7aa2ff;
+  }
+
+  .swiss:not(.ink-on)[data-swiss-accent='veronese'] {
+    --accent: #0c7d54;
+  }
+
+  .swiss:not(.ink-on)[data-swiss-accent='veronese'][data-swiss-theme='dark'] {
+    --accent: #43d2a0;
+  }
+
+  .swiss:not(.ink-on)[data-swiss-accent='safran'] {
+    --accent: #b86a00;
+  }
+
+  .swiss:not(.ink-on)[data-swiss-accent='safran'][data-swiss-theme='dark'] {
+    --accent: #f5b13d;
+  }
+
+  /* Le point du titre est un bouton, mais il ne doit rien en montrer : il
+     reste la ponctuation de la phrase. */
+  .swiss [data-accent-cycle] {
+    appearance: none;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--accent);
+    font: inherit;
+    letter-spacing: inherit;
+    line-height: inherit;
+    transition: color 260ms ease;
+  }
+
   /* Le logo se trace à la première arrivée, une fois par session. Le
      monogramme est un tracé unique : sa plume en fait le tour, puis l'encre
      le remplit et le nom se pose derrière. Le reste du lockup compte
