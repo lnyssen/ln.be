@@ -3,43 +3,77 @@ import SwissArrow from './SwissArrow.astro';
 
 // Panneau violet fixé au fond : le contenu glisse par-dessus et le découvre en
 // fin de course. `main` porte un fond opaque, le body réserve la hauteur.
+// Disposition tabulaire : quatre colonnes d'ours, comme au bas d'un document.
+const elsewhere = [
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/laurentnyssen/' },
+  { label: 'Spotify', href: 'https://open.spotify.com/user/laurentnyssen' },
+  { label: 'Le Polographe', href: 'https://www.instagram.com/lepolographe/' },
+];
 ---
 
 <footer
   class="swiss-footer fixed inset-x-0 bottom-0 z-0 flex h-[var(--footer-h)] flex-col justify-center pb-[env(safe-area-inset-bottom)]"
 >
   <div class="swiss-shell swiss-grid footer-cols items-start gap-y-8">
-    <p class="swiss-meta col-span-6 opacity-70 md:col-span-2">Contact</p>
-
-    <div class="col-span-6 md:col-span-5">
+    <div class="col-span-6 md:col-span-3">
+      <p class="swiss-meta footer-label">Contact</p>
       <a
         href="mailto:hello@laurentnyssen.be"
-        class="block text-[clamp(1.25rem,3vw,2.25rem)] font-medium tracking-[-0.03em] transition-colors duration-200 hover:text-[#141414]"
+        class="mt-[12px] block text-[clamp(1.0625rem,1.7vw,1.375rem)] font-medium tracking-[-0.025em] transition-colors duration-200 hover:text-[#141414]"
       >
         hello@laurentnyssen.be
       </a>
-      <a href="tel:+32497305080" class="swiss-meta mt-3 block opacity-70 hover:opacity-100">
+      <a href="tel:+32497305080" class="swiss-meta mt-[10px] block opacity-70 hover:opacity-100">
         +32 (0)497 30 50 80
-      </a>
-      <a
-        href="https://www.linkedin.com/in/laurentnyssen/"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="swiss-meta mt-2 inline-flex items-center gap-[8px] opacity-70 hover:opacity-100"
-      >
-        Full CV on LinkedIn <SwissArrow size={13} />
       </a>
     </div>
 
-    <p class="swiss-meta col-span-3 opacity-70 md:col-span-3">
-      Brussels — BE<br />Available for commissions
-    </p>
+    <div class="col-span-3 md:col-span-2">
+      <p class="swiss-meta footer-label">Elsewhere</p>
+      <ul class="mt-[12px] space-y-[6px]">
+        {
+          elsewhere.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="swiss-meta inline-flex items-center gap-[7px] opacity-70 hover:opacity-100"
+              >
+                {item.label} <SwissArrow size={12} />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
 
-    <p class="swiss-meta col-span-3 opacity-70 md:col-span-2 md:justify-self-end">
-      © {new Date().getFullYear()} LN<br />
-      <a href="/colophon" class="underline decoration-1 underline-offset-[3px] hover:opacity-100">Colophon</a>
-      &nbsp;·&nbsp;
-      <a href="/privacy" class="underline decoration-1 underline-offset-[3px] hover:opacity-100">Privacy</a>
+    <div class="col-span-3 md:col-span-3">
+      <p class="swiss-meta footer-label">Based</p>
+      <p class="swiss-meta mt-[12px] opacity-70">
+        Brussels — BE<br />Available for commissions
+      </p>
+    </div>
+
+    <div class="col-span-3 md:col-span-2">
+      <p class="swiss-meta footer-label">This site</p>
+      <ul class="mt-[12px] space-y-[6px]">
+        <li>
+          <a href="/colophon" class="swiss-meta underline decoration-1 underline-offset-[3px] opacity-70 hover:opacity-100">
+            Colophon
+          </a>
+        </li>
+        <li>
+          <a href="/privacy" class="swiss-meta underline decoration-1 underline-offset-[3px] opacity-70 hover:opacity-100">
+            Privacy
+          </a>
+        </li>
+        <li><p class="swiss-meta opacity-70">Set in Switzer</p></li>
+      </ul>
+    </div>
+
+    <p class="swiss-meta col-span-3 opacity-70 md:col-span-2 md:justify-self-end md:text-right">
+      © {new Date().getFullYear()} LN
     </p>
   </div>
 </footer>

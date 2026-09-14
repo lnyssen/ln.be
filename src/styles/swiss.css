@@ -30,7 +30,7 @@
   /* Pied de page : violet de la marque, texte papier — 4,53:1. */
   --footer-bg: #7b58e8;
   --footer-fg: #fdfdfb;
-  --footer-h: 300px;
+  --footer-h: 240px;
   --header-h: 75px;
   /* Respiration unique : distance entre un filet et le texte, en haut comme
      en bas de chaque section. */
@@ -46,7 +46,7 @@
    placée dans @layer base perdrait contre eux. */
 @media (max-width: 767px) {
   .swiss {
-    --footer-h: 340px;
+    --footer-h: 364px;
   }
 }
 
@@ -351,6 +351,12 @@
       opacity: 1;
       transform: none;
     }
+  }
+
+  /* Les intitulés d'ours sont en retrait de leur colonne : c'est le contenu
+     qu'on lit, l'intitulé ne fait que le nommer. */
+  .swiss .footer-label {
+    opacity: 0.5;
   }
 
   /* Les colonnes du pied de page s'alignent sur le haut des capitales, pas sur
