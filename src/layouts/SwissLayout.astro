@@ -165,5 +165,122 @@ const ogImage = new URL('/og.png', Astro.site).href;
         for (const el of targets) observer.observe(el);
       })();
     </script>
+  <!-- Le titre répond au pointeur : chaque lettre s'épaissit d'autant plus
+       qu'elle en est proche, et s'allège derrière lui. Les lettres sont
+       découpées au chargement, pas dans le HTML, pour que le titre reste un
+       titre si le script ne tourne pas. -->
+  <script is:inline data-astro-rerun>
+    (() => {
+      const h1 = document.querySelector('h1.swiss-display');
+      if (!h1) return;
+      if (!matchMedia('(pointer: fine)').matches) return;
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      // Découpe en signes, les espaces restant du texte nu : une espace dans
+      // un bloc en ligne se réduirait à rien.
+      const glyphs = [];
+      const split = (node) => {
+        [...node.childNodes].forEach((child) => {
+          if (child.nodeType === 3) {
+            const frag = document.createDocumentFragment();
+            for (const ch of child.textContent) {
+              if (ch === ' ') {
+                frag.appendChild(document.createTextNode(ch));
+              } else {
+                const span = document.createElement('span');
+                span.textContent = ch;
+                span.style.display = 'inline-block';
+                frag.appendChild(span);
+                glyphs.push({ el: span, w: 700, tw: 700, painted: 700 });
+              }
+            }
+            child.replaceWith(frag);
+          } else if (child.nodeName !== 'BR') {
+            split(child);
+          }
+        });
+      };
+      split(h1);
+      if (!glyphs.length) return;
+
+      let pointer = null;
+      let frame = null;
+      let boxes = [];
+
+      const measure = () => {
+        boxes = glyphs.map(({ el }) => {
+          const r = el.getBoundingClientRect();
+          return { cx: r.left + r.width / 2, cy: r.top + r.height / 2 };
+        });
+      };
+
+      // Switzer est variable : au lieu de déplacer les lettres, on en change
+      // la graisse. Elles s'épaississent au passage du pointeur et poussent
+      // leurs voisines, puis reviennent. C'est la typographie qui réagit en
+      // tant que typographie.
+      const REST = 700;
+      const LOW = 560;
+      const PEAK = 900;
+
+      const tick = () => {
+        const size = parseFloat(getComputedStyle(h1).fontSize);
+        const sigma = Math.max(90, size * 0.55);
+
+        let moving = false;
+
+        glyphs.forEach((g, i) => {
+          if (pointer && boxes[i]) {
+            const dx = pointer.x - boxes[i].cx;
+            const dy = pointer.y - boxes[i].cy;
+            const f = Math.exp(-(dx * dx + dy * dy) / (2 * sigma * sigma));
+            g.tw = LOW + f * (PEAK - LOW);
+          } else {
+            g.tw = REST;
+          }
+
+          g.w += (g.tw - g.w) * 0.16;
+
+          if (Math.abs(g.w - g.tw) > 0.5) moving = true;
+          const rounded = Math.round(g.w);
+          // Changer la graisse recalcule la mise en page : on ne réécrit que
+          // si la valeur a bougé d'un cran entier.
+          if (rounded !== g.painted) {
+            g.painted = rounded;
+            g.el.style.fontWeight = String(rounded);
+          }
+        });
+
+        // Les largeurs ont changé, donc les centres aussi.
+        if (pointer) measure();
+
+        if (pointer || moving) {
+          frame = requestAnimationFrame(tick);
+        } else {
+          frame = null;
+        }
+      };
+
+      const start = () => {
+        if (frame === null) frame = requestAnimationFrame(tick);
+      };
+
+      h1.addEventListener('pointerenter', () => {
+        measure();
+        start();
+      });
+
+      h1.addEventListener('pointermove', (event) => {
+        pointer = { x: event.clientX, y: event.clientY };
+        start();
+      });
+
+      h1.addEventListener('pointerleave', () => {
+        pointer = null;
+        start();
+      });
+
+      addEventListener('resize', measure);
+    })();
+  </script>
   </body>
 </html>
