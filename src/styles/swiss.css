@@ -948,14 +948,15 @@
 
   /* La carte du menu partage la matière de la barre : même verre, même
      contour. */
+  /* La carte est du papier plein, comme la barre au-dessus d'elle. En verre,
+     elle prenait la couleur de ce qui passait derrière : le texte de la page,
+     flouté, l'éclaircissait d'un ton, et les deux surfaces ne se
+     ressemblaient plus. L'ombre portée la grisait par-dessus le marché. */
   .swiss .menu-card {
     position: relative;
     isolation: isolate;
     border: 1px solid var(--rule);
-    background-color: var(--header-bg);
-    box-shadow: 0 10px 40px rgb(0 0 0 / 0.2);
-    -webkit-backdrop-filter: blur(64px) saturate(1.15);
-    backdrop-filter: blur(64px) saturate(1.15);
+    background-color: var(--paper);
   }
 
   .swiss .menu-link {
