@@ -193,7 +193,6 @@
     isolation: isolate;
     background-color: var(--header-bg);
     border: 1px solid var(--rule);
-    box-shadow: 0 6px 30px rgb(0 0 0 / 0.14);
     -webkit-backdrop-filter: blur(20px) saturate(1.1);
     backdrop-filter: blur(20px) saturate(1.1);
   }
@@ -252,11 +251,11 @@
      se lire elle-même. Elle couvre aussi la zone sûre d'iOS. */
   .swiss body > header::before {
     content: '';
-    position: absolute;
-    top: calc(-14px - 2 * env(safe-area-inset-top));
+    position: fixed;
+    top: 0;
     left: 0;
     right: 0;
-    height: calc(28px + 3 * env(safe-area-inset-top));
+    height: calc(16px + env(safe-area-inset-top));
     pointer-events: none;
     background-color: var(--paper);
   }
@@ -266,11 +265,11 @@
      la texture sans la remplacer. */
   .swiss body > header::after {
     content: '';
-    position: absolute;
-    top: calc(-14px - 2 * env(safe-area-inset-top));
+    position: fixed;
+    top: 0;
     left: 0;
     right: 0;
-    height: calc(28px + 3 * env(safe-area-inset-top));
+    height: calc(16px + env(safe-area-inset-top));
     pointer-events: none;
     background-image: url('/images/grain.png');
     background-repeat: repeat;
@@ -634,10 +633,10 @@
   /* Panneau de navigation : il couvre la page, donc il porte le papier et
      son grain, calé sur le cadre comme celui du site pour que la texture ne
      s'interrompe pas. */
-  /* La carte se pose sous la barre, jamais dessus : la barre se gare à 14,
-     porte 14 de marge interne et 70 de haut, plus 10 d'écart. */
+  /* La carte se pose sous la barre, jamais dessus : 16 de marge interne,
+     70 de pilule, 10 d'écart. */
   .swiss .swiss-menu {
-    top: calc(108px + 2 * env(safe-area-inset-top));
+    top: calc(96px + env(safe-area-inset-top));
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
