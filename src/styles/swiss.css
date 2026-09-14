@@ -535,19 +535,27 @@
     position: sticky;
     top: calc(var(--header-h) + env(safe-area-inset-top));
     z-index: 20;
-    /* Le titre garée reste lisible sans masquer ce qui défile dessous : même
-       verre dépoli que la barre, plutôt qu'un aplat de papier. */
-    background-color: var(--header-bg);
-    -webkit-backdrop-filter: blur(14px);
-    backdrop-filter: blur(14px);
+    /* Le bandeau doit masquer ce qui défile derrière lui sans se voir quand
+       rien ne passe. Un fond translucide flouté lissait le grain et laissait
+       un rectangle lisse en plein papier ; un fond opaque nu l'interrompait
+       tout autant. Il porte donc son propre grain, calé sur le cadre comme
+       celui de la page : les deux textures sont en phase, la jointure ne se
+       voit pas. */
+    background-color: var(--paper);
+    isolation: isolate;
   }
 
-  @media (prefers-reduced-transparency: reduce) {
-    .swiss details[open] > summary {
-      background-color: var(--paper);
-      -webkit-backdrop-filter: none;
-      backdrop-filter: none;
-    }
+  .swiss details[open] > summary::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image: url('/images/grain.png');
+    background-repeat: repeat;
+    background-size: 64px auto;
+    background-attachment: fixed;
+    opacity: var(--grain);
   }
 
   /* Ouverture filée : le contenu passe de 0 à sa hauteur réelle. Sur un
