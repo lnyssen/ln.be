@@ -3,8 +3,10 @@ import { Image } from 'astro:assets';
 import { resolveImage } from '../lib/images';
 import SwissArrow from './SwissArrow.astro';
 
+type Visuel = string | { src: string; alt: string };
+
 interface Props {
-  images: string[];
+  images: Visuel[];
   title: string;
   // Les planches de projet sont des photographies, cadrées en 3:2. Une affiche
   // ne se recadre pas : la variante « poster » fixe la hauteur et laisse
@@ -25,8 +27,16 @@ const {
 } = Astro.props;
 const poster = variant === 'poster';
 
+// Chaque visuel porte sa description quand on la lui a donnée. À défaut, on
+// se rabat sur le titre et le rang : ce n'est pas une description, mais c'est
+// une identité — mieux vaut cela qu'un alt vide sur une image qui est, ici,
+// le travail lui-même.
 const resolved = images
-  .map((path) => ({ path, asset: resolveImage(path) }))
+  .map((image) => {
+    const src = typeof image === 'string' ? image : image.src;
+    const alt = typeof image === 'string' ? null : image.alt;
+    return { path: src, alt, asset: resolveImage(src) };
+  })
   .filter((entry) => entry.asset !== null);
 
 const total = String(resolved.length).padStart(2, '0');
@@ -54,7 +64,7 @@ const total = String(resolved.length).padStart(2, '0');
         >
           <Image
             src={entry.asset!}
-            alt={`${title} — visuel ${i + 1} sur ${resolved.length}`}
+            alt={entry.alt ?? `${title} — visuel ${i + 1} sur ${resolved.length}`}
             widths={poster ? [340, 520, 700] : [440, 720, 880]}
             sizes={poster ? '(min-width: 768px) 330px, 46vw' : '(min-width: 768px) 440px, 78vw'}
             format="webp"
