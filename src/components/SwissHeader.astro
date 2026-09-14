@@ -17,18 +17,29 @@ const pages = [
 ---
 
 <header class="swiss-shell sticky top-[calc(14px+env(safe-area-inset-top))] z-50 pt-[calc(14px+env(safe-area-inset-top))]">
-  <div class="header-pill flex items-center justify-between gap-4 rounded-full py-[10px] pl-[18px] pr-[10px] md:pl-[22px]">
+  <div class="header-pill flex items-center justify-between gap-4 rounded-full py-[15px] pl-[20px] pr-[12px] md:pl-[26px] md:pr-[14px]">
     <a href="/" class="flex items-center">
       <LogoLockup class="h-[32px] w-auto shrink-0 text-[var(--ink)] md:h-[40px]" />
     </a>
 
     <div class="flex items-center gap-[16px]">
-      <nav class="swiss-meta nav-link hidden items-center gap-[16px] sm:flex" aria-label="Main">
+      <!-- La page courante est marquée par une pastille qui glisse d'un
+           repère à l'autre. Le nœud traverse les transitions de vue, sans
+           quoi elle sauterait au lieu de glisser. -->
+      <nav
+        class="nav-track swiss-meta nav-link relative hidden items-center gap-[2px] sm:flex"
+        aria-label="Main"
+        data-nav
+        transition:persist="nav"
+      >
+        <span class="nav-pill" aria-hidden="true"></span>
         {
           pages.map((page) => (
             <a
               href={page.href}
-              class={current === page.key ? 'text-[var(--accent)]' : 'hover:text-[var(--accent)]'}
+              data-nav-link
+              data-key={page.key}
+              class="relative z-10 flex h-[32px] items-center rounded-full px-[13px] transition-colors duration-200"
               aria-current={current === page.key ? 'page' : undefined}
             >
               {page.label}
@@ -111,10 +122,6 @@ const pages = [
       Get in touch
     </a>
 
-    <p class="swiss-meta mt-[18px] flex justify-center gap-[18px] text-[var(--ink-soft)]">
-      <a href="/colophon" class="underline decoration-1 underline-offset-[3px]">Colophon</a>
-      <a href="/privacy" class="underline decoration-1 underline-offset-[3px]">Privacy</a>
-    </p>
   </div>
 </div>
 
@@ -150,6 +157,68 @@ const pages = [
     // Repasser en grand écran laisse le panneau ouvert derrière soi.
     matchMedia('(min-width: 640px)').addEventListener('change', (event) => {
       if (event.matches) setState(false);
+    });
+  })();
+</script>
+
+<script is:inline>
+  // La pastille suit le repère survolé et revient sur la page courante. Elle
+  // est mesurée plutôt que devinée : largeurs et positions varient avec la
+  // longueur des mots et le format de l'écran.
+  (() => {
+    if (window.__swissNavPill) return;
+    window.__swissNavPill = true;
+
+    const cle = () => {
+      const p = location.pathname;
+      return p.startsWith('/lepolographe') ? 'polographe' : p.startsWith('/lab') ? 'lab' : 'index';
+    };
+
+    const poser = (nav, lien, anime) => {
+      const pastille = nav.querySelector('.nav-pill');
+      if (!pastille || !lien) return;
+      pastille.style.transitionProperty = anime ? 'transform, width' : 'none';
+      pastille.style.width = `${lien.offsetWidth}px`;
+      pastille.style.transform = `translateX(${lien.offsetLeft}px)`;
+      if (!anime) requestAnimationFrame(() => (pastille.style.transitionProperty = ''));
+    };
+
+    const courant = (nav) => nav.querySelector(`[data-key="${cle()}"]`);
+
+    const caler = (anime) => {
+      const nav = document.querySelector('[data-nav]');
+      if (!nav) return;
+      for (const a of nav.querySelectorAll('[data-nav-link]')) {
+        const ici = a.dataset.key === cle();
+        a.classList.toggle('is-current', ici);
+        if (ici) a.setAttribute('aria-current', 'page');
+        else a.removeAttribute('aria-current');
+      }
+      poser(nav, courant(nav), anime);
+    };
+
+    const brancher = () => {
+      const nav = document.querySelector('[data-nav]');
+      if (!nav || nav.dataset.bound) return;
+      nav.dataset.bound = '1';
+      for (const a of nav.querySelectorAll('[data-nav-link]')) {
+        a.addEventListener('pointerenter', () => poser(nav, a, true));
+      }
+      nav.addEventListener('pointerleave', () => poser(nav, courant(nav), true));
+    };
+
+    const demarrer = () => {
+      brancher();
+      caler(false);
+    };
+
+    if (document.fonts?.ready) document.fonts.ready.then(demarrer);
+    else demarrer();
+
+    addEventListener('resize', () => caler(false));
+    document.addEventListener('astro:after-swap', () => {
+      brancher();
+      caler(true);
     });
   })();
 </script>

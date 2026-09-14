@@ -92,6 +92,32 @@
     background-color: transparent;
   }
 
+  /* Pastille de page courante : un aplat d'encre très retenu, qui glisse
+     d'un repère à l'autre. Assez pour se voir, pas assez pour obliger le mot
+     à changer de couleur en passant dessous. */
+  .swiss .nav-pill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 0;
+    border-radius: 999px;
+    background-color: color-mix(in srgb, var(--ink) 13%, transparent);
+    transition:
+      transform 420ms cubic-bezier(0.22, 1, 0.36, 1),
+      width 420ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .swiss [data-nav-link].is-current {
+    color: var(--ink);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .swiss .nav-pill {
+      transition: none;
+    }
+  }
+
   .swiss .header-pill {
     background-color: var(--header-bg);
     border: 1px solid var(--rule);
@@ -142,10 +168,11 @@
      propre fond. Sur iOS, la page défile sous la barre d'état et la valeur de
      env(safe-area-inset-top) ne suffit pas toujours à la couvrir ; cette bande
      le fait quel que soit le décalage réel. */
-  /* La pilule ne masque plus toute la largeur : le contenu passe donc dans la
-     marge au-dessus d'elle et se coupait net au bord de l'écran. Il s'y
-     dissout à la place, sur la hauteur de cette marge. La bande couvre aussi
-     la zone sûre d'iOS, que le défilement traverse sans elle. */
+  /* La pilule ne masque plus toute la largeur : sans cette bande, le contenu
+     passerait dans la marge au-dessus d'elle et se couperait net au bord de
+     l'écran. Elle est franche plutôt que dégradée — un fondu laissait
+     subsister un liseré de texte — et porte le grain de la page pour ne pas
+     se lire elle-même. Elle couvre aussi la zone sûre d'iOS. */
   .swiss body > header::before {
     content: '';
     position: absolute;
@@ -154,12 +181,25 @@
     right: 0;
     height: calc(28px + 2 * env(safe-area-inset-top));
     pointer-events: none;
-    background-image: linear-gradient(
-      to bottom,
-      var(--paper) 0,
-      var(--paper) calc(env(safe-area-inset-top) + 6px),
-      transparent 100%
-    );
+    background-color: var(--paper);
+  }
+
+  /* Le grain de la bande, calé sur le cadre comme celui de la page : sans
+     lui, elle se lisait comme une lisière plus claire, puisqu'elle couvrait
+     la texture sans la remplacer. */
+  .swiss body > header::after {
+    content: '';
+    position: absolute;
+    top: calc(-1 * env(safe-area-inset-top));
+    left: 0;
+    right: 0;
+    height: calc(28px + 2 * env(safe-area-inset-top));
+    pointer-events: none;
+    background-image: url('/images/grain.png');
+    background-repeat: repeat;
+    background-size: 64px auto;
+    background-attachment: fixed;
+    opacity: var(--grain);
   }
 
   .swiss body {
