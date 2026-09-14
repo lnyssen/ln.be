@@ -46,107 +46,73 @@ const editions = [
           The project
         </p>
 
-        <p class="swiss-lede col-span-6 md:col-span-8">
+        <p class="swiss-lede col-span-6 md:col-span-7">
           A side project. No client, no brief, no deadline, and nothing to sell
           anyone. Whatever I start there ends up circling the same three
           things: chaos, nature, and the city.
         </p>
+
+        <ul class="swiss-meta col-span-6 space-y-[10px] md:col-span-3 md:justify-self-end">
+          <li>
+            <a href="https://www.instagram.com/lepolographe/" target="_blank" rel="noopener noreferrer" class="hover:text-[var(--accent)]">
+              Instagram <SwissArrow />
+            </a>
+          </li>
+          <li>
+            <a href="mailto:hello@laurentnyssen.be?subject=Le%20Polographe" class="hover:text-[var(--accent)]">
+              Ask for a print <SwissArrow direction="right" />
+            </a>
+          </li>
+        </ul>
       </div>
     </section>
 
     <section class="swiss-shell">
-      <div class="swiss-grid gap-y-4 border-t border-[var(--rule)]" data-reveal>
+      <div class="swiss-grid gap-y-6 border-t border-[var(--rule)]" data-reveal>
         <p class="section-label swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">
           Compositions
         </p>
 
-        <p class="col-span-6 text-[16px] leading-[1.6] text-[var(--ink-soft)] md:col-span-8 md:text-[17px]">
+        <p class="col-span-6 text-[16px] leading-[1.6] text-[var(--ink-soft)] md:col-span-3 md:text-[17px]">
           Chaos and nature. Stadiums, quarter circles and leaves, set on a
           grid and then piled up until they read as clouds, folds, or something
           growing. Every shape comes from the same small set; only the stacking
           changes.
         </p>
-      </div>
 
-      <div class="mt-[26px]" data-reveal>
-        <SwissFilmstrip images={compositions} title="Le Polographe — compositions" variant="poster" />
+        <div class="col-span-6 md:col-span-7">
+          <SwissFilmstrip
+            images={compositions}
+            title="Le Polographe — compositions"
+            variant="poster"
+            bleed={false}
+            arrows={false}
+          />
+        </div>
       </div>
     </section>
 
     <section class="swiss-shell">
-      <div class="swiss-grid gap-y-4 border-t border-[var(--rule)]" data-reveal>
+      <div class="swiss-grid gap-y-6 border-t border-[var(--rule)]" data-reveal>
         <p class="section-label swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">
           BE series
         </p>
 
-        <p class="col-span-6 text-[16px] leading-[1.6] text-[var(--ink-soft)] md:col-span-8 md:text-[17px]">
+        <p class="col-span-6 text-[16px] leading-[1.6] text-[var(--ink-soft)] md:col-span-3 md:text-[17px]">
           The city, one postcode at a time. Each poster is a window divided
           into a grid of vignettes, drawn at a single line weight: what you
           actually see in that commune, from the landmark everyone photographs
           down to the tram shelter nobody does. An ongoing series.
         </p>
-      </div>
 
-      <div class="mt-[26px]" data-reveal>
-        <SwissFilmstrip
-          images={districts.map((d) => `/images/polographe/be-${d.code}.png`)}
-          title="Le Polographe — série BE"
-          variant="poster"
-        />
-      </div>
-
-      <ul class="swiss-meta mt-[16px] flex flex-wrap gap-x-[26px] gap-y-[8px] text-[var(--ink-soft)]">
-        {districts.map((d) => (<li>BE — {d.code} · {d.name}</li>))}
-      </ul>
-    </section>
-
-    <section class="swiss-shell">
-      <div class="swiss-grid gap-y-4 border-t border-[var(--rule)]" data-reveal>
-        <p class="section-label swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">
-          In print
-        </p>
-
-        <div class="col-span-6 md:col-span-8">
-          <p class="mb-[22px] text-[16px] leading-[1.6] text-[var(--ink-soft)] md:text-[17px]">
-            Five of the compositions exist on paper. A risograph prints one ink
-            at a time: you choose two, the sheet goes through twice, and where
-            the layers meet a third colour appears that neither drum contains.
-            It also refuses to be exact, so no two copies are quite the same.
-            The rest of the work has never left the screen.
-          </p>
-
-          <ul class="edition-list">
-            {
-              editions.map((edition) => (
-                <li class="swiss-meta grid grid-cols-[auto_1fr_auto] items-baseline gap-x-4 border-b border-[var(--rule)] py-[14px] text-[var(--ink-soft)] last:border-b-0">
-                  <span class="text-[var(--ink)]">#{edition.no}</span>
-                  <span>{edition.inks}</span>
-                  <span>{edition.format}</span>
-                </li>
-              ))
-            }
-          </ul>
-
-          <p class="swiss-meta mt-[18px] text-[var(--ink-soft)]">
-            Risography · Twenty copies each · Numbered and signed
-          </p>
-        </div>
-
-        <div class="footer-col col-span-6 md:col-span-2 md:items-end md:text-right">
-          <a
-            href="mailto:hello@laurentnyssen.be?subject=Le%20Polographe"
-            class="swiss-meta w-fit text-[var(--accent)] hover:opacity-80"
-          >
-            Ask for a print<span class="footer-arrow"><SwissArrow size={12} direction="right" /></span>
-          </a>
-          <a
-            href="https://www.instagram.com/lepolographe/"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="swiss-meta w-fit text-[var(--ink-soft)] hover:text-[var(--accent)]"
-          >
-            Instagram<span class="footer-arrow"><SwissArrow size={12} /></span>
-          </a>
+        <div class="col-span-6 md:col-span-7">
+          <SwissFilmstrip
+            images={districts.map((d) => `/images/polographe/be-${d.code}.png`)}
+            title="Le Polographe — série BE"
+            variant="poster"
+            bleed={false}
+            arrows={false}
+          />
         </div>
       </div>
     </section>

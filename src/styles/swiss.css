@@ -371,12 +371,6 @@
     animation-delay: var(--col-delay, 0ms);
   }
 
-  .swiss .grid-overlay .grid-readout {
-    opacity: 0;
-    animation: grid-readout-in 300ms ease forwards;
-    animation-delay: 340ms;
-  }
-
   @keyframes grid-col-in {
     to {
       opacity: 1;
@@ -384,15 +378,8 @@
     }
   }
 
-  @keyframes grid-readout-in {
-    to {
-      opacity: 1;
-    }
-  }
-
   @media (prefers-reduced-motion: reduce) {
-    .swiss .grid-overlay .grid-col,
-    .swiss .grid-overlay .grid-readout {
+    .swiss .grid-overlay .grid-col {
       animation: none;
       opacity: 1;
       transform: none;
@@ -549,11 +536,6 @@
 
   /* Le signe s'emplit et ses deux barres se croisent tant que le panneau est
      ouvert : le même bouton ouvre et referme. */
-  .swiss [data-menu-toggle][aria-expanded='true'] {
-    background-color: var(--ink);
-    color: var(--paper);
-  }
-
   .swiss .menu-icon .bar-top,
   .swiss .menu-icon .bar-bottom {
     transform-origin: center;
@@ -568,10 +550,21 @@
     transform: translateY(-3px) rotate(-45deg);
   }
 
-  /* La capsule d'outils s'efface derrière le panneau : elle flotte au-dessus
-     du contenu, pas au-dessus de la navigation. */
-  .swiss.menu-open .swiss-dock {
+  /* La capsule d'outils et le calque de grille s'effacent derrière le
+     panneau : ils flottent au-dessus du contenu, pas de la navigation. */
+  .swiss.menu-open .swiss-dock,
+  .swiss.menu-open .grid-overlay {
     display: none;
+  }
+
+  /* `sticky` n'a plus de port de défilement quand le corps est bloqué : la
+     barre partait avec la page dès que le menu s'ouvrait en cours de lecture,
+     emportant le signe qui devait le refermer. */
+  .swiss.menu-open body > header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
   }
 
   /* Planches d'affiches : colonnes égales, gouttière de la grille. Les

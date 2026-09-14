@@ -1,7 +1,7 @@
 ---
-// Calque de grille : moins un outil qu'une épreuve d'imprimeur. Traits de
-// coupe aux quatre angles, colonnes numérotées, et les mesures relevées en
-// direct sur la page.
+// Calque de grille : moins un outil qu'une épreuve d'imprimeur. Colonnes
+// contournées et numérotées, rien d'autre — la grille se montre, elle ne se
+// commente pas.
 ---
 
 <div data-grid-overlay hidden class="grid-overlay pointer-events-none fixed inset-0 z-[45]">
@@ -24,14 +24,4 @@
     }
   </div>
 
-  <!-- Relevé, comme une cartouche de plan. -->
-  <div
-    data-grid-readout
-    class="grid-readout absolute bottom-[calc(16px+env(safe-area-inset-bottom))] left-[20px] flex gap-[12px] border border-[var(--grid-line)] bg-[var(--paper)] px-[10px] py-[6px] font-mono text-[9px] tabular-nums text-[var(--accent)] opacity-75 backdrop-blur-sm md:left-[40px]"
-  >
-    <span data-grid-vw>—</span>
-    <span data-grid-bp>—</span>
-    <span data-grid-cols>—</span>
-    <span data-grid-colw>—</span>
-  </div>
 </div>

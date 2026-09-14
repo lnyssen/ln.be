@@ -10,9 +10,19 @@ interface Props {
   // ne se recadre pas : la variante « poster » fixe la hauteur et laisse
   // chaque feuille prendre la largeur de son propre format.
   variant?: 'landscape' | 'poster';
+  // Une planche posée dans une colonne ne déborde pas jusqu'aux marges, et
+  // n'a pas besoin de flèches : elle se parcourt au doigt ou à la molette.
+  bleed?: boolean;
+  arrows?: boolean;
 }
 
-const { images, title, variant = 'landscape' } = Astro.props;
+const {
+  images,
+  title,
+  variant = 'landscape',
+  bleed = true,
+  arrows = true,
+} = Astro.props;
 const poster = variant === 'poster';
 
 const resolved = images
@@ -26,7 +36,10 @@ const total = String(resolved.length).padStart(2, '0');
      masquée, on avance aux flèches, au doigt, à la molette ou au clavier. -->
 <div class="filmstrip-wrap relative">
   <div
-    class="filmstrip -mx-[20px] flex snap-x snap-mandatory gap-[10px] overflow-x-auto px-[20px] pb-[10px] md:-mx-[40px] md:px-[40px]"
+    class:list={[
+      'filmstrip flex snap-x snap-mandatory gap-[10px] overflow-x-auto pb-[10px]',
+      bleed && '-mx-[20px] px-[20px] md:-mx-[40px] md:px-[40px]',
+    ]}
     role="group"
     aria-label={`${title} — ${total} visuels`}
     tabindex="0"
@@ -55,7 +68,7 @@ const total = String(resolved.length).padStart(2, '0');
   </div>
 
   {
-    resolved.length > 1 && (
+    arrows && resolved.length > 1 && (
       <>
         <button
           type="button"

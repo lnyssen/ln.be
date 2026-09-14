@@ -99,29 +99,9 @@ const ogImage = new URL('/og.png', Astro.site).href;
           localStorage.setItem('swiss-grid', on ? '1' : '0');
         };
 
-        // Cartouche : ce que la page mesure réellement à cet instant.
-        const readout = () => {
-          const col = overlay.querySelector('.grid-col:not(.hidden)');
-          const w = window.innerWidth;
-          const set = (sel, value) => {
-            const node = overlay.querySelector(sel);
-            if (node) node.textContent = value;
-          };
-          set('[data-grid-vw]', `${w}px`);
-          set('[data-grid-bp]', w >= 900 ? 'DESKTOP' : w >= 768 ? 'TABLET' : 'MOBILE');
-          set('[data-grid-cols]', `${w >= 900 ? 12 : 6} col`);
-          set('[data-grid-colw]', col ? `${col.getBoundingClientRect().width.toFixed(1)}px` : '—');
-        };
-
         const toggle = () => {
-          const on = overlay.hidden;
-          apply(on);
-          if (on) readout();
+          apply(overlay.hidden);
         };
-
-        window.addEventListener('resize', () => {
-          if (!overlay.hidden) readout();
-        });
 
         button.addEventListener('click', toggle);
 
@@ -133,9 +113,7 @@ const ogImage = new URL('/og.png', Astro.site).href;
           if (event.key === 'g' || event.key === 'G') toggle();
         });
 
-        const stored = localStorage.getItem('swiss-grid') === '1';
-        apply(stored);
-        if (stored) readout();
+        apply(localStorage.getItem('swiss-grid') === '1');
       })();
 
       // Apparition au défilement. Le drapeau n'est posé que si l'on anime
