@@ -515,6 +515,13 @@
     background-color: var(--paper);
   }
 
+  /* L'attribut `hidden` ne suffit pas ici : il vient de la feuille du
+     navigateur, que l'utilitaire `flex` du panneau écrase. Sans cette règle,
+     le menu s'ouvrait et ne se refermait plus. */
+  .swiss .swiss-menu[hidden] {
+    display: none;
+  }
+
   .swiss .swiss-menu::before {
     content: '';
     position: absolute;
