@@ -65,10 +65,10 @@ const total = String(resolved.length).padStart(2, '0');
           <Image
             src={entry.asset!}
             alt={entry.alt ?? `${title} — visuel ${i + 1} sur ${resolved.length}`}
-            widths={poster ? [340, 520, 700] : [440, 720, 880]}
+            widths={poster ? [340, 520, 700, 1200] : [440, 720, 880, 1600]}
             sizes={poster ? '(min-width: 768px) 330px, 46vw' : '(min-width: 768px) 440px, 78vw'}
             format="webp"
-            quality={poster ? 82 : 72}
+            quality={poster ? 82 : 78}
             loading="lazy"
             class:list={[poster ? 'h-full w-auto object-contain' : 'aspect-[3/2] w-full object-cover']}
           />

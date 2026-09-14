@@ -10,6 +10,13 @@ function labelFor(node) {
   // défileraient pour trois liens courts.
   if (node.closest('header')) return null;
 
+  // La loupe couvre tout : elle se referme d'un clic, où qu'il tombe.
+  if (node.closest('[data-loupe]')) return 'CLOSE';
+
+  // Un visuel de planche s'agrandit. La règle passe avant celle de la ligne
+  // dépliée, qui referme tout le reste.
+  if (node.closest('.filmstrip img')) return 'ZOOM';
+
   const summary = node.closest('summary');
   if (summary) {
     return summary.closest('details')?.open ? 'CLOSE' : 'VIEW';
@@ -65,6 +72,8 @@ const GLYPHS = {
   CLICK: 'M6 3.5l12.5 8.2-5.4 1.2 2.6 5.6-2.4 1.1-2.6-5.6-3.7 4V3.5Z',
   // Un astérisque à six branches : rien à faire, seulement à regarder.
   ENJOY: 'M12 3.5v17M4.6 7.75l14.8 8.5M19.4 7.75l-14.8 8.5',
+  // Deux coins qui s'écartent : le visuel prend toute la place.
+  ZOOM: 'M4.5 10V4.5H10M19.5 14v5.5H14M4.5 4.5l6 6M19.5 19.5l-6-6',
   // Une goutte : le geste change l'encre du site.
   TINT: 'M12 3.2c3.4 4 5.6 6.9 5.6 9.6a5.6 5.6 0 0 1-11.2 0c0-2.7 2.2-5.6 5.6-9.6Z',
 };

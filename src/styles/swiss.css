@@ -433,6 +433,45 @@
     }
   }
 
+  /* Loupe : le visuel seul, sur le papier de la page, sans cadre ni bouton —
+     un clic n'importe où la referme, et le disque du curseur le dit. */
+  .swiss .loupe {
+    position: fixed;
+    inset: 0;
+    z-index: 70;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background-color: color-mix(in srgb, var(--paper) 94%, transparent);
+    opacity: 0;
+    transition: opacity 240ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .swiss .loupe.is-open {
+    opacity: 1;
+  }
+
+  .swiss .loupe img {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+    transform: scale(0.98);
+    transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .swiss .loupe.is-open img {
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .swiss .loupe,
+    .swiss .loupe img {
+      transition: none;
+    }
+  }
+
   /* Pastille de page courante : un aplat d'encre très retenu, qui glisse
      d'un repère à l'autre. Assez pour se voir, pas assez pour obliger le mot
      à changer de couleur en passant dessous. */

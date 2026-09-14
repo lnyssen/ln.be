@@ -448,6 +448,11 @@ function domainLabel(link: string) {
         const tag = event.target?.tagName;
         if (tag === 'INPUT' || tag === 'TEXTAREA' || event.target?.isContentEditable) return;
 
+        // La loupe est au premier plan : tant qu'elle est ouverte, le clavier
+        // lui appartient. Sans cela, Échap refermait la loupe et la ligne d'un
+        // même coup, et l'on se retrouvait deux crans en arrière.
+        if (document.querySelector('[data-loupe]')) return;
+
         const openRow = rows.find((row) => row.open);
 
         if (event.key === 'Escape' && openRow) {
@@ -496,6 +501,48 @@ function domainLabel(link: string) {
         });
       };
 
+      // Loupe : un visuel de planche s'ouvre en grand par-dessus la page. Il
+      // ne s'agrandit pas au-delà de sa taille réelle — une image tirée plus
+      // grand qu'elle n'est ne montre rien de plus, elle montre juste ses
+      // pixels.
+      const loupe = (img) => {
+        const cadre = document.createElement('div');
+        cadre.className = 'loupe';
+        cadre.dataset.loupe = '';
+
+        // On reprend le jeu de tailles de la planche en annonçant une tout
+        // autre largeur d'affichage : le navigateur va donc chercher le grand
+        // tirage, là où la bande se contentait d'une vignette. Sans cela la
+        // loupe agrandissait l'image de la bande, et montrait ses pixels.
+        const grand = document.createElement('img');
+        grand.src = img.currentSrc || img.src;
+        if (img.srcset) {
+          grand.srcset = img.srcset;
+          grand.sizes = '92vw';
+        }
+        grand.alt = img.alt;
+        cadre.append(grand);
+        document.body.append(cadre);
+        requestAnimationFrame(() => cadre.classList.add('is-open'));
+
+        const fermer = () => {
+          cadre.classList.remove('is-open');
+          cadre.addEventListener('transitionend', () => cadre.remove(), { once: true });
+          document.removeEventListener('keydown', surTouche);
+        };
+        const surTouche = (event) => {
+          if (event.key === 'Escape') fermer();
+        };
+
+        cadre.addEventListener('click', fermer);
+        document.addEventListener('keydown', surTouche);
+      };
+
+      document.addEventListener('click', (event) => {
+        const img = event.target.closest('.filmstrip img');
+        if (img) loupe(img);
+      });
+
       for (const row of document.querySelectorAll('#work details')) {
         const summary = row.querySelector(':scope > summary');
         // Le clic précède la bascule : c'est le moment de relever la position.
@@ -506,7 +553,7 @@ function domainLabel(link: string) {
 
         // Cliquer dans la planche referme la ligne, sans bouger la page.
         panel.addEventListener('click', (event) => {
-          if (event.target.closest('a, button')) return;
+          if (event.target.closest('a, button, .filmstrip img')) return;
           pin(row);
           row.open = false;
         });
