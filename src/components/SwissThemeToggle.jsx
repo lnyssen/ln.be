@@ -44,7 +44,7 @@ export default function SwissThemeToggle({ framed = true }) {
       className={`relative box-content h-[30px] w-[60px] shrink-0 rounded-full border p-[3px] transition-colors duration-200 ${framed ? 'border-[var(--rule)] hover:border-[var(--accent)]' : 'border-transparent'}`}
     >
       {/* Les deux repères, chacun centré dans sa moitié de 30px. */}
-      <span className="theme-icons pointer-events-none absolute inset-[3px] flex text-[var(--ink-soft)] transition-colors duration-200">
+      <span className="theme-icons pointer-events-none absolute inset-[3px] flex text-[var(--ink)] transition-colors duration-200">
         <span className="flex w-1/2 items-center justify-center">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" aria-hidden="true">
             <circle cx="12" cy="12" r="4.5" />
