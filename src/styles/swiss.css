@@ -508,6 +508,38 @@
     transform: translateX(30px);
   }
 
+  /* Planches d'affiches : colonnes égales, gouttière de la grille. Les
+     affiches n'ont pas toutes le même format, on ne les rogne pas. */
+  .swiss .poster-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    align-items: start;
+  }
+
+  @media (min-width: 768px) {
+    .swiss .poster-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .swiss .series-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+    align-items: start;
+  }
+
+  @media (min-width: 768px) {
+    .swiss .series-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .swiss .edition-list > li:first-child {
+    padding-top: 0;
+  }
+
   .swiss .privacy-body > * + * {
     margin-top: 1.1em;
   }

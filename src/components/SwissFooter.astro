@@ -11,7 +11,7 @@ import SwissArrow from './SwissArrow.astro';
 const elsewhere = [
   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/laurentnyssen/' },
   { label: 'Spotify', href: 'https://open.spotify.com/user/laurentnyssen' },
-  { label: 'Le Polographe', href: 'https://www.instagram.com/lepolographe/' },
+  { label: 'Le Polographe', href: '/lepolographe' },
 ];
 
 const site = [
@@ -41,16 +41,24 @@ const site = [
 
     <div class="footer-col col-span-3 md:col-span-3">
       {
-        elsewhere.map((item) => (
-          <a
-            href={item.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="swiss-meta block w-fit opacity-70 hover:opacity-100"
-          >
-            {item.label}<span class="footer-arrow"><SwissArrow size={12} /></span>
-          </a>
-        ))
+        elsewhere.map((item) => {
+          // Une page du site ne s'ouvre pas dans un onglet neuf, et sa flèche
+          // pointe devant plutôt que dehors.
+          const away = item.href.startsWith('http');
+          return (
+            <a
+              href={item.href}
+              target={away ? '_blank' : undefined}
+              rel={away ? 'noopener noreferrer' : undefined}
+              class="swiss-meta block w-fit opacity-70 hover:opacity-100"
+            >
+              {item.label}
+              <span class="footer-arrow">
+                <SwissArrow size={12} direction={away ? 'up-right' : 'right'} />
+              </span>
+            </a>
+          );
+        })
       }
     </div>
 

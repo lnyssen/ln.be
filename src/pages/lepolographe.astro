@@ -1,0 +1,221 @@
+---
+import { Image } from 'astro:assets';
+import SwissLayout from '../layouts/SwissLayout.astro';
+import SwissHeader from '../components/SwissHeader.astro';
+import SwissFooter from '../components/SwissFooter.astro';
+import SwissArrow from '../components/SwissArrow.astro';
+
+// Les visuels sont chargés par lot : les ajouter revient à déposer un fichier
+// dans le dossier, le classement suit le nom.
+const files = import.meta.glob<{ default: ImageMetadata }>(
+  '../assets/polographe/*.{png,jpg}',
+  { eager: true }
+);
+
+const pick = (prefix: string) =>
+  Object.entries(files)
+    .filter(([path]) => path.includes(`/${prefix}`))
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([path, mod]) => ({ path, src: mod.default }));
+
+const compositions = pick('composition-');
+
+// Chaque affiche de la série porte un code postal bruxellois pour titre.
+const districts: Record<string, string> = {
+  'be-1000': 'Brussels',
+  'be-1030': 'Schaerbeek',
+  'be-1050': 'Ixelles',
+};
+
+const series = pick('be-').map((item) => {
+  const key = item.path.split('/').pop()!.replace(/\.\w+$/, '');
+  return { ...item, code: key.replace('be-', ''), name: districts[key] ?? '' };
+});
+
+// Relevé du catalogue, pas une estimation.
+const editions = [
+  { no: '01', format: 'A3', inks: 'Red + Mint' },
+  { no: '02', format: 'A3', inks: 'Metallic gold + Teal' },
+  { no: '03', format: 'A4', inks: 'Fluo pink + Blue' },
+  { no: '04', format: 'A6', inks: 'Fluo pink + Blue' },
+  { no: '05', format: 'A6', inks: 'Fluo pink + Blue' },
+];
+---
+
+<SwissLayout
+  title="Le Polographe — Laurent Nyssen"
+  description="Risograph posters printed in editions of twenty, numbered and signed. Geometric compositions, and one poster per Brussels postcode."
+>
+  <SwissHeader />
+
+  <main>
+    <section class="swiss-shell pt-[40px] md:pt-[72px]">
+      <h1 class="swiss-display">
+        Le Polographe<span class="text-[var(--accent)]">.</span>
+      </h1>
+    </section>
+
+    <section class="swiss-shell">
+      <div class="swiss-grid gap-y-4 border-t border-[var(--rule)]" data-reveal>
+        <p class="section-label swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">
+          The project
+        </p>
+
+        <p class="swiss-lede col-span-6 md:col-span-8">
+          Posters printed on a risograph, in editions of twenty, numbered and
+          signed. No client, no brief, no deadline. It is where I go to draw
+          for the pleasure of drawing.
+        </p>
+      </div>
+    </section>
+
+    <section class="swiss-shell">
+      <div class="swiss-grid gap-y-4 border-t border-[var(--rule)]" data-reveal>
+        <p class="section-label swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">
+          Two inks
+        </p>
+
+        <div class="privacy-body col-span-6 text-[16px] leading-[1.6] text-[var(--ink-soft)] md:col-span-8 md:text-[17px]">
+          <p>
+            A risograph prints one ink at a time. You choose two, the sheet goes
+            through twice, and where the two layers meet a third colour appears
+            that neither drum contains. That is the whole game: you compose for
+            the overlap, and the machine hands you colours you did not mix.
+          </p>
+          <p>
+            It also refuses to be exact. The registration shifts by a hair from
+            one sheet to the next, the ink sits on the paper rather than in it,
+            and no two copies are quite the same. Twenty prints, twenty
+            variations.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="swiss-shell">
+      <div class="swiss-grid gap-y-4 border-t border-[var(--rule)]" data-reveal>
+        <p class="section-label swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">
+          Compositions
+        </p>
+
+        <p class="col-span-6 text-[16px] leading-[1.6] text-[var(--ink-soft)] md:col-span-8 md:text-[17px]">
+          Stadiums, quarter circles and leaves, set on a grid and overlapped
+          until the gradients read as folded paper. Every shape comes from the
+          same small set; only the stacking changes.
+        </p>
+      </div>
+
+      <div class="poster-grid mt-[26px]">
+        {
+          compositions.map((item, i) => (
+            <figure class="m-0" data-reveal>
+              <Image
+                src={item.src}
+                alt={`Le Polographe — composition ${i + 1}`}
+                widths={[400, 600, 800]}
+                sizes="(min-width: 1024px) 380px, (min-width: 640px) 45vw, 90vw"
+                format="webp"
+                quality={78}
+                loading="lazy"
+                class="w-full"
+              />
+            </figure>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="swiss-shell">
+      <div class="swiss-grid gap-y-4 border-t border-[var(--rule)]" data-reveal>
+        <p class="section-label swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">
+          BE series
+        </p>
+
+        <p class="col-span-6 text-[16px] leading-[1.6] text-[var(--ink-soft)] md:col-span-8 md:text-[17px]">
+          One poster per Brussels postcode. Each is a window divided into a grid
+          of vignettes, drawn at a single line weight: what you actually see in
+          that commune, from the landmark everyone photographs down to the tram
+          shelter nobody does. An ongoing series.
+        </p>
+      </div>
+
+      <div class="series-grid mt-[26px]">
+        {
+          series.map((item) => (
+            <figure class="m-0" data-reveal>
+              <Image
+                src={item.src}
+                alt={`Le Polographe — BE ${item.code}, ${item.name}`}
+                widths={[400, 600, 900]}
+                sizes="(min-width: 768px) 32vw, 90vw"
+                format="webp"
+                quality={82}
+                loading="lazy"
+                class="w-full"
+              />
+              <figcaption class="swiss-meta mt-[12px] flex items-baseline justify-between text-[var(--ink-soft)]">
+                <span>BE — {item.code}</span>
+                <span>{item.name}</span>
+              </figcaption>
+            </figure>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="swiss-shell">
+      <div class="swiss-grid gap-y-4 border-t border-[var(--rule)]" data-reveal>
+        <p class="section-label swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">
+          Editions
+        </p>
+
+        <div class="col-span-6 md:col-span-8">
+          <ul class="edition-list">
+            {
+              editions.map((edition) => (
+                <li class="swiss-meta grid grid-cols-[auto_1fr_auto] items-baseline gap-x-4 border-b border-[var(--rule)] py-[14px] text-[var(--ink-soft)] last:border-b-0">
+                  <span class="text-[var(--ink)]">#{edition.no}</span>
+                  <span>{edition.inks}</span>
+                  <span>{edition.format}</span>
+                </li>
+              ))
+            }
+          </ul>
+
+          <p class="swiss-meta mt-[18px] text-[var(--ink-soft)]">
+            Risography · Twenty copies each · Numbered and signed
+          </p>
+        </div>
+
+        <div class="col-span-6 md:col-span-2 md:justify-self-end">
+          <a
+            href="mailto:hello@laurentnyssen.be?subject=Le%20Polographe"
+            class="swiss-meta inline-flex w-fit items-center gap-[8px] text-[var(--accent)] hover:opacity-80"
+          >
+            Ask for a print <SwissArrow size={13} />
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="swiss-shell">
+      <a
+        href="https://www.instagram.com/lepolographe/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="swiss-grid group items-start gap-y-3 border-t border-[var(--rule)]"
+        data-reveal
+      >
+        <p class="section-label swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">
+          Elsewhere
+        </p>
+
+        <p class="lab-teaser-title col-span-6 text-[clamp(1.5rem,4vw,3rem)] font-medium leading-[1.05] tracking-[-0.04em] group-hover:text-[var(--accent)] md:col-span-8">
+          Every print as it comes off the drum <SwissArrow size={30} />
+        </p>
+      </a>
+    </section>
+  </main>
+
+  <SwissFooter />
+</SwissLayout>
