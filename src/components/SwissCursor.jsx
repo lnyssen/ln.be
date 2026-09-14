@@ -19,6 +19,7 @@ function labelFor(node) {
   const open = node.closest('details[open]');
   if (open && !node.closest('a, button')) return 'CLOSE';
 
+  if (node.closest('[data-grid-toggle]')) return 'GRID';
   if (node.closest('[role="switch"]')) return 'THEME';
 
   const link = node.closest('a');

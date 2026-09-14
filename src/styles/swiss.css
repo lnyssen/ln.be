@@ -238,6 +238,18 @@
 
   /* Bande défilante : le contenu est doublé, la piste recule d'exactement la
      moitié — la boucle est donc invisible. */
+  /* Le rond sépare deux intitulés sans se lire comme une ponctuation : il
+     occupe le milieu exact de l'écart, 19px de chaque côté. */
+  .swiss .marquee-dot {
+    flex: none;
+    width: 0.2em;
+    height: 0.2em;
+    margin: 0 19px;
+    border-radius: 999px;
+    background-color: var(--accent);
+    font-size: clamp(1.5rem, 3.4vw, 2.75rem);
+  }
+
   .swiss .marquee-track {
     animation: marquee 10s linear infinite;
   }
@@ -462,6 +474,10 @@
   @media (hover: hover) {
     .swiss [role='switch']:hover .theme-knob {
       background-color: var(--accent);
+    }
+
+    .swiss [role='switch']:hover .theme-icons {
+      color: var(--accent);
     }
   }
 
