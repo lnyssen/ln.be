@@ -651,6 +651,59 @@
      porte 14 de marge interne et 70 de haut, plus 10 d'écart. */
   .swiss .swiss-menu {
     top: calc(108px + 2 * env(safe-area-inset-top));
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(-12px);
+    transition:
+      opacity 240ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 340ms cubic-bezier(0.22, 1, 0.36, 1),
+      visibility 0s linear 340ms;
+  }
+
+  .swiss .swiss-menu.is-open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: none;
+    transition-delay: 0s;
+  }
+
+  /* Les lignes entrent l'une après l'autre, d'un cheveu : la carte se
+     déroule au lieu d'apparaître d'un bloc. */
+  .swiss .swiss-menu .menu-link,
+  .swiss .swiss-menu .p-\[14px\] {
+    opacity: 0;
+    transform: translateY(-6px);
+    transition:
+      opacity 260ms ease-out,
+      transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .swiss .swiss-menu.is-open .menu-link,
+  .swiss .swiss-menu.is-open .p-\[14px\] {
+    opacity: 1;
+    transform: none;
+  }
+
+  .swiss .swiss-menu.is-open .menu-link:nth-of-type(2) {
+    transition-delay: 55ms;
+  }
+
+  .swiss .swiss-menu.is-open .menu-link:nth-of-type(3) {
+    transition-delay: 110ms;
+  }
+
+  .swiss .swiss-menu.is-open .p-\[14px\] {
+    transition-delay: 165ms;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .swiss .swiss-menu,
+    .swiss .swiss-menu .menu-link,
+    .swiss .swiss-menu .p-\[14px\] {
+      transition: none;
+    }
   }
 
   /* La carte du menu partage la matière de la barre : même verre, même
@@ -661,8 +714,8 @@
     border: 1px solid var(--rule);
     background-color: var(--header-bg);
     box-shadow: 0 10px 40px rgb(0 0 0 / 0.2);
-    -webkit-backdrop-filter: blur(20px) saturate(1.1);
-    backdrop-filter: blur(20px) saturate(1.1);
+    -webkit-backdrop-filter: blur(26px) saturate(1.15);
+    backdrop-filter: blur(26px) saturate(1.15);
   }
 
   .swiss .menu-card::before {
@@ -681,11 +734,10 @@
     border-bottom: 0;
   }
 
-  /* L'attribut `hidden` ne suffit pas ici : il vient de la feuille du
-     navigateur, que l'utilitaire `flex` du panneau écrase. Sans cette règle,
-     le menu s'ouvrait et ne se refermait plus. */
-  .swiss .swiss-menu[hidden] {
-    display: none;
+  /* La carte laisse voir son grain à travers le verre : on retient un peu le
+     bruit pour que le flou reste lisible dessous. */
+  .swiss .menu-card::before {
+    opacity: calc(var(--grain) * 0.7);
   }
 
   .swiss .swiss-menu::before {

@@ -92,7 +92,7 @@ const pages = [
 <div
   id="swiss-menu"
   data-menu-panel
-  hidden
+  aria-hidden="true"
   class="swiss-menu swiss-shell fixed inset-x-0 z-40 sm:hidden"
 >
   <div class="menu-card overflow-hidden rounded-[26px]">
@@ -108,18 +108,19 @@ const pages = [
             aria-current={current === page.key ? 'page' : undefined}
           >
             {page.label}
-            <span class="swiss-meta opacity-45">{String(pages.indexOf(page) + 1).padStart(2, '0')}</span>
           </a>
         ))
       }
     </nav>
 
-    <a
-      href="mailto:hello@laurentnyssen.be"
-      class="swiss-meta flex items-center justify-center bg-[var(--ink)] py-[18px] font-semibold text-[var(--paper)]"
-    >
-      Get in touch
-    </a>
+    <div class="p-[14px]">
+      <a
+        href="mailto:hello@laurentnyssen.be"
+        class="swiss-meta flex h-[48px] items-center justify-center rounded-full border border-[var(--ink)] bg-[var(--ink)] font-semibold text-[var(--paper)] transition-colors duration-200 hover:border-[var(--accent)] hover:bg-[var(--accent)]"
+      >
+        Get in touch
+      </a>
+    </div>
   </div>
 </div>
 
@@ -133,7 +134,8 @@ const pages = [
     if (!button || !panel) return;
 
     const setState = (open) => {
-      panel.hidden = !open;
+      panel.classList.toggle('is-open', open);
+      panel.setAttribute('aria-hidden', String(!open));
       button.setAttribute('aria-expanded', String(open));
       button.setAttribute('aria-label', open ? 'Fermer le menu' : 'Ouvrir le menu');
       document.documentElement.classList.toggle('menu-open', open);
@@ -146,14 +148,14 @@ const pages = [
       if (!panel.contains(event.target) && !button.contains(event.target)) setState(false);
     };
 
-    button.addEventListener('click', () => setState(panel.hidden));
+    button.addEventListener('click', () => setState(!panel.classList.contains('is-open')));
 
     panel.addEventListener('click', (event) => {
       if (event.target.closest('a')) setState(false);
     });
 
     document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape' && !panel.hidden) {
+      if (event.key === 'Escape' && panel.classList.contains('is-open')) {
         setState(false);
         button.focus();
       }
