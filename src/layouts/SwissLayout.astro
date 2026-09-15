@@ -382,46 +382,43 @@ const ogImage = new URL('/og.png', Astro.site).href;
       };
 
       // Switzer est variable : au lieu de déplacer les lettres, on en change
-      // la graisse. Elles s'épaississent au passage du pointeur et poussent
-      // leurs voisines, puis reviennent. C'est la typographie qui réagit en
-      // tant que typographie.
-      // Le titre ne maigrit plus. Les lettres loin du pointeur descendaient à
-      // 560, si bien qu'au moindre survol deux lignes sur trois s'amincissaient
-      // d'un coup : ce n'était pas un mouvement, c'était le titre entier qui se
-      // déformait, et c'est cela qu'on lisait comme un vrillage. Le repos est
-      // désormais le plancher — rien ne s'allège, seules les lettres sous le
-      // pointeur s'épaississent, et d'un cran plus retenu.
+      // la graisse. Le titre s'épaissit à l'approche du pointeur et revient
+      // quand il s'éloigne. C'est la typographie qui réagit en tant que
+      // typographie, et rien ne se déplace : les boîtes sont figées.
+      //
+      // Toutes les lettres prennent la MÊME graisse. Une réaction lettre par
+      // lettre revient à dire que les lettres d'un même mot ne portent pas la
+      // même graisse : le mot se déforme sur lui-même, et c'est cela qu'on lit
+      // comme un vrillage. Élargir la portée n'y changeait rien, ça ne faisait
+      // que l'étaler. Mesures faites sur trois captures : aucune ligne ne
+      // bouge d'un pixel CSS, donc ce n'était jamais un mouvement — c'était
+      // l'inégalité. Le titre respire donc d'un seul tenant : il n'a plus rien
+      // d'inégal à montrer.
       const REST = 700;
-      const LOW = 700;
-      const PEAK = 790;
+      const PEAK = 800;
 
       const tick = () => {
         const size = parseFloat(getComputedStyle(h1).fontSize);
-        // La portée fait tout. Avec un rayon serré, deux lettres voisines d'un
-        // même mot pouvaient différer de trente-cinq crans de graisse : le mot
-        // se déformait sur lui-même, et c'est cela qu'on lisait comme un
-        // vrillage — rien ne bougeait, mesures à l'appui, mais IDENTITIES ne
-        // portait pas la même graisse d'un bout à l'autre. Le rayon est
-        // désormais bien plus large que le mot : l'écart entre deux lettres
-        // voisines tombe à sept crans, invisible, tandis que le titre garde
-        // quatre-vingt-dix crans d'amplitude d'un bord à l'autre. Le titre
-        // respire d'un seul tenant au lieu d'onduler par endroits.
-        const sigma = Math.max(240, size * 5);
+        // La portée se compte depuis la lettre la plus proche : le pointeur
+        // posé sur le titre l'épaissit à plein, et l'effet retombe à mesure
+        // qu'il s'en écarte.
+        const sigma = Math.max(120, size * 1.2);
+
+        let cible = REST;
+        if (pointer && boxes.length) {
+          let plusProche = Infinity;
+          for (const b of boxes) {
+            const dx = pointer.x - b.cx;
+            const dy = pointer.y - b.cy;
+            plusProche = Math.min(plusProche, dx * dx + dy * dy);
+          }
+          cible = REST + Math.exp(-plusProche / (2 * sigma * sigma)) * (PEAK - REST);
+        }
 
         let moving = false;
-
-        glyphs.forEach((g, i) => {
-          if (pointer && boxes[i]) {
-            const dx = pointer.x - boxes[i].cx;
-            const dy = pointer.y - boxes[i].cy;
-            const f = Math.exp(-(dx * dx + dy * dy) / (2 * sigma * sigma));
-            g.tw = LOW + f * (PEAK - LOW);
-          } else {
-            g.tw = REST;
-          }
-
+        for (const g of glyphs) {
+          g.tw = cible;
           g.w += (g.tw - g.w) * 0.16;
-
           if (Math.abs(g.w - g.tw) > 0.5) moving = true;
           const rounded = Math.round(g.w);
           // Changer la graisse recalcule la mise en page : on ne réécrit que
@@ -430,7 +427,7 @@ const ogImage = new URL('/og.png', Astro.site).href;
             g.painted = rounded;
             g.el.style.fontWeight = String(rounded);
           }
-        });
+        }
 
         if (pointer || moving) {
           frame = requestAnimationFrame(tick);
