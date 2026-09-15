@@ -370,11 +370,22 @@ const ogImage = new URL('/og.png', Astro.site).href;
       // Les distances se mesurent donc sur la position de repos. Elle s'écarte
       // au plus de deux pixels de la position réelle quand le titre est gonflé
       // — invisible — et l'effet ne dépend plus que du pointeur. Il se pose.
+      // Les signes sont aussi rangés par ligne : c'est à l'échelle de la ligne
+      // que se fait l'équilibre, plus bas.
+      let lignes = [];
+
       const measure = () => {
         boxes = glyphs.map(({ el }) => {
           const r = el.getBoundingClientRect();
           return { cx: r.left + r.width / 2, cy: r.top + r.height / 2 };
         });
+        const par = new Map();
+        boxes.forEach((b, i) => {
+          const cle = Math.round(b.cy / 8);
+          if (!par.has(cle)) par.set(cle, []);
+          par.get(cle).push(i);
+        });
+        lignes = [...par.values()];
       };
 
       // Switzer est variable : au lieu de déplacer les lettres, on en change
@@ -442,6 +453,24 @@ const ogImage = new URL('/og.png', Astro.site).href;
             g.tw = REST;
           }
 
+        });
+
+        // Chaque ligne garde sa graisse moyenne. Une lettre qui s'épaissit
+        // pousse tout ce qui la suit, et ces poussées s'additionnent : la fin
+        // d'une ligne porte la somme de toutes celles qui la précèdent, et
+        // glisse d'un bloc. C'est ce glissement latéral qu'on lit comme un
+        // vrillage, bien plus que la graisse elle-même. En ramenant la moyenne
+        // de chaque ligne au repos, ce que le renflement prend en largeur, le
+        // creux le rend : la ligne garde sa longueur, le contraste reste
+        // entier, et rien ne part sur le côté.
+        for (const ligne of lignes) {
+          let somme = 0;
+          for (const i of ligne) somme += glyphs[i].tw - REST;
+          const ecart = somme / ligne.length;
+          for (const i of ligne) glyphs[i].tw -= ecart;
+        }
+
+        glyphs.forEach((g) => {
           g.w += (g.tw - g.w) * 0.16;
 
           if (Math.abs(g.w - g.tw) > 0.5) moving = true;
