@@ -40,6 +40,7 @@
      en bas de chaque section. */
   --section-space: 42px;
   --renvoi-space: 66px;
+  --ouverture-space: 120px;
   /* Calque de grille : couleurs prêtes à l'emploi, l'opacité ne peut pas
      s'appliquer à une variable depuis une classe utilitaire. */
   --grid-line: color-mix(in srgb, #7b58e8 34%, transparent);
@@ -1022,6 +1023,19 @@
 
   .swiss main section {
     padding-bottom: var(--section-space);
+  }
+
+  /* Le titre d'ouverture est seul à respirer aussi large : c'est la première
+     chose qu'on voit, et la seule qui n'ait rien au-dessus d'elle. Le haut et
+     le bas sont réglés sur la même valeur, et ils se mesurent bien à ce qui
+     se voit — la hauteur de capitale d'un côté, la ligne de base de l'autre —
+     puisque le titre rogne les blancs de sa fonte. */
+  .swiss main section.section-ouverture {
+    padding-top: var(--ouverture-space);
+  }
+
+  .swiss main section.section-ouverture > h1 + [class*="border-t"] {
+    margin-top: var(--ouverture-space);
   }
 
   /* Les deux renvois respirent plus large que le reste : ce n'est pas une
