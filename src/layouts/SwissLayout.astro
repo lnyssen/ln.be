@@ -393,11 +393,20 @@ const ogImage = new URL('/og.png', Astro.site).href;
       // pointeur s'épaississent, et d'un cran plus retenu.
       const REST = 700;
       const LOW = 700;
-      const PEAK = 820;
+      const PEAK = 790;
 
       const tick = () => {
         const size = parseFloat(getComputedStyle(h1).fontSize);
-        const sigma = Math.max(90, size * 0.55);
+        // La portée fait tout. Avec un rayon serré, deux lettres voisines d'un
+        // même mot pouvaient différer de trente-cinq crans de graisse : le mot
+        // se déformait sur lui-même, et c'est cela qu'on lisait comme un
+        // vrillage — rien ne bougeait, mesures à l'appui, mais IDENTITIES ne
+        // portait pas la même graisse d'un bout à l'autre. Le rayon est
+        // désormais bien plus large que le mot : l'écart entre deux lettres
+        // voisines tombe à sept crans, invisible, tandis que le titre garde
+        // quatre-vingt-dix crans d'amplitude d'un bord à l'autre. Le titre
+        // respire d'un seul tenant au lieu d'onduler par endroits.
+        const sigma = Math.max(240, size * 5);
 
         let moving = false;
 

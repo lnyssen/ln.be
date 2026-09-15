@@ -617,6 +617,88 @@ function domainLabel(link: string) {
           }
         }
 
+        // Le visuel se feuillette aussi à la main : un glissement horizontal au
+        // doigt, ou deux doigts sur le pavé tactile. L'image suit le geste —
+        // sans lui, on ne sait pas si le glissement est pris — puis passe au
+        // suivant si le geste est franc, et revient si on se ravise.
+        let aGlisse = false;
+        const glisser = (px) => {
+          scene.style.setProperty('--glisse', `${px}px`);
+        };
+        const relacher = () => {
+          grand.classList.remove('sans-transition');
+          glisser(0);
+        };
+
+        let roulis = 0;
+        let repos = null;
+        const surRoulette = (event) => {
+          // Le glissement vertical appartient encore à la page : on ne prend
+          // que ce qui est franchement horizontal.
+          if (Math.abs(event.deltaX) <= Math.abs(event.deltaY)) return;
+          event.preventDefault();
+          clearTimeout(repos);
+          repos = setTimeout(() => {
+            roulis = 0;
+          }, 220);
+          if (Math.abs(roulis) > 90) return;
+          roulis += event.deltaX;
+          if (Math.abs(roulis) > 90) {
+            poser(rang + (roulis > 0 ? 1 : -1));
+            aGlisse = true;
+            setTimeout(() => {
+              aGlisse = false;
+            }, 0);
+          }
+        };
+
+        if (visuels.length > 1) {
+          let depart = null;
+          let tenu = false;
+
+          scene.addEventListener('pointerdown', (event) => {
+            if (event.button !== 0 || event.target.closest('[data-loupe-nav]')) return;
+            depart = { x: event.clientX, y: event.clientY, id: event.pointerId };
+            tenu = false;
+            aGlisse = false;
+          });
+
+          scene.addEventListener('pointermove', (event) => {
+            if (!depart || event.pointerId !== depart.id) return;
+            const dx = event.clientX - depart.x;
+            const dy = event.clientY - depart.y;
+            if (!tenu) {
+              // Tant que la direction n'est pas tranchée, on ne prend rien.
+              if (Math.abs(dx) < 8 || Math.abs(dx) <= Math.abs(dy)) return;
+              tenu = true;
+              grand.classList.add('sans-transition');
+              // La capture n'est qu'un confort : si le pointeur a déjà quitté
+              // la scène, le geste continue quand même.
+              try {
+                scene.setPointerCapture(event.pointerId);
+              } catch {}
+            }
+            // Le visuel suit de moins loin que le doigt : il indique le geste
+            // sans promettre qu'il se décollera.
+            glisser(dx * 0.55);
+          });
+
+          const fin = (event) => {
+            if (!depart || event.pointerId !== depart.id) return;
+            const dx = event.clientX - depart.x;
+            depart = null;
+            if (!tenu) return;
+            tenu = false;
+            aGlisse = true;
+            if (Math.abs(dx) > 56) poser(rang + (dx < 0 ? 1 : -1));
+            relacher();
+          };
+
+          scene.addEventListener('pointerup', fin);
+          scene.addEventListener('pointercancel', fin);
+          cadre.addEventListener('wheel', surRoulette, { passive: false });
+        }
+
         document.body.append(cadre);
         requestAnimationFrame(() => {
           cadre.classList.add('is-open');
@@ -637,6 +719,8 @@ function domainLabel(link: string) {
           );
           document.removeEventListener('keydown', surTouche);
           removeEventListener('resize', caler);
+          cadre.removeEventListener('wheel', surRoulette);
+          clearTimeout(repos);
         };
 
         const surTouche = (event) => {
@@ -647,7 +731,14 @@ function domainLabel(link: string) {
           event.preventDefault();
         };
 
-        cadre.addEventListener('click', fermer);
+        // Un glissement n'est pas un clic : il ne referme pas.
+        cadre.addEventListener('click', () => {
+          if (aGlisse) {
+            aGlisse = false;
+            return;
+          }
+          fermer();
+        });
         document.addEventListener('keydown', surTouche);
       };
 
