@@ -228,7 +228,7 @@ function domainLabel(link: string) {
          prend donc toute la largeur et suit le rythme des autres sections —
          aucune marge propre, sans quoi il respirerait plus large que le
          reste. À sa droite, un dessin au trait qui dit son sujet. -->
-    <section class="swiss-shell">
+    <section class="swiss-shell section-renvoi">
       <div class="swiss-grid border-t border-[var(--rule)]" data-reveal>
         <a
           href="/lab"
@@ -241,12 +241,13 @@ function domainLabel(link: string) {
             </p>
           </span>
 
-          <!-- Une onde qui se quantifie. À gauche elle est continue, tracée
-               à la main ; à mi-chemin elle bascule en marches d'escalier et
-               finit en signal carré. C'est le moment exact où un geste devient
-               une suite de valeurs — l'art d'un côté, le code de l'autre, et
-               la collision au milieu, sans rien y ajouter.
-               Un seul tracé, d'un bout à l'autre : la plume ne se lève pas.
+          <!-- Un système régulier mis sous contrainte. Cinq traits verticaux
+               du même jeu : le premier parfaitement droit, chacun plus
+               déformé que le précédent. La règle est stricte et identique
+               pour tous, seule son intensité change — c'est exactement ce
+               qu'est une expérience, et ce que fait une machine à qui l'on
+               confie un paramètre. Ils se tracent de gauche à droite, du plus
+               sage au plus libre.
                Même cadre que le Polographe au point près, pour que les deux
                renvois pèsent pareil. -->
           <svg
@@ -255,21 +256,21 @@ function domainLabel(link: string) {
             fill="none"
             stroke="currentColor"
             stroke-width="1"
-            stroke-linecap="square"
             aria-hidden="true"
           >
             <g class="mark-formes">
-              <path
-                pathLength="100"
-                d="M1 38q12.5-48 25 0t25 0t25 0V62h25V14h25v48h23"
-              />
+              <path pathLength="100" d="M12 5C12 24 12 52 12 71" />
+              <path pathLength="100" d="M41 5C46 24 36 52 41 71" />
+              <path pathLength="100" d="M70 5C81 24 59 52 70 71" />
+              <path pathLength="100" d="M99 5C117 24 81 52 99 71" />
+              <path pathLength="100" d="M132 5C158 24 106 52 132 71" />
             </g>
           </svg>
         </a>
       </div>
     </section>
 
-    <section class="swiss-shell">
+    <section class="swiss-shell section-renvoi">
       <div class="swiss-grid border-t border-[var(--rule)]" data-reveal>
         <a
           href="/lepolographe"
