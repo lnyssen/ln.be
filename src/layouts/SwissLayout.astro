@@ -360,16 +360,6 @@ const ogImage = new URL('/og.png', Astro.site).href;
       let frame = null;
       let boxes = [];
 
-      // Les centres sont relevés au repos, et seulement là. On les relevait à
-      // chaque image, puisque les lettres poussent et se déplacent : c'était
-      // une boucle. Les lettres gonflent, leurs centres bougent, les distances
-      // changent, les graisses changent, les centres bougent encore — le titre
-      // se poursuivait lui-même et ne se stabilisait jamais, souris immobile.
-      // C'est cela, le vrillage au survol tenu, et c'est cela que figer() ne
-      // faisait que masquer, au prix de la poussée.
-      // Les distances se mesurent donc sur la position de repos. Elle s'écarte
-      // au plus de deux pixels de la position réelle quand le titre est gonflé
-      // — invisible — et l'effet ne dépend plus que du pointeur. Il se pose.
       const measure = () => {
         boxes = glyphs.map(({ el }) => {
           const r = el.getBoundingClientRect();
@@ -378,22 +368,9 @@ const ogImage = new URL('/og.png', Astro.site).href;
       };
 
       // Switzer est variable : au lieu de déplacer les lettres, on en change
-      // la graisse. Chaque signe s'épaissit d'autant plus qu'il est près du
-      // pointeur, et s'allège derrière lui. C'est la typographie qui réagit en
+      // la graisse. Elles s'épaississent au passage du pointeur et poussent
+      // leurs voisines, puis reviennent. C'est la typographie qui réagit en
       // tant que typographie.
-      //
-      // La modulation va dans les deux sens : au-dessus du repos sous le
-      // pointeur, en dessous tout autour. C'est bien plus vivant qu'un titre
-      // qui gonfle d'un bloc, et c'est le parti retenu. Mais le creux a un
-      // fond : au-delà du voisinage du geste, les lettres reviennent au repos
-      // plutôt que de rester au plus maigre.
-      //
-      // Les lettres poussent leurs voisines et la ligne respire. J'ai voulu
-      // un temps figer chaque boîte à sa largeur de repos pour que rien ne
-      // bouge : c'était une erreur. Une lettre qui s'épaissit dans une boîte
-      // fixe grossit dans l'espace de ses voisines au lieu de l'écarter —
-      // elles se serrent, et c'est cela qui se lisait comme un vrillage. Le
-      // déplacement n'était pas le défaut, il était le remède.
       const REST = 700;
       const LOW = 560;
       const PEAK = 900;
@@ -401,43 +378,15 @@ const ogImage = new URL('/og.png', Astro.site).href;
       const tick = () => {
         const size = parseFloat(getComputedStyle(h1).fontSize);
         const sigma = Math.max(90, size * 0.55);
-        // Le creux se tient autour du renflement, et non partout ailleurs.
-        const creux = sigma * 1.8;
-
-        // Le bloc du titre est bien plus large que son texte : la ligne la
-        // plus courte laisse à sa droite une bande de vide qui appartient
-        // pourtant au titre. On y entrait, plus aucune lettre n'était proche,
-        // et toutes tombaient d'un coup au plus maigre — un rétrécissement qui
-        // s'additionne sur toute la ligne et fait reculer le point final de
-        // sept pixels. L'effet se mesure donc à la lettre la plus proche : sur
-        // le texte il joue à plein, et il s'éteint dès qu'on s'en écarte, au
-        // lieu de s'emballer.
-        let porte = 0;
-        if (pointer && boxes.length) {
-          let pres = Infinity;
-          for (const b of boxes) {
-            const dx = pointer.x - b.cx;
-            const dy = pointer.y - b.cy;
-            pres = Math.min(pres, dx * dx + dy * dy);
-          }
-          porte = Math.exp(-pres / (2 * sigma * sigma));
-        }
 
         let moving = false;
 
         glyphs.forEach((g, i) => {
-          if (porte > 0.002 && boxes[i]) {
+          if (pointer && boxes[i]) {
             const dx = pointer.x - boxes[i].cx;
             const dy = pointer.y - boxes[i].cy;
-            const d2 = dx * dx + dy * dy;
-            const d = Math.sqrt(d2);
-            // Le renflement sous le pointeur.
-            const bosse = Math.exp(-d2 / (2 * sigma * sigma));
-            // Le creux qui l'entoure : nul sous le pointeur, au plus bas à une
-            // portée de là, éteint au-delà. C'est ce qui rend les lettres au
-            // repos loin du geste au lieu de les laisser toutes amaigries.
-            const fosse = (d / creux) * Math.exp(0.5 - d2 / (2 * creux * creux));
-            g.tw = REST + porte * (bosse * (PEAK - REST) - fosse * (REST - LOW));
+            const f = Math.exp(-(dx * dx + dy * dy) / (2 * sigma * sigma));
+            g.tw = LOW + f * (PEAK - LOW);
           } else {
             g.tw = REST;
           }
@@ -454,6 +403,9 @@ const ogImage = new URL('/og.png', Astro.site).href;
           }
         });
 
+        // Les largeurs ont changé, donc les centres aussi.
+        if (pointer) measure();
+
         if (pointer || moving) {
           frame = requestAnimationFrame(tick);
         } else {
@@ -466,9 +418,7 @@ const ogImage = new URL('/og.png', Astro.site).href;
       };
 
       h1.addEventListener('pointerenter', () => {
-        // À l'entrée, tout est encore au repos : c'est le bon moment pour
-        // relever la géométrie de référence.
-        if (!pointer) measure();
+        measure();
         start();
       });
 
@@ -483,10 +433,6 @@ const ogImage = new URL('/og.png', Astro.site).href;
       });
 
       addEventListener('resize', measure);
-
-      // Les centres ne valent que si la fonte est arrivée.
-      if (document.fonts?.ready) document.fonts.ready.then(measure);
-      else measure();
     })();
   </script>
   </body>

@@ -351,6 +351,50 @@
      sur téléphone il n'y a pas de survol, et c'est là qu'ils seraient perdus.
      Le mouvement ne s'arrête jamais. */
 
+  /* Lab : les trois figures se rapprochent puis se séparent. Elles se
+     percutent, c'est la phrase. */
+  .swiss .teaser-mark .mark-haut {
+    animation: mark-gauche 5s ease-in-out infinite;
+  }
+
+  .swiss .teaser-mark .mark-milieu {
+    animation: mark-monte 5s ease-in-out infinite;
+  }
+
+  .swiss .teaser-mark .mark-bas {
+    animation: mark-descend 5s ease-in-out infinite;
+  }
+
+  @keyframes mark-gauche {
+    0%,
+    100% {
+      transform: none;
+    }
+    50% {
+      transform: translateX(11px);
+    }
+  }
+
+  @keyframes mark-monte {
+    0%,
+    100% {
+      transform: none;
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  @keyframes mark-descend {
+    0%,
+    100% {
+      transform: none;
+    }
+    50% {
+      transform: translateX(-11px);
+    }
+  }
+
   /* Les deux dessins tiennent la même plume. Rien ne se déplace : les formes
      du Polographe touchent la grille et se touchent l'une l'autre, les bouger
      les décrocherait ; la Bézier du Lab n'a de sens qu'aux coordonnées où

@@ -241,15 +241,10 @@ function domainLabel(link: string) {
             </p>
           </span>
 
-          <!-- Un système régulier mis sous contrainte. Cinq traits verticaux
-               du même jeu : le premier parfaitement droit, chacun plus
-               déformé que le précédent. La règle est stricte et identique
-               pour tous, seule son intensité change — c'est exactement ce
-               qu'est une expérience, et ce que fait une machine à qui l'on
-               confie un paramètre. Ils se tracent de gauche à droite, du plus
-               sage au plus libre.
-               Même cadre que le Polographe au point près, pour que les deux
-               renvois pèsent pareil. -->
+          <!-- Trois figures qui se chevauchent : le cercle, le carré et le
+               triangle, les trois premières formes qu'on apprend à tracer.
+               Elles se percutent comme les trois matières de la phrase, et
+               aucune ne cède le passage à l'autre. -->
           <svg
             class="teaser-mark h-[54px] w-auto shrink-0 text-[var(--accent)] sm:h-[76px]"
             viewBox="0 0 150 76"
@@ -258,13 +253,9 @@ function domainLabel(link: string) {
             stroke-width="1"
             aria-hidden="true"
           >
-            <g class="mark-formes">
-              <path pathLength="100" d="M12 5C12 24 12 52 12 71" />
-              <path pathLength="100" d="M41 5C46 24 36 52 41 71" />
-              <path pathLength="100" d="M70 5C81 24 59 52 70 71" />
-              <path pathLength="100" d="M99 5C117 24 81 52 99 71" />
-              <path pathLength="100" d="M132 5C158 24 106 52 132 71" />
-            </g>
+            <circle class="mark-haut" cx="34" cy="38" r="26" />
+            <rect class="mark-milieu" x="44" y="12" width="52" height="52" />
+            <path class="mark-bas" d="M88 64h52L114 12Z" />
           </svg>
         </a>
       </div>
