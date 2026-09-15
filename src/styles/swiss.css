@@ -350,62 +350,21 @@
      sur téléphone il n'y a pas de survol, et c'est là qu'ils seraient perdus.
      Le mouvement ne s'arrête jamais. */
 
-  /* Lab : les trois figures se rapprochent puis se séparent. Elles se
-     percutent, c'est la phrase. */
-  .swiss .teaser-mark .mark-haut {
-    animation: mark-gauche 5s ease-in-out infinite;
-  }
-
-  .swiss .teaser-mark .mark-milieu {
-    animation: mark-monte 5s ease-in-out infinite;
-  }
-
-  .swiss .teaser-mark .mark-bas {
-    animation: mark-descend 5s ease-in-out infinite;
-  }
-
-  @keyframes mark-gauche {
-    0%,
-    100% {
-      transform: none;
-    }
-    50% {
-      transform: translateX(11px);
-    }
-  }
-
-  @keyframes mark-monte {
-    0%,
-    100% {
-      transform: none;
-    }
-    50% {
-      transform: translateY(-10px);
-    }
-  }
-
-  @keyframes mark-descend {
-    0%,
-    100% {
-      transform: none;
-    }
-    50% {
-      transform: translateX(-11px);
-    }
-  }
-
-  /* Polographe : les formes ne se déplacent pas — elles touchent la grille et
-     se touchent l'une l'autre, les bouger les décrocherait. Elles se
-     retracent, le carré puis la courbe. Chacune déclare une longueur de cent
-     par `pathLength`, si bien qu'un seul réglage vaut pour les deux quelle
-     que soit leur taille réelle. */
+  /* Les deux dessins tiennent la même plume. Rien ne se déplace : les formes
+     du Polographe touchent la grille et se touchent l'une l'autre, les bouger
+     les décrocherait ; la Bézier du Lab n'a de sens qu'aux coordonnées où
+     elle est. Elles se retracent donc, l'une après l'autre. Chacune déclare
+     une longueur de cent par `pathLength`, si bien qu'un seul réglage vaut
+     pour toutes quelle que soit leur longueur réelle. */
   .swiss .teaser-mark .mark-formes > path {
     stroke-dasharray: 100;
     animation: mark-retrace 5s ease-in-out infinite backwards;
   }
 
-  /* Elles se tracent l'une après l'autre, de la première case à la dernière,
-     comme la plume d'une table traçante. */
+  /* Elles se tracent l'une après l'autre, comme la plume d'une table
+     traçante : de la première case à la dernière pour le Polographe, et pour
+     le Lab dans l'ordre où l'on dessine — les deux ancres, les deux
+     tangentes, les deux points de contrôle, puis la courbe. */
   .swiss .teaser-mark .mark-formes > path:nth-child(2) {
     animation-delay: 180ms;
   }
@@ -517,8 +476,11 @@
     width: 100%;
     height: 100%;
     object-fit: contain;
+    opacity: var(--voile, 1);
     transform: translateX(var(--glisse, 0px)) scale(0.98);
-    transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
+    transition:
+      transform 280ms cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 280ms cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   .swiss .loupe.is-open img {
@@ -528,6 +490,16 @@
   /* Pendant le geste, l'image colle au doigt : aucune détente entre les deux. */
   .swiss .loupe img.sans-transition {
     transition: none;
+  }
+
+  /* La sortie est plus courte et plus sèche que l'entrée : le visuel quitte
+     l'écran d'un trait, le suivant arrive en se posant. Une sortie aussi
+     longue que l'entrée donnerait deux gestes de même poids, et le passage
+     traînerait. */
+  .swiss .loupe img.file {
+    transition:
+      transform 170ms cubic-bezier(0.4, 0, 1, 1),
+      opacity 170ms cubic-bezier(0.4, 0, 1, 1);
   }
 
   /* Les flèches de la loupe, posées aux bords de la fenêtre et non du visuel :
@@ -555,7 +527,8 @@
 
   @media (prefers-reduced-motion: reduce) {
     .swiss .loupe,
-    .swiss .loupe img {
+    .swiss .loupe img,
+    .swiss .loupe img.file {
       transition: none;
     }
   }
@@ -1053,25 +1026,15 @@
     transform: none;
   }
 
-  /* La capsule d'outils s'efface au lieu de disparaître : elle sautait d'un
-     coup à l'instant du geste, et c'est ce saut qu'on lisait comme un accroc
-     dans l'ouverture du menu. */
-  .swiss .swiss-dock {
-    transition:
-      opacity 200ms ease-out,
-      transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  .swiss.menu-open .swiss-dock {
-    opacity: 0;
-    transform: translate(-50%, 14px);
-    pointer-events: none;
-  }
+  /* La capsule d'outils reste, menu ouvert ou non. Elle s'effaçait à
+     l'ouverture : les outils du visiteur disparaissaient au moment précis où
+     il ouvre quelque chose, et le bas de l'écran se vidait sans raison. Le
+     menu est une carte posée sous la barre, en haut ; il ne lui dispute pas
+     la place. */
 
   @media (prefers-reduced-motion: reduce) {
     .swiss .swiss-menu,
-    .swiss .swiss-menu .menu-card,
-    .swiss .swiss-dock {
+    .swiss .swiss-menu .menu-card {
       transition: none;
     }
 

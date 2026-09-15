@@ -241,10 +241,15 @@ function domainLabel(link: string) {
             </p>
           </span>
 
-          <!-- Trois figures qui se chevauchent : le cercle, le carré et le
-               triangle, les trois premières formes qu'on apprend à tracer.
-               Elles se percutent comme les trois matières de la phrase, et
-               aucune ne cède le passage à l'autre. -->
+          <!-- Une courbe de Bézier et son appareillage : deux ancres
+               carrées, deux points de contrôle ronds, les deux tangentes, et
+               la courbe. C'est l'endroit précis où un geste de dessin devient
+               des coordonnées — l'objet où l'art et le code se touchent, et
+               le seul outil que tout ceci a en commun.
+               Elle se trace dans l'ordre où on la dessine vraiment : on pose
+               les ancres, on tire les poignées, la courbe naît entre les
+               deux. Même plume que le Polographe, même cadre au point près :
+               les deux renvois pèsent pareil. -->
           <svg
             class="teaser-mark h-[54px] w-auto shrink-0 text-[var(--accent)] sm:h-[76px]"
             viewBox="0 0 150 76"
@@ -253,9 +258,15 @@ function domainLabel(link: string) {
             stroke-width="1"
             aria-hidden="true"
           >
-            <circle class="mark-haut" cx="34" cy="38" r="26" />
-            <rect class="mark-milieu" x="44" y="12" width="52" height="52" />
-            <path class="mark-bas" d="M88 64h52L114 12Z" />
+            <g class="mark-formes">
+              <path pathLength="100" d="M8 56h8v8H8Z" />
+              <path pathLength="100" d="M134 12h8v8h-8Z" />
+              <path pathLength="100" d="M12 60 54 6" />
+              <path pathLength="100" d="M138 16 96 70" />
+              <path pathLength="100" d="M50 6a4 4 0 1 0 8 0a4 4 0 1 0-8 0" />
+              <path pathLength="100" d="M92 70a4 4 0 1 0 8 0a4 4 0 1 0-8 0" />
+              <path pathLength="100" d="M12 60C54 6 96 70 138 16" />
+            </g>
           </svg>
         </a>
       </div>
@@ -558,6 +569,42 @@ function domainLabel(link: string) {
           if (grand.complete) caler();
         };
 
+        // Le visuel ne se remplace pas sur place : il sort par le bord vers
+        // lequel on l'a poussé et le suivant entre par l'autre. Le geste va
+        // jusqu'au bout au lieu de s'arrêter net, et le même passage sert au
+        // doigt, aux flèches, au clavier et à la molette — d'où qu'on vienne,
+        // on voit la même chose.
+        let enVol = false;
+        const glisser = (px) => scene.style.setProperty('--glisse', `${px}px`);
+        const voiler = (v) => scene.style.setProperty('--voile', v);
+
+        const filer = (sens) => {
+          if (enVol) return;
+          enVol = true;
+          const ecart = Math.min(scene.getBoundingClientRect().width * 0.22, 180);
+          grand.classList.remove('sans-transition');
+          grand.classList.add('file');
+          glisser(-sens * ecart);
+          voiler(0);
+          setTimeout(() => {
+            poser(rang + sens);
+            grand.classList.add('sans-transition');
+            grand.classList.remove('file');
+            glisser(sens * ecart);
+            // Deux images d'attente : la première pose la position sans
+            // transition, la seconde la relâche. En une seule, le navigateur
+            // regroupe les deux écritures et rien ne glisse.
+            requestAnimationFrame(() => {
+              requestAnimationFrame(() => {
+                grand.classList.remove('sans-transition');
+                glisser(0);
+                voiler(1);
+                enVol = false;
+              });
+            });
+          }, 170);
+        };
+
         grand.addEventListener('load', caler);
 
         poser(rang);
@@ -582,7 +629,7 @@ function domainLabel(link: string) {
               '</svg>';
             bouton.addEventListener('click', (event) => {
               event.stopPropagation();
-              poser(rang + sens);
+              filer(sens);
             });
             scene.append(bouton);
           }
@@ -593,13 +640,6 @@ function domainLabel(link: string) {
         // sans lui, on ne sait pas si le glissement est pris — puis passe au
         // suivant si le geste est franc, et revient si on se ravise.
         let aGlisse = false;
-        const glisser = (px) => {
-          scene.style.setProperty('--glisse', `${px}px`);
-        };
-        const relacher = () => {
-          grand.classList.remove('sans-transition');
-          glisser(0);
-        };
 
         let roulis = 0;
         let repos = null;
@@ -615,7 +655,7 @@ function domainLabel(link: string) {
           if (Math.abs(roulis) > 90) return;
           roulis += event.deltaX;
           if (Math.abs(roulis) > 90) {
-            poser(rang + (roulis > 0 ? 1 : -1));
+            filer(roulis > 0 ? 1 : -1);
             aGlisse = true;
             setTimeout(() => {
               aGlisse = false;
@@ -649,9 +689,9 @@ function domainLabel(link: string) {
                 scene.setPointerCapture(event.pointerId);
               } catch {}
             }
-            // Le visuel suit de moins loin que le doigt : il indique le geste
-            // sans promettre qu'il se décollera.
-            glisser(dx * 0.55);
+            // Le visuel suit le doigt d'un peu moins loin : il indique le
+            // geste sans promettre qu'il se décollera.
+            glisser(dx * 0.7);
           });
 
           const fin = (event) => {
@@ -661,8 +701,13 @@ function domainLabel(link: string) {
             if (!tenu) return;
             tenu = false;
             aGlisse = true;
-            if (Math.abs(dx) > 56) poser(rang + (dx < 0 ? 1 : -1));
-            relacher();
+            if (Math.abs(dx) > 56) {
+              filer(dx < 0 ? 1 : -1);
+            } else {
+              // On s'est ravisé : le visuel revient à sa place.
+              grand.classList.remove('sans-transition');
+              glisser(0);
+            }
           };
 
           scene.addEventListener('pointerup', fin);
@@ -696,8 +741,8 @@ function domainLabel(link: string) {
 
         const surTouche = (event) => {
           if (event.key === 'Escape') fermer();
-          else if (event.key === 'ArrowLeft') poser(rang - 1);
-          else if (event.key === 'ArrowRight') poser(rang + 1);
+          else if (event.key === 'ArrowLeft') filer(-1);
+          else if (event.key === 'ArrowRight') filer(1);
           else return;
           event.preventDefault();
         };
