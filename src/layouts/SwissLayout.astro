@@ -360,20 +360,6 @@ const ogImage = new URL('/og.png', Astro.site).href;
       let frame = null;
       let boxes = [];
 
-      // Chaque signe est figé à la largeur qu'il a au repos. Sans cela, une
-      // lettre qui s'épaissit pousse ses voisines, la ligne se recompose sous
-      // le pointeur et le titre paraît vriller. La graisse change désormais
-      // dans une boîte qui ne bouge pas : le signe grossit sur place, centré,
-      // et rien d'autre ne se déplace.
-      const figer = () => {
-        for (const { el } of glyphs) el.style.width = '';
-        const largeurs = glyphs.map(({ el }) => el.getBoundingClientRect().width);
-        glyphs.forEach(({ el }, i) => {
-          el.style.width = `${largeurs[i]}px`;
-          el.style.textAlign = 'center';
-        });
-      };
-
       const measure = () => {
         boxes = glyphs.map(({ el }) => {
           const r = el.getBoundingClientRect();
@@ -382,43 +368,42 @@ const ogImage = new URL('/og.png', Astro.site).href;
       };
 
       // Switzer est variable : au lieu de déplacer les lettres, on en change
-      // la graisse. Le titre s'épaissit à l'approche du pointeur et revient
-      // quand il s'éloigne. C'est la typographie qui réagit en tant que
-      // typographie, et rien ne se déplace : les boîtes sont figées.
+      // la graisse. Chaque signe s'épaissit d'autant plus qu'il est près du
+      // pointeur, et s'allège derrière lui. C'est la typographie qui réagit en
+      // tant que typographie.
       //
-      // Toutes les lettres prennent la MÊME graisse. Une réaction lettre par
-      // lettre revient à dire que les lettres d'un même mot ne portent pas la
-      // même graisse : le mot se déforme sur lui-même, et c'est cela qu'on lit
-      // comme un vrillage. Élargir la portée n'y changeait rien, ça ne faisait
-      // que l'étaler. Mesures faites sur trois captures : aucune ligne ne
-      // bouge d'un pixel CSS, donc ce n'était jamais un mouvement — c'était
-      // l'inégalité. Le titre respire donc d'un seul tenant : il n'a plus rien
-      // d'inégal à montrer.
+      // La modulation va donc dans les deux sens : au-dessus du repos sous le
+      // pointeur, en dessous ailleurs. C'est bien plus vivant qu'un titre qui
+      // gonfle d'un bloc, et c'est le parti retenu.
+      //
+      // Les lettres poussent leurs voisines et la ligne respire. J'ai voulu
+      // un temps figer chaque boîte à sa largeur de repos pour que rien ne
+      // bouge : c'était une erreur. Une lettre qui s'épaissit dans une boîte
+      // fixe grossit dans l'espace de ses voisines au lieu de l'écarter —
+      // elles se serrent, et c'est cela qui se lisait comme un vrillage. Le
+      // déplacement n'était pas le défaut, il était le remède.
       const REST = 700;
-      const PEAK = 800;
+      const LOW = 560;
+      const PEAK = 900;
 
       const tick = () => {
         const size = parseFloat(getComputedStyle(h1).fontSize);
-        // La portée se compte depuis la lettre la plus proche : le pointeur
-        // posé sur le titre l'épaissit à plein, et l'effet retombe à mesure
-        // qu'il s'en écarte.
-        const sigma = Math.max(120, size * 1.2);
-
-        let cible = REST;
-        if (pointer && boxes.length) {
-          let plusProche = Infinity;
-          for (const b of boxes) {
-            const dx = pointer.x - b.cx;
-            const dy = pointer.y - b.cy;
-            plusProche = Math.min(plusProche, dx * dx + dy * dy);
-          }
-          cible = REST + Math.exp(-plusProche / (2 * sigma * sigma)) * (PEAK - REST);
-        }
+        const sigma = Math.max(90, size * 0.55);
 
         let moving = false;
-        for (const g of glyphs) {
-          g.tw = cible;
+
+        glyphs.forEach((g, i) => {
+          if (pointer && boxes[i]) {
+            const dx = pointer.x - boxes[i].cx;
+            const dy = pointer.y - boxes[i].cy;
+            const f = Math.exp(-(dx * dx + dy * dy) / (2 * sigma * sigma));
+            g.tw = LOW + f * (PEAK - LOW);
+          } else {
+            g.tw = REST;
+          }
+
           g.w += (g.tw - g.w) * 0.16;
+
           if (Math.abs(g.w - g.tw) > 0.5) moving = true;
           const rounded = Math.round(g.w);
           // Changer la graisse recalcule la mise en page : on ne réécrit que
@@ -427,7 +412,11 @@ const ogImage = new URL('/og.png', Astro.site).href;
             g.painted = rounded;
             g.el.style.fontWeight = String(rounded);
           }
-        }
+        });
+
+        // Les largeurs ont changé, donc les centres aussi : sans quoi l'onde
+        // se décalerait des lettres qu'elle est censée suivre.
+        if (pointer) measure();
 
         if (pointer || moving) {
           frame = requestAnimationFrame(tick);
@@ -455,14 +444,11 @@ const ogImage = new URL('/og.png', Astro.site).href;
         start();
       });
 
-      addEventListener('resize', () => {
-        figer();
-        measure();
-      });
+      addEventListener('resize', measure);
 
-      // Les largeurs ne valent que si la fonte est arrivée.
-      if (document.fonts?.ready) document.fonts.ready.then(figer);
-      else figer();
+      // Les centres ne valent que si la fonte est arrivée.
+      if (document.fonts?.ready) document.fonts.ready.then(measure);
+      else measure();
     })();
   </script>
   </body>

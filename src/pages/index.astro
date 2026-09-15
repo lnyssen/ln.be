@@ -241,31 +241,28 @@ function domainLabel(link: string) {
             </p>
           </span>
 
-          <!-- Une courbe de Bézier et son appareillage : deux ancres
-               carrées, deux points de contrôle ronds, les deux tangentes, et
-               la courbe. C'est l'endroit précis où un geste de dessin devient
-               des coordonnées — l'objet où l'art et le code se touchent, et
-               le seul outil que tout ceci a en commun.
-               Elle se trace dans l'ordre où on la dessine vraiment : on pose
-               les ancres, on tire les poignées, la courbe naît entre les
-               deux. Même plume que le Polographe, même cadre au point près :
-               les deux renvois pèsent pareil. -->
+          <!-- Une onde qui se quantifie. À gauche elle est continue, tracée
+               à la main ; à mi-chemin elle bascule en marches d'escalier et
+               finit en signal carré. C'est le moment exact où un geste devient
+               une suite de valeurs — l'art d'un côté, le code de l'autre, et
+               la collision au milieu, sans rien y ajouter.
+               Un seul tracé, d'un bout à l'autre : la plume ne se lève pas.
+               Même cadre que le Polographe au point près, pour que les deux
+               renvois pèsent pareil. -->
           <svg
             class="teaser-mark h-[54px] w-auto shrink-0 text-[var(--accent)] sm:h-[76px]"
             viewBox="0 0 150 76"
             fill="none"
             stroke="currentColor"
             stroke-width="1"
+            stroke-linecap="square"
             aria-hidden="true"
           >
             <g class="mark-formes">
-              <path pathLength="100" d="M8 56h8v8H8Z" />
-              <path pathLength="100" d="M134 12h8v8h-8Z" />
-              <path pathLength="100" d="M12 60 54 6" />
-              <path pathLength="100" d="M138 16 96 70" />
-              <path pathLength="100" d="M50 6a4 4 0 1 0 8 0a4 4 0 1 0-8 0" />
-              <path pathLength="100" d="M92 70a4 4 0 1 0 8 0a4 4 0 1 0-8 0" />
-              <path pathLength="100" d="M12 60C54 6 96 70 138 16" />
+              <path
+                pathLength="100"
+                d="M1 38q12.5-48 25 0t25 0t25 0V62h25V14h25v48h23"
+              />
             </g>
           </svg>
         </a>
