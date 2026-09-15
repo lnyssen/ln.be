@@ -59,12 +59,7 @@ function domainLabel(link: string) {
     <!-- Titre pleine largeur, calé au filet. -->
     <section class="swiss-shell pt-[var(--section-space)]">
       <h1 class="swiss-display" data-reveal data-reveal-slow>
-        Bold identities<br />and digital<br />experiences<button
-          type="button"
-          data-accent-cycle
-          aria-label="Changer la couleur d'accent du site"
-          title="Changer la couleur d'accent"
-        >.</button>
+        Bold identities<br />and digital<br />experiences<span class="titre-point">.</span>
       </h1>
 
       <div class="swiss-grid mt-[40px] gap-y-6 border-t border-[var(--rule)]" data-reveal data-reveal-slow data-reveal-delay="140">
@@ -364,30 +359,6 @@ function domainLabel(link: string) {
       // assez vivant pour qu'on voie que rien n'est cassé.
       bande.addEventListener('pointerenter', () => viser(0.2));
       bande.addEventListener('pointerleave', () => viser(1));
-    })();
-  </script>
-
-  <script is:inline data-astro-rerun>
-    // Le point qui ferme le titre est la seule couleur de la page : en
-    // cliquant dessus, le visiteur la fait tourner sur une petite gamme
-    // arrêtée, et le site garde son choix sur son appareil. Rien ne l'annonce
-    // — le curseur le dit au survol, ce qui suffit à qui regarde.
-    (() => {
-      const point = document.querySelector('[data-accent-cycle]');
-      if (!point) return;
-
-      const gamme = ['', 'vermillon', 'outremer', 'veronese', 'safran'];
-
-      point.addEventListener('click', () => {
-        const root = document.documentElement;
-        const suivante = gamme[(gamme.indexOf(root.dataset.swissAccent || '') + 1) % gamme.length];
-        if (suivante) root.dataset.swissAccent = suivante;
-        else delete root.dataset.swissAccent;
-        try {
-          if (suivante) localStorage.setItem('swiss-accent', suivante);
-          else localStorage.removeItem('swiss-accent');
-        } catch {}
-      });
     })();
   </script>
 

@@ -1,10 +1,16 @@
 ---
 import SwissThemeToggle from './SwissThemeToggle.jsx';
 
-// Les outils du visiteur — la grille, la graisse et le thème — ne sont pas de
-// la navigation : ils quittent la barre et se posent en capsule flottante,
-// centrée au bas de l'écran et à portée du pouce. Le contact n'y figure pas :
-// la barre le porte sur grand écran, la carte du menu sur téléphone.
+// Les outils du visiteur — la grille, la graisse, la teinte et le thème — ne
+// sont pas de la navigation : ils quittent la barre et se posent en capsule
+// flottante, centrée au bas de l'écran et à portée du pouce. Le contact n'y
+// figure pas : la barre le porte sur grand écran, la carte du menu sur
+// téléphone.
+// La teinte se commandait depuis le point qui ferme le titre. Ce point
+// grossissait au survol, en plein dans la vague de graisse du titre : au
+// dernier signe de la dernière ligne, la ligne paraissait vriller. La teinte
+// rejoint donc les autres outils, où rien ne la gêne — et elle vaut du même
+// coup pour toutes les pages, non plus la seule page d'accueil.
 ---
 
 <div
@@ -45,6 +51,40 @@ import SwissThemeToggle from './SwissThemeToggle.jsx';
       </svg>
     </button>
 
+    <button
+      type="button"
+      data-accent-cycle
+      aria-label="Changer la couleur d'accent du site"
+      title="Teinte"
+      class="swiss-meta flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-full border border-[var(--rule)] transition-colors duration-200 hover:border-[var(--accent)]"
+    >
+      <!-- La pastille porte la teinte du moment : le bouton dit déjà où on en
+           est, sans un mot. -->
+      <span class="dock-teinte" aria-hidden="true"></span>
+    </button>
+
     <SwissThemeToggle client:load />
   </div>
 </div>
+
+<script is:inline data-astro-rerun>
+  // La teinte tourne sur une petite gamme arrêtée, et le site garde le choix
+  // sur l'appareil du visiteur.
+  (() => {
+    const bouton = document.querySelector('[data-accent-cycle]');
+    if (!bouton) return;
+
+    const gamme = ['', 'vermillon', 'outremer', 'veronese', 'safran'];
+
+    bouton.addEventListener('click', () => {
+      const root = document.documentElement;
+      const suivante = gamme[(gamme.indexOf(root.dataset.swissAccent || '') + 1) % gamme.length];
+      if (suivante) root.dataset.swissAccent = suivante;
+      else delete root.dataset.swissAccent;
+      try {
+        if (suivante) localStorage.setItem('swiss-accent', suivante);
+        else localStorage.removeItem('swiss-accent');
+      } catch {}
+    });
+  })();
+</script>

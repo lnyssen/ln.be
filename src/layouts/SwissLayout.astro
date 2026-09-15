@@ -346,9 +346,9 @@ const ogImage = new URL('/og.png', Astro.site).href;
               }
             }
             child.replaceWith(frag);
-          } else if (child.nodeName !== 'BR' && child.dataset?.accentCycle === undefined) {
-            // Le point qui ferme le titre est une commande, pas un signe de
-            // plus : il garde sa graisse et son geste à lui.
+          } else if (child.nodeName !== 'BR') {
+            // Le point qui ferme le titre a cessé d'être une commande : c'est
+            // un signe comme les autres, et il suit la graisse comme eux.
             split(child);
           }
         });
