@@ -1,6 +1,10 @@
 ---
 // Flèche géométrique : tête en équerre et hampe à 45°, épaisseur constante,
 // extrémités franches. Les autres directions sont des rotations de la même.
+// La rotation passe par une propriété plutôt que par la transformation elle-
+// même : le CSS peut ainsi composer un déplacement par-dessus sans écraser
+// l'orientation. C'est ce qui permet à toute flèche du site d'avancer dans
+// son propre sens au survol, sans une règle par direction.
 interface Props {
   direction?: 'up-right' | 'right' | 'down' | 'left';
   size?: number;
@@ -21,8 +25,8 @@ const rotation = { 'up-right': 0, right: 45, down: 135, left: 225 }[direction];
   stroke-width="2.2"
   stroke-linecap="butt"
   aria-hidden="true"
-  class:list={['inline-block shrink-0 align-[-0.1em]', className]}
-  style={rotation ? `transform: rotate(${rotation}deg)` : undefined}
+  class:list={['swiss-arrow inline-block shrink-0 align-[-0.1em]', className]}
+  style={`--rot: ${rotation}deg`}
 >
   <path d="M5.5 18.5 18 6"></path>
   <path d="M8.4 6H18v9.6"></path>

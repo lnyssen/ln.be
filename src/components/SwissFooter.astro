@@ -54,10 +54,10 @@ const site = [
               href={item.href}
               target={away ? '_blank' : undefined}
               rel={away ? 'noopener noreferrer' : undefined}
-              class="lien-fleche swiss-meta block w-fit transition-colors duration-200"
+              class="swiss-meta block w-fit transition-colors duration-200"
             >
               {item.label}
-              <span class:list={['footer-arrow', away && 'footer-arrow-oblique']}>
+              <span class="footer-arrow">
                 <SwissArrow size={12} direction={away ? 'up-right' : 'right'} />
               </span>
             </a>
@@ -71,7 +71,7 @@ const site = [
         site.map((item) => (
           <a
             href={item.href}
-            class="lien-fleche swiss-meta block w-fit transition-colors duration-200"
+            class="swiss-meta block w-fit transition-colors duration-200"
           >
             {item.label}
             <span class="footer-arrow">
@@ -84,9 +84,9 @@ const site = [
         href="https://www.typedump.com/font/switzer"
         target="_blank"
         rel="noopener noreferrer"
-        class="lien-fleche swiss-meta block w-fit transition-colors duration-200"
+        class="swiss-meta block w-fit transition-colors duration-200"
       >
-        Set in Switzer<span class="footer-arrow footer-arrow-oblique"><SwissArrow size={12} /></span>
+        Set in Switzer<span class="footer-arrow"><SwissArrow size={12} /></span>
       </a>
     </div>
 
