@@ -40,7 +40,11 @@
      en bas de chaque section. */
   --section-space: 42px;
   --renvoi-space: 66px;
-  --ouverture-space: 120px;
+  /* Le titre d'ouverture respire au rythme commun tant que l'écran est
+     étroit : sur un téléphone, cent vingt pixels de vide avant le premier
+     mot repousseraient le titre sous la ligne de flottaison. La valeur large
+     est rétablie plus bas, dès que l'écran s'ouvre. */
+  --ouverture-space: var(--section-space);
   /* Calque de grille : couleurs prêtes à l'emploi, l'opacité ne peut pas
      s'appliquer à une variable depuis une classe utilitaire. */
   --grid-line: color-mix(in srgb, #7b58e8 34%, transparent);
@@ -59,6 +63,7 @@
 @media (min-width: 768px) {
   .swiss {
     --header-h: 77px;
+    --ouverture-space: 120px;
   }
 }
 
