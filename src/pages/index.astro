@@ -106,6 +106,7 @@ function domainLabel(link: string) {
                           format="webp"
                           quality={78}
                           loading={i < 5 && tour === 0 ? 'eager' : 'lazy'}
+                          draggable="false"
                           class="vitrine-image aspect-[3/2] object-cover"
                         />
                       </a>
@@ -417,6 +418,124 @@ function domainLabel(link: string) {
         scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
       });
     });
+  </script>
+
+  <script is:inline data-astro-rerun>
+    // La vitrine avance seule, ralentit au survol, et se prend en main : on
+    // la fait glisser au doigt ou à la souris, on la pousse au pavé tactile.
+    // Relâchée, elle garde un peu d'élan puis reprend son allure. Un
+    // glissement n'ouvre pas le projet sous le doigt ; un toucher, si.
+    (() => {
+      const bande = document.querySelector('.marquee-images');
+      const piste = bande?.querySelector('.marquee-track');
+      if (!piste) return;
+      const calme = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // Environ quarante-cinq pixels par seconde.
+      const ALLURE = calme ? 0 : 45;
+      let decal = 0;
+      let facteur = 1;
+      let cible = 1;
+      let elan = 0;
+      let prise = null;
+      let aGlisse = false;
+      let dernier = 0;
+      let visible = true;
+
+      const moitie = () => piste.scrollWidth / 2 || 1;
+      const poser = () => {
+        const m = moitie();
+        decal = ((decal % m) + m) % m;
+        piste.style.transform = `translate3d(${-decal}px, 0, 0)`;
+      };
+
+      const tick = (t) => {
+        const dt = Math.min(0.05, (t - (dernier || t)) / 1000);
+        dernier = t;
+        facteur += (cible - facteur) * (1 - Math.exp(-dt / 0.18));
+        if (!prise) {
+          decal += (ALLURE * facteur + elan) * dt;
+          elan *= Math.exp(-dt / 0.35);
+          if (Math.abs(elan) < 2) elan = 0;
+        }
+        poser();
+        if (visible) requestAnimationFrame(tick);
+        else dernier = 0;
+      };
+
+      new IntersectionObserver(([entree]) => {
+        const avant = visible;
+        visible = entree.isIntersecting;
+        if (visible && !avant) requestAnimationFrame(tick);
+      }).observe(bande);
+      requestAnimationFrame(tick);
+
+      bande.addEventListener('pointerenter', (e) => {
+        if (e.pointerType === 'mouse') cible = 0.2;
+      });
+      bande.addEventListener('pointerleave', () => {
+        cible = 1;
+      });
+
+      // Pavé tactile et molette horizontale : la bande suit le geste.
+      bande.addEventListener(
+        'wheel',
+        (e) => {
+          if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+          e.preventDefault();
+          decal += e.deltaX;
+          elan = 0;
+          poser();
+        },
+        { passive: false },
+      );
+
+      // Glisser, au doigt comme à la souris.
+      bande.addEventListener('pointerdown', (e) => {
+        if (e.pointerType === 'mouse' && e.button !== 0) return;
+        prise = { id: e.pointerId, x: e.clientX, y: e.clientY, depart: decal, t: e.timeStamp, vx: 0, tenu: false };
+        aGlisse = false;
+        elan = 0;
+      });
+      bande.addEventListener('pointermove', (e) => {
+        if (!prise || e.pointerId !== prise.id) return;
+        const dx = e.clientX - prise.x;
+        const dy = e.clientY - prise.y;
+        if (!prise.tenu) {
+          if (Math.abs(dx) < 6 || Math.abs(dx) < Math.abs(dy)) return;
+          prise.tenu = true;
+          aGlisse = true;
+          try {
+            bande.setPointerCapture(e.pointerId);
+          } catch {}
+        }
+        const dt = Math.max(1, e.timeStamp - prise.t);
+        const nouveau = prise.depart - dx;
+        prise.vx = ((nouveau - decal) / dt) * 1000 * 0.6 + prise.vx * 0.4;
+        prise.t = e.timeStamp;
+        decal = nouveau;
+        poser();
+      });
+      const lacher = (e) => {
+        if (!prise || e.pointerId !== prise.id) return;
+        if (prise.tenu) elan = Math.max(-2500, Math.min(2500, prise.vx)) - ALLURE;
+        prise = null;
+      };
+      bande.addEventListener('pointerup', lacher);
+      bande.addEventListener('pointercancel', lacher);
+
+      // Un glissement ne vaut pas un clic.
+      bande.addEventListener(
+        'click',
+        (e) => {
+          if (!aGlisse) return;
+          e.preventDefault();
+          e.stopPropagation();
+          aGlisse = false;
+        },
+        true,
+      );
+    })();
   </script>
 
   <script is:inline data-astro-rerun>

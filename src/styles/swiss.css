@@ -34,7 +34,7 @@
   --accent: #7b58e8;
   /* Fond de la barre : assez de papier pour que la typographie reste lisible,
      assez de vide pour qu'on devine le contenu passer dessous. */
-  --header-bg: color-mix(in srgb, #f4f2ed 68%, transparent);
+  --header-bg: color-mix(in srgb, #f4f2ed 46%, transparent);
   /* Pied de page : violet de la marque, texte papier — 4,53:1. */
   /* Le pied est le seul aplat de couleur du site : il porte la teinte
      choisie, exactement. Son texte prend le papier du thème — en clair les
@@ -110,7 +110,7 @@
      lavande, l'autre violet du site, qui remonte à 7,7:1. */
   --accent: #9e9eff;
   /* Le bruit se voit davantage sur l'encre : on le retient un peu. */
-  --header-bg: color-mix(in srgb, #1d1f21 68%, transparent);
+  --header-bg: color-mix(in srgb, #1d1f21 46%, transparent);
 }
 
 /* Deux encres sur un papier chaud et un très léger
@@ -123,7 +123,7 @@
   --accent: #ff4d6d;
   --footer-bg: #ff4d6d;
   --footer-fg: #f2ead9;
-  --header-bg: color-mix(in srgb, #f2ead9 68%, transparent);
+  --header-bg: color-mix(in srgb, #f2ead9 46%, transparent);
   --grid-line: color-mix(in srgb, #ff4d6d 34%, transparent);
   --grid-fill: color-mix(in srgb, #ff4d6d 6%, transparent);
   --grid-ink: color-mix(in srgb, #ff4d6d 75%, transparent);
@@ -656,8 +656,8 @@
     isolation: isolate;
     background-color: var(--header-bg);
     border: 1px solid var(--rule);
-    -webkit-backdrop-filter: blur(36px) saturate(1.2);
-    backdrop-filter: blur(36px) saturate(1.2);
+    -webkit-backdrop-filter: blur(52px) saturate(1.35);
+    backdrop-filter: blur(52px) saturate(1.35);
   }
 
   /* La capsule d'outils est un objet constant : elle reste blanche quel que
@@ -820,12 +820,23 @@
     animation: marquee 10s linear infinite;
   }
 
-  /* La vitrine prend le rythme des sections et défile plus lentement que les
-     mots : une image se regarde plus longtemps qu'un intitulé ne se lit. Sa
-     durée est comptée pour une vitesse d'environ quarante pixels par seconde,
-     quelle que soit la longueur de la bande. */
+  /* La vitrine n'est pas une animation CSS : elle avance par script, pour
+     qu'on puisse la faire glisser à la main — au doigt, à la souris, au
+     pavé tactile — sans qu'elle cesse d'avancer seule. Le glissement
+     vertical reste à la page. */
   .swiss .marquee-images .marquee-track {
-    animation-duration: 38s;
+    animation: none;
+    will-change: transform;
+  }
+
+  .swiss .marquee-images {
+    touch-action: pan-y;
+    overflow: hidden !important;
+  }
+
+  .swiss .marquee-images img {
+    -webkit-user-drag: none;
+    user-select: none;
   }
 
   .swiss .vitrine-image {
@@ -1214,8 +1225,8 @@
     margin-left: auto;
     border: 1px solid var(--rule);
     background-color: var(--header-bg);
-    -webkit-backdrop-filter: blur(36px) saturate(1.2);
-    backdrop-filter: blur(36px) saturate(1.2);
+    -webkit-backdrop-filter: blur(52px) saturate(1.35);
+    backdrop-filter: blur(52px) saturate(1.35);
   }
 
   @media (prefers-reduced-transparency: reduce) {
