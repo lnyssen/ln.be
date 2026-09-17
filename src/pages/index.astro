@@ -431,8 +431,9 @@ function domainLabel(link: string) {
       if (!piste) return;
       const calme = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      // Environ quarante-cinq pixels par seconde.
-      const ALLURE = calme ? 0 : 45;
+      // Environ quatre-vingt-dix pixels par seconde : les vignettes sont
+      // grandes, il faut qu'elles passent.
+      const ALLURE = calme ? 0 : 90;
       let decal = 0;
       let facteur = 1;
       let cible = 1;
