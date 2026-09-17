@@ -366,6 +366,35 @@ const ogImage = new URL('/og.png', Astro.site).href;
       split(h1);
       if (!glyphs.length) return;
 
+      // Chaque ligne devient un bloc à part, à hauteur fixe. Chrome recalculait
+      // parfois mal la hauteur d'une ligne faite de lettres en boîtes
+      // séparées : souris posée sur la deuxième ligne, les deux dernières
+      // descendaient d'un bloc de près de six pixels au moment où les
+      // graisses se posaient, et remontaient à la moindre retouche. Une ligne
+      // enfermée dans un bloc de hauteur fixe ne peut plus pousser la
+      // suivante, quoi que le moteur calcule à l'intérieur.
+      const lignesTitre = [];
+      {
+        let courante = null;
+        const nouvelle = () => {
+          courante = document.createElement('span');
+          courante.className = 'titre-ligne';
+          courante.style.cssText = 'display:block;white-space:nowrap';
+          lignesTitre.push(courante);
+        };
+        nouvelle();
+        for (const node of [...h1.childNodes]) {
+          if (node.nodeName === 'BR') {
+            node.remove();
+            h1.appendChild(courante);
+            nouvelle();
+          } else {
+            courante.appendChild(node);
+          }
+        }
+        h1.appendChild(courante);
+      }
+
       // Couper le titre en signes détruit le crénage : chaque lettre devient
       // une boîte à part, et les paires que la fonte resserre — TA, AL, AV —
       // ne se resserrent plus. La ligne « and digital » s'élargissait ainsi de
@@ -450,6 +479,11 @@ const ogImage = new URL('/og.png', Astro.site).href;
       // la ligne de section, la vitrine et tout le reste restent en place.
       const figerHauteur = () => {
         h1.style.height = '';
+        for (const l of lignesTitre) l.style.height = '';
+        const hauteurs = lignesTitre.map((l) => l.getBoundingClientRect().height);
+        lignesTitre.forEach((l, i) => {
+          l.style.height = `${hauteurs[i]}px`;
+        });
         h1.style.height = `${h1.getBoundingClientRect().height}px`;
       };
 
