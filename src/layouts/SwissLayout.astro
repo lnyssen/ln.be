@@ -435,9 +435,6 @@ const ogImage = new URL('/og.png', Astro.site).href;
           par.get(cle).push(i);
         });
         lignes = [...par.values()];
-        const suite = h1.nextElementSibling;
-        const espace = suite ? parseFloat(getComputedStyle(suite).marginTop) || 72 : 72;
-        EXTINCTION = Math.min(72, espace * 0.8);
         // La boîte du titre, en coordonnées de page.
         const r = h1.getBoundingClientRect();
         boite = {
@@ -470,12 +467,6 @@ const ogImage = new URL('/og.png', Astro.site).href;
             pres = Math.min(pres, dx * dx + dy * dy);
           }
           porte = Math.exp(-pres / (2 * sigma * sigma));
-          // Hors de la boîte du titre, l'effet s'éteint sur une courte
-          // distance : assez pour ne pas retomber d'un coup en sortant, assez
-          // court pour être éteint avant la vitrine, dont le survol faisait
-          // onduler le titre.
-          const hors = Math.max(boite.l - pointer.x, pointer.x - boite.r, boite.t - pointer.y, pointer.y - boite.b, 0);
-          porte *= Math.max(0, 1 - hors / EXTINCTION);
         }
 
         glyphs.forEach((g, i) => {
@@ -507,14 +498,17 @@ const ogImage = new URL('/og.png', Astro.site).href;
       // près d'une demi-seconde derrière la souris à 60 Hz. Constante de
       // soixante-dix millisecondes : la graisse suit la main sans à-coup.
       const TAU = 70;
-      // Distance, hors du titre, sur laquelle l'effet s'éteint : les quatre
-      // cinquièmes de l'espace qui le sépare de la vitrine, 72 px au plus.
-      let EXTINCTION = 72;
+      // En sortant du titre, les lettres ne reviennent pas au rythme du geste
+      // mais plus lentement : le titre se repose au lieu de se recomposer d'un
+      // coup. C'est cette lenteur-là, et non une zone élargie autour du
+      // titre, qui efface le saut à la sortie — la zone élargie faisait
+      // réagir le titre au-dessus du vide et des images.
+      const TAU_SORTIE = 420;
 
       const tick = (maintenant) => {
         const dt = Math.min(64, maintenant - (dernier || maintenant - 16));
         dernier = maintenant;
-        const k = 1 - Math.exp(-dt / TAU);
+        const k = 1 - Math.exp(-dt / (pointer ? TAU : TAU_SORTIE));
 
         let moving = false;
         for (const g of glyphs) {
@@ -545,12 +539,10 @@ const ogImage = new URL('/og.png', Astro.site).href;
         if (frame === null) frame = requestAnimationFrame(tick);
       };
 
-      // Le pointeur est suivi sur toute la page, pas seulement sur le titre.
-      // Le titre rogne ses blancs : son bloc s'arrête à la ligne de base. En
-      // descendant vers la section suivante, on le quittait donc tout près des
-      // lettres, au plus fort de l'effet, et tout retombait d'un coup au repos
-      // — le titre entier se recomposait sous la main. Désormais l'effet
-      // s'éteint avec la distance, qu'on soit dans le bloc ou non.
+      // Le pointeur est lu sur toute la page, mais l'effet ne joue que dans la
+      // boîte du titre. Au-dessus du vide qui le sépare de la vitrine, et sur
+      // la vitrine elle-même, le titre ne bouge plus ; en sortant, il revient
+      // lentement au repos au lieu de se recomposer d'un coup.
       const auRepos = () => frame === null && glyphs.every((g) => g.painted === REST);
 
       addEventListener(
@@ -560,12 +552,9 @@ const ogImage = new URL('/og.png', Astro.site).href;
           const x = event.pageX;
           const y = event.pageY;
           if (!boite) measure();
-          const dedans =
-            x > boite.l - EXTINCTION &&
-            x < boite.r + EXTINCTION &&
-            y > boite.t - EXTINCTION &&
-            y < boite.b + EXTINCTION;
-          // En entrant dans la zone, tout est posé : c'est le moment de relever
+          // L'effet ne joue que sur le titre lui-même.
+          const dedans = x > boite.l && x < boite.r && y > boite.t && y < boite.b;
+          // En entrant dans le titre, tout est posé : c'est le moment de relever
           // la géométrie sans la fausser. Ailleurs sur la page, on ne mesure
           // rien.
           if (dedans && !pointer && auRepos()) measure();
