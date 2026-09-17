@@ -487,7 +487,11 @@ const ogImage = new URL('/og.png', Astro.site).href;
       };
 
       const REST = 700;
-      const LOW = 560;
+      // Au téléphone, le titre est petit : l'écart de graisse doit être plus
+      // large pour se voir, et l'onde plus serrée pour ne pas couvrir toute
+      // la ligne — une onde plus large que la ligne s'annule dans
+      // l'équilibrage et le titre semble immobile.
+      const LOW = souris ? 560 : 380;
       const PEAK = 900;
 
       let pointer = null;
@@ -508,7 +512,7 @@ const ogImage = new URL('/og.png', Astro.site).href;
       // fois, au lieu de relire le style à chaque image.
       const measure = () => {
         const size = parseFloat(getComputedStyle(h1).fontSize);
-        sigma = Math.max(90, size * 0.55);
+        sigma = souris ? Math.max(90, size * 0.55) : size * 0.8;
         creux = sigma * 1.8;
         boxes = glyphs.map(({ el }) => {
           const r = el.getBoundingClientRect();
@@ -582,6 +586,8 @@ const ogImage = new URL('/og.png', Astro.site).href;
           const ecart = somme / ligne.length;
           for (const i of ligne) glyphs[i].tw -= ecart;
         }
+        // La fonte ne va pas au-delà de 100 et 900.
+        for (const g of glyphs) g.tw = Math.min(900, Math.max(100, g.tw));
       };
 
       // Le rattrapage est réglé sur le temps, pas sur les images : un pas fixe
@@ -696,9 +702,9 @@ const ogImage = new URL('/og.png', Astro.site).href;
           }
           if (!pointer && auRepos()) measure();
 
-          // Vingt degrés d'inclinaison suffisent pour parcourir le titre.
-          const x = borne((gauche - repere.gauche) / 20);
-          const y = borne((avant - repere.avant) / 20);
+          // Douze degrés d'inclinaison suffisent pour parcourir le titre.
+          const x = borne((gauche - repere.gauche) / 12);
+          const y = borne((avant - repere.avant) / 12);
           // Téléphone tenu droit : le titre se repose.
           if (Math.abs(x) < 0.06 && Math.abs(y) < 0.06) {
             if (pointer) {
@@ -717,24 +723,28 @@ const ogImage = new URL('/og.png', Astro.site).href;
         // On écoute d'emblée : Android envoie l'inclinaison sans rien
         // demander. Safari sur iPhone, lui, n'envoie rien tant que le
         // visiteur n'a pas donné sa permission, et ne la demande qu'à la
-        // suite d'un toucher : le premier toucher du titre la réclame.
-        // Écouter deux fois ne double rien, le navigateur ignore le doublon.
+        // suite d'un toucher. Le premier toucher de la page la réclame — le
+        // titre seul ne suffisait pas : iOS n'y déclenche pas de clic, ce
+        // n'est pas un élément qu'on touche. On redemande tant qu'aucune
+        // réponse n'est venue. Écouter deux fois ne double rien, le
+        // navigateur ignore le doublon.
         const ecouter = () => addEventListener('deviceorientation', incliner, { passive: true });
         if ('DeviceOrientationEvent' in window) ecouter();
         const demande = window.DeviceOrientationEvent?.requestPermission;
         if (typeof demande === 'function') {
-          h1.addEventListener(
-            'click',
-            () => {
-              demande
-                .call(DeviceOrientationEvent)
-                .then((etat) => {
-                  if (etat === 'granted') ecouter();
-                })
-                .catch(() => {});
-            },
-            { once: true },
-          );
+          let repondu = false;
+          const demander = () => {
+            if (repondu) return;
+            demande
+              .call(DeviceOrientationEvent)
+              .then((etat) => {
+                repondu = true;
+                removeEventListener('touchend', demander);
+                if (etat === 'granted') ecouter();
+              })
+              .catch(() => {});
+          };
+          addEventListener('touchend', demander, { passive: true });
         }
       }
 
