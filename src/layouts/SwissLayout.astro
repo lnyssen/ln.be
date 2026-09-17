@@ -376,8 +376,8 @@ const ogImage = new URL('/og.png', Astro.site).href;
       const h1 = document.querySelector('h1.swiss-display');
       if (!h1) return;
       if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      // Sans souris, c'est le défilement qui promène un pointeur virtuel sur
-      // le titre : le doigt fait respirer la typographie en faisant défiler.
+      // Sans souris, c'est l'inclinaison du téléphone qui promène un pointeur
+      // virtuel sur le titre.
       const souris = matchMedia('(pointer: fine)').matches;
 
       // Découpe en signes, les espaces restant du texte nu : une espace dans
@@ -662,44 +662,80 @@ const ogImage = new URL('/og.png', Astro.site).href;
         { passive: true },
       );
 
-      // Au doigt : pendant le défilement, un point parcourt le titre en
-      // diagonale, du coin haut gauche au coin bas droit, à mesure que le
-      // titre remonte. Le défilement s'arrête, le titre se repose.
+      // Au doigt : c'est l'inclinaison du téléphone qui promène un point sur
+      // le titre. Pencher à gauche ou à droite le fait courir le long des
+      // lignes ; pencher vers soi ou vers l'avant le fait passer d'une ligne
+      // à l'autre. La position de départ sert de repos, et elle se recale
+      // doucement : un téléphone qu'on garde penché finit par être « droit ».
       if (!souris) {
-        let repos = null;
-        addEventListener(
-          'scroll',
-          () => {
-            if (!boite) measure();
-            const course = Math.max(1, boite.b);
-            const p = Math.min(1, Math.max(0, scrollY / course));
-            // On ne relève la géométrie qu'en entrant dans la course, titre au
-            // repos : ailleurs, le défilement ne coûte rien.
-            if (p > 0 && p < 1 && !pointer && auRepos()) measure();
-            if (p <= 0 || p >= 1) {
-              if (pointer) {
-                pointer = null;
-                relancer();
-              }
-              return;
-            }
-            // Trois allers-retours sur la largeur, un par ligne.
-            const lignesParcourues = p * 3;
-            const dansLaLigne = lignesParcourues % 1;
-            const sens = Math.floor(lignesParcourues) % 2 === 0 ? dansLaLigne : 1 - dansLaLigne;
-            pointer = {
-              x: boite.l + (boite.r - boite.l) * (0.08 + 0.84 * sens),
-              y: boite.t + (boite.b - boite.t) * Math.min(0.97, p),
-            };
-            relancer();
-            clearTimeout(repos);
-            repos = setTimeout(() => {
+        let repere = null;
+        const borne = (v) => Math.max(-1, Math.min(1, v));
+
+        const incliner = (event) => {
+          if (event.gamma == null || event.beta == null) return;
+          // En paysage, les axes du téléphone tournent avec l'écran.
+          const angle = (screen.orientation?.angle ?? window.orientation ?? 0) % 360;
+          let gauche = event.gamma;
+          let avant = event.beta;
+          if (angle === 90) [gauche, avant] = [event.beta, -event.gamma];
+          else if (angle === 270 || angle === -90) [gauche, avant] = [-event.beta, event.gamma];
+          else if (angle === 180) [gauche, avant] = [-event.gamma, -event.beta];
+
+          if (!repere) repere = { gauche, avant };
+          repere.gauche += (gauche - repere.gauche) * 0.004;
+          repere.avant += (avant - repere.avant) * 0.004;
+
+          // Le titre hors de l'écran ne joue pas.
+          const r = h1.getBoundingClientRect();
+          if (r.bottom < 0 || r.top > innerHeight) {
+            if (pointer) {
               pointer = null;
               relancer();
-            }, 160);
-          },
-          { passive: true },
-        );
+            }
+            return;
+          }
+          if (!pointer && auRepos()) measure();
+
+          // Vingt degrés d'inclinaison suffisent pour parcourir le titre.
+          const x = borne((gauche - repere.gauche) / 20);
+          const y = borne((avant - repere.avant) / 20);
+          // Téléphone tenu droit : le titre se repose.
+          if (Math.abs(x) < 0.06 && Math.abs(y) < 0.06) {
+            if (pointer) {
+              pointer = null;
+              relancer();
+            }
+            return;
+          }
+          pointer = {
+            x: boite.l + ((boite.r - boite.l) * (1 + x)) / 2,
+            y: boite.t + ((boite.b - boite.t) * (1 + y)) / 2,
+          };
+          relancer();
+        };
+
+        // On écoute d'emblée : Android envoie l'inclinaison sans rien
+        // demander. Safari sur iPhone, lui, n'envoie rien tant que le
+        // visiteur n'a pas donné sa permission, et ne la demande qu'à la
+        // suite d'un toucher : le premier toucher du titre la réclame.
+        // Écouter deux fois ne double rien, le navigateur ignore le doublon.
+        const ecouter = () => addEventListener('deviceorientation', incliner, { passive: true });
+        if ('DeviceOrientationEvent' in window) ecouter();
+        const demande = window.DeviceOrientationEvent?.requestPermission;
+        if (typeof demande === 'function') {
+          h1.addEventListener(
+            'click',
+            () => {
+              demande
+                .call(DeviceOrientationEvent)
+                .then((etat) => {
+                  if (etat === 'granted') ecouter();
+                })
+                .catch(() => {});
+            },
+            { once: true },
+          );
+        }
       }
 
       // La souris quitte la fenêtre : on repose tout.
