@@ -1291,6 +1291,12 @@
     opacity: 1;
   }
 
+  /* Le temps d'une mesure, tout est posé dans son état final. */
+  .swiss.sans-filer details::details-content,
+  .swiss.sans-filer [data-reveal] {
+    transition: none !important;
+  }
+
   /* Le disque inverse ce qu'il couvre ; la largeur s'anime grâce à
      `interpolate-size` déjà posé sur .swiss. */
   /* Le disque est en fusion « difference » : il inverse ce qu'il survole, donc

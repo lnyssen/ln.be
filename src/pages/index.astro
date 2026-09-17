@@ -374,16 +374,43 @@ function domainLabel(link: string) {
 
   <script is:inline data-astro-rerun>
     // Un visuel de la vitrine ouvre sa ligne dans l'index et la ramène sous
-    // les yeux. Sans script, le lien descend simplement à la liste.
+    // la barre. Sans script, le lien descend simplement à la liste.
+    //
+    // La cible se calcule sur la mise en page finale, pas sur celle du
+    // moment. Ouvrir une ligne referme celle qui l'était — en animation, si
+    // bien que la page raccourcissait pendant le défilement et qu'on arrivait
+    // trop bas. Les lignes pas encore révélées portaient aussi leur décalage
+    // d'entrée. On coupe donc les animations le temps d'une image, on met la
+    // page dans son état final, on mesure, puis on défile.
     document.addEventListener('click', (event) => {
       const lien = event.target.closest('[data-ouvrir]');
       if (!lien) return;
       const ligne = document.querySelector(`#work details[data-slug="${lien.dataset.ouvrir}"]`);
       if (!ligne) return;
       event.preventDefault();
+
+      const racine = document.documentElement;
+      racine.classList.add('sans-filer');
+
+      for (const el of document.querySelectorAll('main [data-reveal]')) {
+        const avant = el.compareDocumentPosition(ligne) & Node.DOCUMENT_POSITION_FOLLOWING;
+        if (avant || el === ligne || el.contains(ligne)) el.classList.add('is-in');
+      }
+      for (const autre of document.querySelectorAll('#work details[open]')) {
+        if (autre !== ligne) autre.open = false;
+      }
       ligne.open = true;
+
+      // La ligne ouverte colle sous la barre : on s'aligne sur ce même arrêt.
+      // On mesure la ligne elle-même, pas son intitulé, qui une fois collant
+      // donnerait sa position figée plutôt que sa place.
+      const summary = ligne.querySelector(':scope > summary');
+      const arret = parseFloat(getComputedStyle(summary).top) || 0;
+      const y = ligne.getBoundingClientRect().top + scrollY - arret;
+
       requestAnimationFrame(() => {
-        ligne.querySelector('summary')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        racine.classList.remove('sans-filer');
+        scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
       });
     });
   </script>
