@@ -735,12 +735,21 @@ const ogImage = new URL('/og.png', Astro.site).href;
           let repondu = false;
           const demander = () => {
             if (repondu) return;
-            demande
-              .call(DeviceOrientationEvent)
-              .then((etat) => {
+            // L'inclinaison et le mouvement se demandent dans le même geste :
+            // iOS n'affiche qu'une fenêtre pour les deux. Le mouvement sert à
+            // la pluie de formes qu'on déclenche en secouant le téléphone.
+            const mouvement = window.DeviceMotionEvent?.requestPermission;
+            Promise.all([
+              demande.call(DeviceOrientationEvent),
+              typeof mouvement === 'function'
+                ? mouvement.call(DeviceMotionEvent).catch(() => 'denied')
+                : 'granted',
+            ])
+              .then(([etat, etatMouvement]) => {
                 repondu = true;
                 removeEventListener('touchend', demander);
                 if (etat === 'granted') ecouter();
+                if (etatMouvement === 'granted') dispatchEvent(new Event('mouvement-autorise'));
               })
               .catch(() => {});
           };

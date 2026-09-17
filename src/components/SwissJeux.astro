@@ -3,6 +3,8 @@
 // contenu, sans capter le pointeur.
 // P : une pluie de formes du Polographe, qui s'empilent au bas de l'écran —
 //     « piled up into chaos ». Échap les efface.
+// Au téléphone, on secoue : la pluie tombe, et la pile s'efface deux
+// secondes après que la dernière forme s'est posée.
 ---
 
 <canvas data-jeu-pluie class="pointer-events-none fixed inset-0 z-[44]" aria-hidden="true"></canvas>
@@ -54,6 +56,8 @@
     let hauteurs = [];
     let pieces = [];
     let pluieTourne = false;
+    let effacerApres = false;
+    let minuterie = null;
 
     const grille = () => {
       case_ = Math.round(Math.min(72, Math.max(40, L / 16)));
@@ -142,6 +146,13 @@
       else {
         pluieTourne = false;
         dernier = 0;
+        // Pluie venue d'une secousse : tout est posé, on laisse la pile deux
+        // secondes puis on l'efface.
+        if (effacerApres && pieces.length) {
+          effacerApres = false;
+          clearTimeout(minuterie);
+          minuterie = setTimeout(eclaircir, 2000);
+        }
       }
     };
 
@@ -193,11 +204,43 @@
       lancerPluie();
     };
 
+    // La secousse : une accélération franche, deux fois en moins d'une
+    // demi-seconde. Un pas, un bus qui freine ne suffisent pas.
+    let pics = [];
+    let repos = 0;
+    const secouer = (event) => {
+      const a = event.acceleration;
+      let force = 0;
+      if (a && a.x != null) {
+        force = Math.hypot(a.x, a.y, a.z);
+      } else if (event.accelerationIncludingGravity?.x != null) {
+        const g = event.accelerationIncludingGravity;
+        force = Math.abs(Math.hypot(g.x, g.y, g.z) - 9.81);
+      }
+      const t = event.timeStamp;
+      if (force < 14 || t < repos) return;
+      pics = pics.filter((p) => t - p < 500);
+      pics.push(t);
+      if (pics.length < 2) return;
+      pics = [];
+      repos = t + 1200;
+      clearTimeout(minuterie);
+      effacerApres = true;
+      pleuvoir();
+    };
+    const ecouterMouvement = () => addEventListener('devicemotion', secouer, { passive: true, signal: arret.signal });
+    if ('DeviceMotionEvent' in window) ecouterMouvement();
+    addEventListener('mouvement-autorise', ecouterMouvement, sig);
+
     document.addEventListener('keydown', (event) => {
       if (event.metaKey || event.ctrlKey || event.altKey) return;
       const t = event.target;
       if (t?.tagName === 'INPUT' || t?.tagName === 'TEXTAREA' || t?.isContentEditable) return;
-      if (event.key.toLowerCase() === 'p') pleuvoir();
+      if (event.key.toLowerCase() === 'p') {
+        clearTimeout(minuterie);
+        effacerApres = false;
+        pleuvoir();
+      }
       else if (event.key === 'Escape' && pieces.length && !document.querySelector('[data-loupe]')) eclaircir();
     }, sig);
 
