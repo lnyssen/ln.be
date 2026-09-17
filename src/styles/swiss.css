@@ -789,7 +789,7 @@
      durée est comptée pour une vitesse d'environ quarante pixels par seconde,
      quelle que soit la longueur de la bande. */
   .swiss .marquee-images .marquee-track {
-    animation-duration: 90s;
+    animation-duration: 55s;
   }
 
   .swiss .vitrine-image {

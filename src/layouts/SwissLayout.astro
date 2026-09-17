@@ -407,6 +407,7 @@ const ogImage = new URL('/og.png', Astro.site).href;
       let lignes = [];
       let sigma = 90;
       let creux = 162;
+      let zone = null;
 
       // La géométrie de repos : le centre de chaque signe, en coordonnées de
       // page et non d'écran, pour qu'un défilement pendant le survol ne décale
@@ -430,6 +431,16 @@ const ogImage = new URL('/og.png', Astro.site).href;
           par.get(cle).push(i);
         });
         lignes = [...par.values()];
+        // La zone d'écoute : le titre élargi de trois portées. Au-delà, l'effet
+        // est éteint de toute façon.
+        const r = h1.getBoundingClientRect();
+        const marge = sigma * 3;
+        zone = {
+          l: r.left + scrollX - marge,
+          r: r.right + scrollX + marge,
+          t: r.top + scrollY - marge,
+          b: r.bottom + scrollY + marge,
+        };
       };
 
       // Chaque signe s'épaissit sous le pointeur et s'allège tout autour. Le
@@ -512,16 +523,42 @@ const ogImage = new URL('/og.png', Astro.site).href;
         if (frame === null) frame = requestAnimationFrame(tick);
       };
 
-      h1.addEventListener('pointerenter', () => {
-        if (!pointer) measure();
-      });
+      // Le pointeur est suivi sur toute la page, pas seulement sur le titre.
+      // Le titre rogne ses blancs : son bloc s'arrête à la ligne de base. En
+      // descendant vers la section suivante, on le quittait donc tout près des
+      // lettres, au plus fort de l'effet, et tout retombait d'un coup au repos
+      // — le titre entier se recomposait sous la main. Désormais l'effet
+      // s'éteint avec la distance, qu'on soit dans le bloc ou non.
+      const auRepos = () => frame === null && glyphs.every((g) => g.painted === REST);
 
-      h1.addEventListener('pointermove', (event) => {
-        pointer = { x: event.pageX, y: event.pageY };
-        relancer();
-      });
+      addEventListener(
+        'pointermove',
+        (event) => {
+          if (event.pointerType && event.pointerType !== 'mouse' && event.pointerType !== 'pen') return;
+          const x = event.pageX;
+          const y = event.pageY;
+          if (!zone) measure();
+          const dedans = x > zone.l && x < zone.r && y > zone.t && y < zone.b;
+          // En entrant dans la zone, tout est posé : c'est le moment de relever
+          // la géométrie sans la fausser. Ailleurs sur la page, on ne mesure
+          // rien.
+          if (dedans && !pointer && auRepos()) measure();
+          if (!dedans) {
+            if (pointer) {
+              pointer = null;
+              relancer();
+            }
+            return;
+          }
+          pointer = { x, y };
+          relancer();
+        },
+        { passive: true },
+      );
 
-      h1.addEventListener('pointerleave', () => {
+      // La souris quitte la fenêtre : on repose tout.
+      document.documentElement.addEventListener('pointerleave', () => {
+        if (!pointer) return;
         pointer = null;
         relancer();
       });
