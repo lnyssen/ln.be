@@ -342,6 +342,10 @@ const ogImage = new URL('/og.png', Astro.site).href;
                 const span = document.createElement('span');
                 span.textContent = ch;
                 span.style.display = 'inline-block';
+                // Aligné par le haut de sa boîte et non par sa ligne de base :
+                // la hauteur de la ligne ne dépend plus des métriques de la
+                // graisse en cours, qui la faisaient varier de trois pixels.
+                span.style.verticalAlign = 'top';
                 frag.appendChild(span);
                 const g = { el: span, ch, w: 700, tw: 700, painted: 700, avant: precedent };
                 glyphs.push(g);
@@ -407,7 +411,7 @@ const ogImage = new URL('/og.png', Astro.site).href;
       let lignes = [];
       let sigma = 90;
       let creux = 162;
-      let zone = null;
+      let boite = null;
 
       // La géométrie de repos : le centre de chaque signe, en coordonnées de
       // page et non d'écran, pour qu'un défilement pendant le survol ne décale
@@ -431,16 +435,25 @@ const ogImage = new URL('/og.png', Astro.site).href;
           par.get(cle).push(i);
         });
         lignes = [...par.values()];
-        // La zone d'écoute : le titre élargi de trois portées. Au-delà, l'effet
-        // est éteint de toute façon.
+        const suite = h1.nextElementSibling;
+        const espace = suite ? parseFloat(getComputedStyle(suite).marginTop) || 72 : 72;
+        EXTINCTION = Math.min(72, espace * 0.8);
+        // La boîte du titre, en coordonnées de page.
         const r = h1.getBoundingClientRect();
-        const marge = sigma * 3;
-        zone = {
-          l: r.left + scrollX - marge,
-          r: r.right + scrollX + marge,
-          t: r.top + scrollY - marge,
-          b: r.bottom + scrollY + marge,
+        boite = {
+          l: r.left + scrollX,
+          r: r.right + scrollX,
+          t: r.top + scrollY,
+          b: r.bottom + scrollY,
         };
+      };
+
+      // Le titre garde sa hauteur de repos, écrite en dur. Quelle que soit la
+      // graisse de ses lettres, la page sous lui ne bouge plus d'un pixel :
+      // la ligne de section, la vitrine et tout le reste restent en place.
+      const figerHauteur = () => {
+        h1.style.height = '';
+        h1.style.height = `${h1.getBoundingClientRect().height}px`;
       };
 
       // Chaque signe s'épaissit sous le pointeur et s'allège tout autour. Le
@@ -457,6 +470,12 @@ const ogImage = new URL('/og.png', Astro.site).href;
             pres = Math.min(pres, dx * dx + dy * dy);
           }
           porte = Math.exp(-pres / (2 * sigma * sigma));
+          // Hors de la boîte du titre, l'effet s'éteint sur une courte
+          // distance : assez pour ne pas retomber d'un coup en sortant, assez
+          // court pour être éteint avant la vitrine, dont le survol faisait
+          // onduler le titre.
+          const hors = Math.max(boite.l - pointer.x, pointer.x - boite.r, boite.t - pointer.y, pointer.y - boite.b, 0);
+          porte *= Math.max(0, 1 - hors / EXTINCTION);
         }
 
         glyphs.forEach((g, i) => {
@@ -488,6 +507,9 @@ const ogImage = new URL('/og.png', Astro.site).href;
       // près d'une demi-seconde derrière la souris à 60 Hz. Constante de
       // soixante-dix millisecondes : la graisse suit la main sans à-coup.
       const TAU = 70;
+      // Distance, hors du titre, sur laquelle l'effet s'éteint : les quatre
+      // cinquièmes de l'espace qui le sépare de la vitrine, 72 px au plus.
+      let EXTINCTION = 72;
 
       const tick = (maintenant) => {
         const dt = Math.min(64, maintenant - (dernier || maintenant - 16));
@@ -537,8 +559,12 @@ const ogImage = new URL('/og.png', Astro.site).href;
           if (event.pointerType && event.pointerType !== 'mouse' && event.pointerType !== 'pen') return;
           const x = event.pageX;
           const y = event.pageY;
-          if (!zone) measure();
-          const dedans = x > zone.l && x < zone.r && y > zone.t && y < zone.b;
+          if (!boite) measure();
+          const dedans =
+            x > boite.l - EXTINCTION &&
+            x < boite.r + EXTINCTION &&
+            y > boite.t - EXTINCTION &&
+            y < boite.b + EXTINCTION;
           // En entrant dans la zone, tout est posé : c'est le moment de relever
           // la géométrie sans la fausser. Ailleurs sur la page, on ne mesure
           // rien.
@@ -572,11 +598,16 @@ const ogImage = new URL('/og.png', Astro.site).href;
           g.el.style.fontWeight = '';
         }
         crener();
+        figerHauteur();
         measure();
       });
 
-      if (document.fonts?.ready) document.fonts.ready.then(crener);
-      else crener();
+      const installer = () => {
+        crener();
+        figerHauteur();
+      };
+      if (document.fonts?.ready) document.fonts.ready.then(installer);
+      else installer();
     })();
   </script>
   </body>
