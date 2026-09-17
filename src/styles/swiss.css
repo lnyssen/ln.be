@@ -93,11 +93,11 @@
 /* Écran d'ordinateur peu haut — la plupart des portables, barre du
    navigateur déduite : le titre, la vitrine et ses images doivent tenir
    ensemble dans le premier écran. L'ouverture se resserre au-dessus du
-   titre et les images perdent un quart de leur hauteur. */
+   titre et les images se limitent à 200 px de haut. */
 @media (min-width: 768px) and (max-height: 900px) {
   .swiss {
     --ouverture-space: 60px;
-    --vitrine-h: 180px;
+    --vitrine-h: 200px;
   }
 }
 
@@ -841,14 +841,14 @@
 
   .swiss .vitrine-image {
     display: block;
-    height: 160px;
+    height: 220px;
     width: auto;
     transition: opacity 200ms ease;
   }
 
   @media (min-width: 768px) {
     .swiss .vitrine-image {
-      height: var(--vitrine-h, 240px);
+      height: var(--vitrine-h, 320px);
     }
   }
 
