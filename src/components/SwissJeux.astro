@@ -204,26 +204,43 @@
       lancerPluie();
     };
 
-    // La secousse : une accélération franche, deux fois en moins d'une
-    // demi-seconde. Un pas, un bus qui freine ne suffisent pas.
+    // La secousse : un vrai va-et-vient. Il faut trois à-coups violents —
+    // plus de 2,5 g — en moins d'une seconde, chacun dans le sens opposé au
+    // précédent. Lever le téléphone, marcher, le poser sur la table ne font
+    // qu'un pic, ou des pics dans le même sens : rien ne tombe. Et rien ne
+    // retombe tant que la pile est à l'écran, ni dans les quatre secondes qui
+    // suivent.
+    const SEUIL = 25;
     let pics = [];
     let repos = 0;
     const secouer = (event) => {
-      const a = event.acceleration;
-      let force = 0;
-      if (a && a.x != null) {
-        force = Math.hypot(a.x, a.y, a.z);
-      } else if (event.accelerationIncludingGravity?.x != null) {
-        const g = event.accelerationIncludingGravity;
-        force = Math.abs(Math.hypot(g.x, g.y, g.z) - 9.81);
-      }
       const t = event.timeStamp;
-      if (force < 14 || t < repos) return;
-      pics = pics.filter((p) => t - p < 500);
-      pics.push(t);
-      if (pics.length < 2) return;
+      if (t < repos || pieces.length) return;
+      let v = event.acceleration;
+      if (!v || v.x == null) {
+        // Sans l'accélération nette, on retire la pesanteur à la main :
+        // assez juste pour des pics de cette force.
+        const g = event.accelerationIncludingGravity;
+        if (!g || g.x == null) return;
+        const n = Math.hypot(g.x, g.y, g.z) || 1;
+        const exces = n - 9.81;
+        v = { x: (g.x / n) * exces, y: (g.y / n) * exces, z: (g.z / n) * exces };
+      }
+      const force = Math.hypot(v.x, v.y, v.z);
+      if (force < SEUIL) return;
+      pics = pics.filter((p) => t - p.t < 1000);
+      const dernier = pics[pics.length - 1];
+      // Un même à-coup dure plusieurs mesures : on n'en garde qu'une.
+      if (dernier && t - dernier.t < 90) return;
+      // Le pic doit repartir dans l'autre sens.
+      if (dernier && v.x * dernier.v.x + v.y * dernier.v.y + v.z * dernier.v.z >= 0) {
+        pics = [{ t, v }];
+        return;
+      }
+      pics.push({ t, v });
+      if (pics.length < 3) return;
       pics = [];
-      repos = t + 1200;
+      repos = t + 4000;
       clearTimeout(minuterie);
       effacerApres = true;
       pleuvoir();
