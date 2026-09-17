@@ -4,6 +4,7 @@ import '../styles/swiss.css';
 import SwissCursor from '../components/SwissCursor.jsx';
 import SwissGrid from '../components/SwissGrid.astro';
 import SwissDock from '../components/SwissDock.astro';
+import SwissJeux from '../components/SwissJeux.astro';
 import SwissLab from '../components/SwissLab.astro';
 
 interface Props {
@@ -130,6 +131,8 @@ const ogImage = new URL('/og.png', Astro.site).href;
           if (teinte) root.dataset.swissAccent = teinte;
           else delete root.dataset.swissAccent;
 
+          poserTeinte();
+
           // La barre du navigateur est teintée après le thème et la teinte,
           // pas avant : elle lit le papier réellement appliqué.
           poserBarre();
@@ -143,6 +146,59 @@ const ogImage = new URL('/og.png', Astro.site).href;
             root.dataset.swissCursor = '';
           }
         };
+
+        // La teinte d'accent vit. Sans choix du visiteur, elle suit l'heure
+        // de Bruxelles : froide le matin, la violette de la marque vers midi,
+        // chaude le soir. Au survol d'une image de la vitrine, elle prend la
+        // couleur du projet. Un choix fait à la capsule, ou le mode encre,
+        // l'emportent sur les deux.
+        //
+        // La couleur se construit en OKLCH : à clarté égale, toutes les
+        // teintes pèsent pareil et gardent le même contraste sur le papier —
+        // 0,50 sur fond clair, 0,78 sur fond sombre. C'est la teinte qui
+        // change, jamais la lisibilité.
+        const PALIERS = [
+          [0, 295], [5, 270], [8, 235], [12, 285],
+          [16, 320], [19, 15], [21, 10], [23, 300], [24, 295],
+        ];
+        const teinteHeure = () => {
+          let h = 12;
+          try {
+            const parts = new Intl.DateTimeFormat('en-GB', {
+              timeZone: 'Europe/Brussels', hour: 'numeric', minute: 'numeric', hourCycle: 'h23',
+            }).formatToParts(new Date());
+            const val = (t) => Number(parts.find((p) => p.type === t)?.value || 0);
+            h = val('hour') + val('minute') / 60;
+          } catch {}
+          for (let i = 0; i < PALIERS.length - 1; i++) {
+            const [h0, t0] = PALIERS[i];
+            const [h1, t1] = PALIERS[i + 1];
+            if (h >= h0 && h <= h1) {
+              // Le plus court chemin sur le cercle des teintes.
+              let d = t1 - t0;
+              if (d > 180) d -= 360;
+              if (d < -180) d += 360;
+              return (t0 + d * ((h - h0) / (h1 - h0)) + 360) % 360;
+            }
+          }
+          return 285;
+        };
+        window.__teinte = window.__teinte || { projet: null };
+        const poserTeinte = () => {
+          const root = document.documentElement;
+          const choisie = root.dataset.swissAccent || root.classList.contains('ink-on');
+          const projet = window.__teinte.projet;
+          if (choisie && !projet) {
+            root.style.removeProperty('--accent');
+            return;
+          }
+          const sombre = root.dataset.swissTheme === 'dark';
+          const teinte = projet ? projet.teinte : teinteHeure();
+          const chroma = projet ? projet.chroma : 0.17;
+          const clarte = sombre ? 0.78 : 0.5;
+          root.style.setProperty('--accent', `oklch(${clarte} ${chroma.toFixed(3)} ${teinte.toFixed(1)})`);
+        };
+        window.__teinte.poser = poserTeinte;
 
         // Safari teinte ses barres avec cette valeur, et c'est ce qui fait
         // déborder le violet du pied de page dans la barre d'adresse quand on
@@ -190,10 +246,16 @@ const ogImage = new URL('/og.png', Astro.site).href;
         // Le thème peut changer sans passer par ici — l'interrupteur du bas,
         // la touche du mode encre. On suit l'attribut plutôt que celui qui le
         // pose.
-        new MutationObserver(poserBarre).observe(document.documentElement, {
+        new MutationObserver(() => {
+          poserTeinte();
+          poserBarre();
+        }).observe(document.documentElement, {
           attributes: true,
-          attributeFilter: ['data-swiss-theme', 'class'],
+          attributeFilter: ['data-swiss-theme', 'data-swiss-accent', 'class'],
         });
+
+        // L'heure avance : la teinte suit, à la minute.
+        setInterval(poserTeinte, 60000);
 
         // Le logo ne se trace qu'à la première page vue : le revoir se
         // dessiner à chaque navigation lasserait. Le drapeau est posé avant
@@ -224,6 +286,7 @@ const ogImage = new URL('/og.png', Astro.site).href;
     <slot />
     <SwissDock />
     <SwissLab />
+    <SwissJeux />
     <SwissCursor client:idle />
 
     <script is:inline data-astro-rerun>
@@ -320,8 +383,10 @@ const ogImage = new URL('/og.png', Astro.site).href;
     (() => {
       const h1 = document.querySelector('h1.swiss-display');
       if (!h1) return;
-      if (!matchMedia('(pointer: fine)').matches) return;
       if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      // Sans souris, c'est le défilement qui promène un pointeur virtuel sur
+      // le titre : le doigt fait respirer la typographie en faisant défiler.
+      const souris = matchMedia('(pointer: fine)').matches;
 
       // Découpe en signes, les espaces restant du texte nu : une espace dans
       // un bloc en ligne se réduirait à rien.
@@ -604,6 +669,46 @@ const ogImage = new URL('/og.png', Astro.site).href;
         },
         { passive: true },
       );
+
+      // Au doigt : pendant le défilement, un point parcourt le titre en
+      // diagonale, du coin haut gauche au coin bas droit, à mesure que le
+      // titre remonte. Le défilement s'arrête, le titre se repose.
+      if (!souris) {
+        let repos = null;
+        addEventListener(
+          'scroll',
+          () => {
+            if (!boite) measure();
+            const course = Math.max(1, boite.b);
+            const p = Math.min(1, Math.max(0, scrollY / course));
+            // On ne relève la géométrie qu'en entrant dans la course, titre au
+            // repos : ailleurs, le défilement ne coûte rien.
+            if (p > 0 && p < 1 && !pointer && auRepos()) measure();
+            if (p <= 0 || p >= 1) {
+              if (pointer) {
+                pointer = null;
+                relancer();
+              }
+              return;
+            }
+            // Trois allers-retours sur la largeur, un par ligne.
+            const lignesParcourues = p * 3;
+            const dansLaLigne = lignesParcourues % 1;
+            const sens = Math.floor(lignesParcourues) % 2 === 0 ? dansLaLigne : 1 - dansLaLigne;
+            pointer = {
+              x: boite.l + (boite.r - boite.l) * (0.08 + 0.84 * sens),
+              y: boite.t + (boite.b - boite.t) * Math.min(0.97, p),
+            };
+            relancer();
+            clearTimeout(repos);
+            repos = setTimeout(() => {
+              pointer = null;
+              relancer();
+            }, 160);
+          },
+          { passive: true },
+        );
+      }
 
       // La souris quitte la fenêtre : on repose tout.
       document.documentElement.addEventListener('pointerleave', () => {

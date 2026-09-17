@@ -13,6 +13,10 @@ const projects = defineCollection({
       .array(z.union([z.string(), z.object({ src: z.string(), alt: z.string() })]))
       .default([]),
     link: z.string().optional(),
+    // Couleur du projet, en hexadécimal (« accent: "#1f45d6" »). Au survol
+    // de sa vignette, le site prend cette teinte. Sans elle, la teinte est
+    // lue dans l'image.
+    accent: z.string().optional(),
   }),
 });
 

@@ -28,11 +28,15 @@ const rendered = await Promise.all(
 // La bande d'images : le premier visuel de chaque projet, dans l'ordre de
 // l'index. C'est ce qu'on voit en arrivant, avant même d'ouvrir une ligne.
 const vitrine = rendered
-  .map(({ project, slug }) => ({
-    slug,
-    title: project.data.title,
-    asset: resolveImage(project.data.images?.[0]),
-  }))
+  .map(({ project, slug }) => {
+    const premiere = project.data.images?.[0];
+    return {
+      slug,
+      title: project.data.title,
+      accent: project.data.accent,
+      asset: resolveImage(typeof premiere === 'string' ? premiere : premiere?.src),
+    };
+  })
   .filter((v) => v.asset !== null);
 
 const skills = [
@@ -91,6 +95,8 @@ function domainLabel(link: string) {
                       <a
                         href="#work"
                         data-ouvrir={v.slug}
+                        data-titre={v.title}
+                        data-accent={v.accent}
                         tabindex={tour === 1 ? -1 : undefined}
                         class="vitrine-lien block"
                       >
@@ -373,6 +379,109 @@ function domainLabel(link: string) {
   <SwissFooter />
 
   <script is:inline data-astro-rerun>
+    // Au survol d'un visuel de la vitrine, le site prend la couleur du
+    // projet. On lit l'image elle-même, réduite à quelques pixels : chaque
+    // pixel vote pour sa teinte, d'autant plus fort qu'il est saturé et ni
+    // trop clair ni trop sombre. La teinte qui l'emporte donne l'accent ; sa
+    // clarté, elle, reste celle du thème, pour que le texte reste lisible.
+    // Une image grise ne change rien.
+    (() => {
+      const teinte = window.__teinte;
+      if (!teinte?.poser) return;
+      const cache = new Map();
+      const toile = document.createElement('canvas');
+      toile.width = 32;
+      toile.height = 20;
+      const ctx = toile.getContext('2d', { willReadFrequently: true });
+
+      const lin = (c) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
+      const versOklch = (r, g, b) => {
+        const R = lin(r / 255), G = lin(g / 255), B = lin(b / 255);
+        const l = Math.cbrt(0.4122214708 * R + 0.5363325363 * G + 0.0514459929 * B);
+        const m = Math.cbrt(0.2119034982 * R + 0.6806995451 * G + 0.1073969566 * B);
+        const s = Math.cbrt(0.0883024619 * R + 0.2817188376 * G + 0.6299787005 * B);
+        const a = 1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s;
+        const bb = 0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s;
+        return { c: Math.hypot(a, bb), h: (Math.atan2(bb, a) * 180) / Math.PI + 360 };
+      };
+
+      const lire = (img) => {
+        const cle = img.currentSrc || img.src;
+        if (cache.has(cle)) return cache.get(cle);
+        let res = null;
+        try {
+          ctx.drawImage(img, 0, 0, toile.width, toile.height);
+          const px = ctx.getImageData(0, 0, toile.width, toile.height).data;
+          const cases = Array.from({ length: 12 }, () => ({ poids: 0, r: 0, g: 0, b: 0 }));
+          let total = 0;
+          for (let i = 0; i < px.length; i += 4) {
+            const r = px[i], g = px[i + 1], b = px[i + 2];
+            const { c: intensite, h } = versOklch(r, g, b);
+            // Les tons neutres — bois, papier, peau, béton — sont partout sur
+            // des photos de projet et ne disent rien de l'identité. Ils ne
+            // votent pas. Au-delà, le vote croît avec le carré de l'intensité :
+            // une banderole bleue franche l'emporte sur un plafond de bois
+            // trois fois plus étendu.
+            if (intensite < 0.07) continue;
+            let poids = intensite * intensite * 100;
+            // Bois, carton, peau : des ocres d'intensité moyenne, présents sur
+            // presque toutes les photos de mise en situation. Ils ne votent
+            // qu'à peine, sauf quand ils sont francs — une affiche orange reste
+            // orange.
+            if (h % 360 > 25 && h % 360 < 80 && intensite < 0.15) poids *= 0.12;
+            const c = cases[Math.floor((h % 360) / 30)];
+            c.poids += poids;
+            c.r += r * poids;
+            c.g += g * poids;
+            c.b += b * poids;
+            total += poids;
+          }
+          const meilleure = cases.reduce((a, b) => (b.poids > a.poids ? b : a));
+          if (total > 0.6 && meilleure.poids > 0) {
+            const { c, h } = versOklch(
+              meilleure.r / meilleure.poids,
+              meilleure.g / meilleure.poids,
+              meilleure.b / meilleure.poids,
+            );
+            res = { teinte: h % 360, chroma: Math.min(0.2, Math.max(0.1, c * 1.4)) };
+          }
+        } catch {}
+        cache.set(cle, res);
+        return res;
+      };
+
+      let sortie = null;
+      document.addEventListener('pointerover', (event) => {
+        const lien = event.target.closest?.('.vitrine [data-ouvrir]');
+        if (!lien) return;
+        const img = lien.querySelector('img');
+        let couleur = null;
+        const impose = /^#([0-9a-f]{6})$/i.exec(lien.dataset.accent || '');
+        if (impose) {
+          const n = parseInt(impose[1], 16);
+          const { c, h } = versOklch((n >> 16) & 255, (n >> 8) & 255, n & 255);
+          couleur = { teinte: h % 360, chroma: Math.min(0.2, Math.max(0.1, c)) };
+        } else if (img?.complete) {
+          couleur = lire(img);
+        }
+        if (!couleur) return;
+        clearTimeout(sortie);
+        teinte.projet = couleur;
+        teinte.poser();
+      });
+      document.addEventListener('pointerout', (event) => {
+        const lien = event.target.closest?.('.vitrine [data-ouvrir]');
+        if (!lien || lien.contains(event.relatedTarget)) return;
+        // Un court délai : passer d'une image à la voisine ne repasse pas par
+        // la teinte de base.
+        clearTimeout(sortie);
+        sortie = setTimeout(() => {
+          teinte.projet = null;
+          teinte.poser();
+        }, 160);
+      });
+    })();
+
     // Un visuel de la vitrine ouvre sa ligne dans l'index et la ramène sous
     // la barre. Sans script, le lien descend simplement à la liste.
     //

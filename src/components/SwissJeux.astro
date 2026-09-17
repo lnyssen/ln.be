@@ -1,0 +1,223 @@
+---
+// Un jeu posé sur toute la page, sous la barre et la capsule, au-dessus du
+// contenu, sans capter le pointeur.
+// P : une pluie de formes du Polographe, qui s'empilent au bas de l'écran —
+//     « piled up into chaos ». Échap les efface.
+---
+
+<canvas data-jeu-pluie class="pointer-events-none fixed inset-0 z-[44]" aria-hidden="true"></canvas>
+
+<script is:inline data-astro-rerun>
+  (() => {
+    const pluie = document.querySelector('[data-jeu-pluie]');
+    if (!pluie) return;
+    // Une navigation interne relance ce script : on détache d'abord les
+    // écouteurs de la page précédente, qui dessineraient sur des toiles
+    // disparues.
+    window.__jeuxStop?.();
+    const arret = new AbortController();
+    const sig = { signal: arret.signal };
+    window.__jeuxStop = () => arret.abort();
+    const calme = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // La couleur se relit au moment de dessiner : elle suit l'heure, la
+    // teinte choisie et le projet survolé.
+    const sonde = document.createElement('span');
+    sonde.style.cssText = 'position:absolute;visibility:hidden;color:var(--accent)';
+    document.body.appendChild(sonde);
+    const encre = () => getComputedStyle(sonde).color;
+
+    let L = 0;
+    let H = 0;
+    let dpr = 1;
+    const dimensionner = () => {
+      dpr = Math.min(2, devicePixelRatio || 1);
+      L = innerWidth;
+      H = innerHeight;
+      for (const c of [pluie]) {
+        c.width = Math.round(L * dpr);
+        c.height = Math.round(H * dpr);
+        c.style.width = `${L}px`;
+        c.style.height = `${H}px`;
+        c.getContext('2d').setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+    };
+    dimensionner();
+
+    /* ---------- La pluie ------------------------------------------------ */
+
+    const gp = pluie.getContext('2d');
+    const FORMES = ['quart', 'cercle', 'demi', 'triangle', 'carre'];
+    let case_ = 56;
+    let colonnes = 0;
+    let marge = 0;
+    let hauteurs = [];
+    let pieces = [];
+    let pluieTourne = false;
+
+    const grille = () => {
+      case_ = Math.round(Math.min(72, Math.max(40, L / 16)));
+      colonnes = Math.floor(L / case_);
+      marge = (L - colonnes * case_) / 2;
+      hauteurs = new Array(colonnes).fill(0);
+    };
+    grille();
+
+    // Chaque forme tient dans sa case et la touche, comme sur les affiches.
+    const dessiner = (g, forme, x, y, s, rot) => {
+      g.save();
+      g.translate(x + s / 2, y + s / 2);
+      g.rotate((rot * Math.PI) / 2);
+      g.translate(-s / 2, -s / 2);
+      g.beginPath();
+      if (forme === 'quart') {
+        g.moveTo(s, s);
+        g.arc(s, s, s, Math.PI, 1.5 * Math.PI);
+        g.closePath();
+      } else if (forme === 'cercle') {
+        g.arc(s / 2, s / 2, s / 2, 0, 2 * Math.PI);
+      } else if (forme === 'demi') {
+        g.arc(s / 2, s, s / 2, Math.PI, 2 * Math.PI);
+        g.closePath();
+      } else if (forme === 'triangle') {
+        g.moveTo(0, s);
+        g.lineTo(s / 2, 0);
+        g.lineTo(s, s);
+        g.closePath();
+      } else {
+        g.rect(s * 0.25, s * 0.25, s * 0.5, s * 0.5);
+      }
+      g.restore();
+      g.stroke();
+    };
+
+    const peindrePluie = () => {
+      gp.clearRect(0, 0, L, H);
+      gp.strokeStyle = encre();
+      gp.lineWidth = 2;
+      gp.lineJoin = 'round';
+      for (const p of pieces) {
+        gp.globalAlpha = p.alpha;
+        dessiner(gp, p.forme, marge + p.col * case_ + 1, p.y + 1, case_ - 2, p.rot);
+      }
+      gp.globalAlpha = 1;
+    };
+
+    let dernier = 0;
+    const animerPluie = (t) => {
+      const dt = Math.min(0.05, (t - (dernier || t)) / 1000);
+      dernier = t;
+      let encore = false;
+      for (const p of pieces) {
+        if (p.attente > 0) {
+          p.attente -= dt;
+          encore = true;
+          continue;
+        }
+        if (p.pose) continue;
+        p.v += 2600 * dt;
+        p.y += p.v * dt;
+        if (p.y >= p.cible) {
+          p.y = p.cible;
+          // Un rebond, un seul, bref : la forme se pose, elle ne danse pas.
+          if (!p.rebondi && p.v > 300) {
+            p.v = -p.v * 0.22;
+            p.rebondi = true;
+          } else {
+            p.pose = true;
+            p.v = 0;
+          }
+        }
+        encore = true;
+      }
+      for (const p of pieces) {
+        if (p.efface) {
+          p.alpha -= dt * 2.5;
+          encore = true;
+        }
+      }
+      pieces = pieces.filter((p) => p.alpha > 0);
+      peindrePluie();
+      if (encore) requestAnimationFrame(animerPluie);
+      else {
+        pluieTourne = false;
+        dernier = 0;
+      }
+    };
+
+    const lancerPluie = () => {
+      if (pluieTourne) return;
+      pluieTourne = true;
+      requestAnimationFrame(animerPluie);
+    };
+
+    const pleuvoir = () => {
+      const plafond = Math.floor((H * 0.72) / case_);
+      const nombre = Math.max(10, Math.round(colonnes * 1.2));
+      for (let i = 0; i < nombre; i++) {
+        const libres = [];
+        for (let c = 0; c < colonnes; c++) if (hauteurs[c] < plafond) libres.push(c);
+        if (!libres.length) break;
+        // Les colonnes basses attirent davantage : la pile monte en désordre
+        // mais sans tour isolée.
+        libres.sort((a, b) => hauteurs[a] - hauteurs[b]);
+        const col = libres[Math.floor(Math.random() ** 1.6 * libres.length)];
+        hauteurs[col]++;
+        const cible = H - hauteurs[col] * case_;
+        pieces.push({
+          forme: FORMES[Math.floor(Math.random() * FORMES.length)],
+          rot: Math.floor(Math.random() * 4),
+          col,
+          cible,
+          y: calme ? cible : -case_ - Math.random() * case_ * 2,
+          v: 0,
+          attente: calme ? 0 : i * 0.06 + Math.random() * 0.08,
+          pose: calme,
+          alpha: 1,
+        });
+      }
+      if (calme) peindrePluie();
+      else lancerPluie();
+    };
+
+    const eclaircir = () => {
+      if (!pieces.length) return;
+      if (calme) {
+        pieces = [];
+        grille();
+        peindrePluie();
+        return;
+      }
+      for (const p of pieces) p.efface = true;
+      grille();
+      lancerPluie();
+    };
+
+    document.addEventListener('keydown', (event) => {
+      if (event.metaKey || event.ctrlKey || event.altKey) return;
+      const t = event.target;
+      if (t?.tagName === 'INPUT' || t?.tagName === 'TEXTAREA' || t?.isContentEditable) return;
+      if (event.key.toLowerCase() === 'p') pleuvoir();
+      else if (event.key === 'Escape' && pieces.length && !document.querySelector('[data-loupe]')) eclaircir();
+    }, sig);
+
+    // La teinte change — l'heure, la capsule, un projet survolé, le thème :
+    // la pile se repeint pendant le fondu.
+    new MutationObserver(() => {
+      if (!pieces.length || pluieTourne) return;
+      const debut = performance.now();
+      const suivre = (t) => {
+        peindrePluie();
+        if (t - debut < 800) requestAnimationFrame(suivre);
+      };
+      requestAnimationFrame(suivre);
+    }).observe(document.documentElement, { attributes: true, attributeFilter: ['style', 'class', 'data-swiss-theme', 'data-swiss-accent'] });
+
+    addEventListener('resize', () => {
+      dimensionner();
+      pieces = [];
+      grille();
+      peindrePluie();
+    }, sig);
+  })();
+</script>

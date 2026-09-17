@@ -2,6 +2,7 @@
 title: "Silicones Europe"
 slug: "silicones-europe"
 order: 9
+accent: "#34409a"
 tags: ["Rebranding", "Print"]
 images:
   - "/images/silicones-europe-1.jpg"

@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 // lisible dans les deux thèmes sans rien savoir d'eux. Sur un élément
 // interactif, il s'étire en étiquette qui dit ce qui va se passer.
 function labelFor(node) {
-  if (!node) return null;
+  if (!node?.closest) return null;
 
   // La barre de navigation garde le disque nu : trop d'étiquettes y
   // défileraient pour trois liens courts. Un bouton marqué en miroir fait
@@ -78,8 +78,9 @@ function labelFor(node) {
   if (node.closest('[data-weight-toggle]')) return 'WEIGHT';
   if (node.closest('[role="switch"]')) return 'THEME';
 
-  // Un visuel de la vitrine ouvre son projet dans l'index.
-  if (node.closest('[data-ouvrir]')) return 'VIEW';
+  // Un visuel de la vitrine dit le nom du projet qu'il ouvre.
+  const vitrine = node.closest('[data-ouvrir]');
+  if (vitrine) return { mot: vitrine.dataset.titre || 'View', signe: 'VIEW' };
 
   const link = node.closest('a');
   if (!link) return node.closest('button') ? 'CLICK' : null;

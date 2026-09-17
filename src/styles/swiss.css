@@ -11,6 +11,15 @@
   font-display: swap;
 }
 
+/* L'accent est déclaré comme une couleur : le navigateur sait alors passer
+   d'une teinte à l'autre en fondu, au lieu de sauter. C'est ce qui rend
+   vivant le glissement vers la couleur d'un projet survolé, et le retour. */
+@property --accent {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #7b58e8;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -34,6 +43,7 @@
      sans qu'on ait à décider deux fois. */
   --footer-bg: var(--accent);
   --footer-fg: var(--paper);
+  transition: --accent 700ms cubic-bezier(0.22, 1, 0.36, 1);
   --footer-h: 280px;
   --header-h: 75px;
   /* Respiration unique : distance entre un filet et le texte, en haut comme
@@ -65,10 +75,29 @@
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .swiss {
+    transition: none;
+  }
+}
+
+
 @media (min-width: 768px) {
   .swiss {
     --header-h: 77px;
     --ouverture-space: 120px;
+    --ouverture-vitrine: 60px;
+  }
+}
+
+/* Écran d'ordinateur peu haut — la plupart des portables, barre du
+   navigateur déduite : le titre, la vitrine et ses images doivent tenir
+   ensemble dans le premier écran. L'ouverture se resserre au-dessus du
+   titre et les images perdent un quart de leur hauteur. */
+@media (min-width: 768px) and (max-height: 900px) {
+  .swiss {
+    --ouverture-space: 60px;
+    --vitrine-h: 180px;
   }
 }
 
@@ -808,7 +837,7 @@
 
   @media (min-width: 768px) {
     .swiss .vitrine-image {
-      height: 240px;
+      height: var(--vitrine-h, 240px);
     }
   }
 
@@ -1048,6 +1077,12 @@
 
   .swiss main section.section-ouverture > h1 + [class*="border-t"] {
     margin-top: var(--ouverture-space);
+  }
+
+  /* La vitrine suit le titre de plus près : elle doit entrer dans le premier
+     écran. Sous le titre, l'espace tombe à 60 px sur grand écran. */
+  .swiss main section.section-ouverture > h1 + .vitrine {
+    margin-top: var(--ouverture-vitrine, var(--ouverture-space));
   }
 
   /* La présentation suit la vitrine au rythme commun. */
