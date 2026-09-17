@@ -6,6 +6,8 @@ import SwissFooter from '../components/SwissFooter.astro';
 import also from '../data/also.json';
 import SwissArrow from '../components/SwissArrow.astro';
 import SwissFilmstrip from '../components/SwissFilmstrip.astro';
+import { Image } from 'astro:assets';
+import { resolveImage } from '../lib/images';
 
 const projects = (await getCollection('projects')).sort(
   (a, b) => a.data.order - b.data.order
@@ -22,6 +24,16 @@ const rendered = await Promise.all(
     return { project, slug, Body: hasBody ? Content : null, remarkPluginFrontmatter };
   })
 );
+
+// La bande d'images : le premier visuel de chaque projet, dans l'ordre de
+// l'index. C'est ce qu'on voit en arrivant, avant même d'ouvrir une ligne.
+const vitrine = rendered
+  .map(({ project, slug }) => ({
+    slug,
+    title: project.data.title,
+    asset: resolveImage(project.data.images?.[0]),
+  }))
+  .filter((v) => v.asset !== null);
 
 const skills = [
   'Brand Strategy',
@@ -61,6 +73,46 @@ function domainLabel(link: string) {
       <h1 class="swiss-display" data-reveal data-reveal-slow>
         Bold identities<br />and digital<br />experiences<span class="titre-point">.</span>
       </h1>
+
+      <!-- Vitrine : une bande de visuels, un par projet, qui défile comme la
+           bande des compétences et ralentit de même au survol. Posée juste
+           sous le titre : placée sous la présentation, elle commençait à
+           964 px sur un écran de 800 — on arrivait toujours sans une image.
+           Un visuel mène à sa ligne, qui s'ouvre. La bande est doublée pour
+           boucler sans couture ; la copie est cachée aux lecteurs d'écran. -->
+      <div class="vitrine border-t border-[var(--rule)]" role="region" aria-label="Aperçu des projets" data-reveal data-reveal-slow data-reveal-delay="80">
+        <div class="marquee marquee-images overflow-hidden">
+          <div class="marquee-track flex w-max">
+            {
+              [0, 1].map((tour) => (
+                <ul class="flex shrink-0 list-none gap-[10px] pr-[10px]" aria-hidden={tour === 1 ? 'true' : undefined}>
+                  {vitrine.map((v, i) => (
+                    <li class="shrink-0">
+                      <a
+                        href="#work"
+                        data-ouvrir={v.slug}
+                        tabindex={tour === 1 ? -1 : undefined}
+                        class="vitrine-lien block"
+                      >
+                        <Image
+                          src={v.asset!}
+                          alt={v.title}
+                          widths={[360, 540, 720, 1080]}
+                          sizes="(min-width: 768px) 360px, 240px"
+                          format="webp"
+                          quality={78}
+                          loading={i < 5 && tour === 0 ? 'eager' : 'lazy'}
+                          class="vitrine-image aspect-[3/2] object-cover"
+                        />
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              ))
+            }
+          </div>
+        </div>
+      </div>
 
       <div class="swiss-grid gap-y-6 border-t border-[var(--rule)]" data-reveal data-reveal-slow data-reveal-delay="140">
         <h2 class="section-label swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">Profile
@@ -321,14 +373,30 @@ function domainLabel(link: string) {
   <SwissFooter />
 
   <script is:inline data-astro-rerun>
+    // Un visuel de la vitrine ouvre sa ligne dans l'index et la ramène sous
+    // les yeux. Sans script, le lien descend simplement à la liste.
+    document.addEventListener('click', (event) => {
+      const lien = event.target.closest('[data-ouvrir]');
+      if (!lien) return;
+      const ligne = document.querySelector(`#work details[data-slug="${lien.dataset.ouvrir}"]`);
+      if (!ligne) return;
+      event.preventDefault();
+      ligne.open = true;
+      requestAnimationFrame(() => {
+        ligne.querySelector('summary')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+  </script>
+
+  <script is:inline data-astro-rerun>
     // La bande des compétences ralentit au survol au lieu de s'arrêter : une
     // piste qui se fige se lit comme une panne, une piste qui traîne se lit
     // comme une invitation à lire. Le CSS ne sait faire que le tout ou rien,
     // on règle donc la vitesse de lecture de son animation — elle reste la
     // sienne, et tient sans JavaScript.
-    (() => {
-      const bande = document.querySelector('.marquee');
-      const piste = bande?.querySelector('.marquee-track');
+    // Il vaut pour chaque bande de la page : les compétences et la vitrine.
+    for (const bande of document.querySelectorAll('.marquee')) (() => {
+      const piste = bande.querySelector('.marquee-track');
       if (!piste || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
       const anim = piste.getAnimations?.()[0];

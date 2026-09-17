@@ -78,6 +78,9 @@ function labelFor(node) {
   if (node.closest('[data-weight-toggle]')) return 'WEIGHT';
   if (node.closest('[role="switch"]')) return 'THEME';
 
+  // Un visuel de la vitrine ouvre son projet dans l'index.
+  if (node.closest('[data-ouvrir]')) return 'VIEW';
+
   const link = node.closest('a');
   if (!link) return node.closest('button') ? 'CLICK' : null;
 

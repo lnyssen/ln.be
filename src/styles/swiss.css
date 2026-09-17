@@ -784,6 +784,32 @@
     animation: marquee 10s linear infinite;
   }
 
+  /* La vitrine prend le rythme des sections et défile plus lentement que les
+     mots : une image se regarde plus longtemps qu'un intitulé ne se lit. Sa
+     durée est comptée pour une vitesse d'environ quarante pixels par seconde,
+     quelle que soit la longueur de la bande. */
+  .swiss .marquee-images .marquee-track {
+    animation-duration: 90s;
+  }
+
+  .swiss .vitrine-image {
+    display: block;
+    height: 160px;
+    width: auto;
+    transition: opacity 200ms ease;
+  }
+
+  @media (min-width: 768px) {
+    .swiss .vitrine-image {
+      height: 240px;
+    }
+  }
+
+  .swiss .vitrine-lien:hover .vitrine-image,
+  .swiss .vitrine-lien:focus-visible .vitrine-image {
+    opacity: 0.82;
+  }
+
   /* Au clavier, l'arrêt reste net : on n'y survole pas, on y arrive d'un
      coup. Le survol, lui, est passé au JavaScript, qui sait ralentir. */
   .swiss .marquee:focus-within .marquee-track {
@@ -1010,6 +1036,11 @@
 
   .swiss main section.section-ouverture > h1 + [class*="border-t"] {
     margin-top: var(--ouverture-space);
+  }
+
+  /* La présentation suit la vitrine au rythme commun. */
+  .swiss main section.section-ouverture > .vitrine + [class*="border-t"] {
+    margin-top: var(--section-space);
   }
 
   /* Les deux renvois respirent plus large que le reste : ce n'est pas une
@@ -1369,6 +1400,10 @@
     letter-spacing: -0.045em;
     text-transform: uppercase;
     font-weight: 700;
+    /* Le titre change de graisse lettre par lettre au survol : chaque
+       changement recalcule sa mise en page. Le confinement la garde dans le
+       titre au lieu de la propager à toute la page. */
+    contain: layout;
   }
 
   .swiss .swiss-lede {
