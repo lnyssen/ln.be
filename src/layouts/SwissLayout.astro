@@ -182,14 +182,30 @@ const ogImage = new URL('/og.png', Astro.site).href;
           }
           return 285;
         };
+        // Les teintes de la capsule, relevées sur leurs couleurs d'origine :
+        // [teinte, saturation].
+        const GAMME = {
+          vermillon: [32, 0.18],
+          outremer: [266, 0.2],
+          veronese: [161, 0.13],
+          safran: [66, 0.13],
+        };
+        // Une même couleur dans les deux thèmes : même teinte, même
+        // saturation, et seulement l'écart de clarté qu'exige la lecture —
+        // 0,52 sur le papier clair, 0,66 sur le fond sombre, soit au moins
+        // 4,5:1 dans les deux cas. L'écart était de 0,50 à 0,78 : si clair
+        // en sombre que l'écran ne pouvait plus y mettre de saturation, et
+        // le violet devenait lavande, le vermillon corail.
         const poserTeinte = () => {
           const root = document.documentElement;
-          if (root.dataset.swissAccent || root.classList.contains('ink-on')) {
+          if (root.classList.contains('ink-on')) {
             root.style.removeProperty('--accent');
             return;
           }
-          const clarte = root.dataset.swissTheme === 'dark' ? 0.78 : 0.5;
-          root.style.setProperty('--accent', `oklch(${clarte} 0.170 ${teinteHeure().toFixed(1)})`);
+          const choisie = GAMME[root.dataset.swissAccent];
+          const [teinte, chroma] = choisie || [teinteHeure(), 0.17];
+          const clarte = root.dataset.swissTheme === 'dark' ? 0.66 : 0.52;
+          root.style.setProperty('--accent', `oklch(${clarte} ${chroma.toFixed(3)} ${teinte.toFixed(1)})`);
         };
 
         // Safari teinte ses barres avec cette valeur, et c'est ce qui fait
