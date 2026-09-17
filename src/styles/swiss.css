@@ -656,8 +656,8 @@
     isolation: isolate;
     background-color: var(--header-bg);
     border: 1px solid var(--rule);
-    -webkit-backdrop-filter: blur(22px) saturate(1.1);
-    backdrop-filter: blur(22px) saturate(1.1);
+    -webkit-backdrop-filter: blur(36px) saturate(1.2);
+    backdrop-filter: blur(36px) saturate(1.2);
   }
 
   /* La capsule d'outils est un objet constant : elle reste blanche quel que
@@ -1165,7 +1165,7 @@
   .swiss .swiss-menu .menu-card {
     opacity: 0;
     transform: translateY(-14px) scale(0.97);
-    transform-origin: top center;
+    transform-origin: top right;
     /* La carte est promue sur sa propre couche pendant le trajet : sans cela
        le navigateur la recompose à chaque image, et le mouvement accroche. */
     will-change: transform, opacity;
@@ -1202,17 +1202,28 @@
     }
   }
 
-  /* La carte du menu partage la matière de la barre : même verre, même
-     contour. */
-  /* La carte est du papier plein, comme la barre au-dessus d'elle. En verre,
-     elle prenait la couleur de ce qui passait derrière : le texte de la page,
-     flouté, l'éclaircissait d'un ton, et les deux surfaces ne se
-     ressemblaient plus. L'ombre portée la grisait par-dessus le marché. */
+  /* La carte du menu prend la matière de la barre : même verre, même
+     contour. Elle occupe la moitié de la largeur, au moins ce qu'il faut à
+     son plus long intitulé, et se range à droite, sous le bouton qui
+     l'ouvre — c'est de là qu'elle se déplie. */
   .swiss .menu-card {
     position: relative;
     isolation: isolate;
+    width: fit-content;
+    min-width: 50%;
+    margin-left: auto;
     border: 1px solid var(--rule);
-    background-color: var(--paper);
+    background-color: var(--header-bg);
+    -webkit-backdrop-filter: blur(36px) saturate(1.2);
+    backdrop-filter: blur(36px) saturate(1.2);
+  }
+
+  @media (prefers-reduced-transparency: reduce) {
+    .swiss .menu-card {
+      background-color: var(--paper);
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
   }
 
   .swiss .menu-link {
