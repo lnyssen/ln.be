@@ -39,6 +39,11 @@
   /* Respiration unique : distance entre un filet et le texte, en haut comme
      en bas de chaque section. */
   --section-space: 42px;
+  /* Deux épaisseurs de filet. Le fort ouvre une section ; le fin sépare les
+     éléments d'une même section — les lignes de l'index, les entrées d'une
+     liste. On lit la structure avant de lire le texte. */
+  --rule-fort: 2px;
+  --rule-fin: 1px;
   --renvoi-space: 66px;
   /* Le titre d'ouverture respire au rythme commun tant que l'écran est
      étroit : sur un téléphone, cent vingt pixels de vide avant le premier
@@ -348,8 +353,10 @@
      quelle que soit la taille à laquelle le dessin est rendu. Sans cette
      règle, l'épaisseur suivrait l'échelle du cadre et le trait maigrirait sur
      téléphone, où le dessin est plus petit. */
+  /* Les dessins des renvois tiennent le trait des filets de section. */
   .swiss .teaser-mark path {
     vector-effect: non-scaling-stroke;
+    stroke-width: var(--rule-fort);
   }
 
   /* Les dessins des deux renvois tournent en boucle plutôt qu'au survol :
@@ -1019,6 +1026,11 @@
   /* Le rythme, en une seule valeur. */
   .swiss main section > [class*="border-t"] {
     padding-top: var(--section-space);
+  }
+
+  /* Le filet qui ouvre une section est le fort. */
+  .swiss main section > [class*="border-t"] {
+    border-top-width: var(--rule-fort);
   }
 
   .swiss main section {
