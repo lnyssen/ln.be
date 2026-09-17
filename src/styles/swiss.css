@@ -841,7 +841,7 @@
 
   .swiss .vitrine-image {
     display: block;
-    height: 300px;
+    height: 200px;
     width: auto;
     transition: opacity 200ms ease;
   }

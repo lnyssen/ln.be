@@ -102,7 +102,7 @@ function domainLabel(link: string) {
                           src={v.asset!}
                           alt={v.title}
                           widths={[450, 690, 900, 1380]}
-                          sizes="(min-width: 768px) 690px, 450px"
+                          sizes="(min-width: 768px) 690px, 300px"
                           format="webp"
                           quality={78}
                           loading={i < 5 && tour === 0 ? 'eager' : 'lazy'}
@@ -431,9 +431,10 @@ function domainLabel(link: string) {
       if (!piste) return;
       const calme = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      // Environ quatre-vingt-dix pixels par seconde : les vignettes sont
-      // grandes, il faut qu'elles passent.
-      const ALLURE = calme ? 0 : 90;
+      // Quatre-vingt-dix pixels par seconde sur grand écran ; sur téléphone,
+      // où l'écran est étroit et le regard plus pressé, cent quarante.
+      const telephone = matchMedia('(max-width: 767px)');
+      const allure = () => (calme ? 0 : telephone.matches ? 140 : 90);
       let decal = 0;
       let facteur = 1;
       let cible = 1;
@@ -455,7 +456,7 @@ function domainLabel(link: string) {
         dernier = t;
         facteur += (cible - facteur) * (1 - Math.exp(-dt / 0.18));
         if (!prise) {
-          decal += (ALLURE * facteur + elan) * dt;
+          decal += (allure() * facteur + elan) * dt;
           elan *= Math.exp(-dt / 0.35);
           if (Math.abs(elan) < 2) elan = 0;
         }
@@ -519,7 +520,7 @@ function domainLabel(link: string) {
       });
       const lacher = (e) => {
         if (!prise || e.pointerId !== prise.id) return;
-        if (prise.tenu) elan = Math.max(-2500, Math.min(2500, prise.vx)) - ALLURE;
+        if (prise.tenu) elan = Math.max(-2500, Math.min(2500, prise.vx)) - allure();
         prise = null;
       };
       bande.addEventListener('pointerup', lacher);
