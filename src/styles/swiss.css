@@ -948,9 +948,16 @@
   }
 
   /* Ceux qui partent déjà d'un demi-gras montent d'autant. */
-  .swiss a.font-medium:has(.swiss-arrow),
-  .swiss a.teaser:has(.swiss-arrow) {
+  .swiss a.font-medium:has(.swiss-arrow) {
     --gras-survol: 620;
+  }
+
+  /* Les deux grands renvois ne s'épaississent pas : à ce corps, la phrase
+     entière changerait de longueur. Seules la couleur et la flèche
+     répondent. */
+  .swiss a.lab-teaser-title:hover,
+  .swiss a.lab-teaser-title:focus-visible {
+    font-variation-settings: normal;
   }
 
   @media (prefers-reduced-motion: reduce) {

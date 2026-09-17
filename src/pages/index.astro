@@ -230,15 +230,14 @@ function domainLabel(link: string) {
          reste. À sa droite, un dessin au trait qui dit son sujet. -->
     <section class="swiss-shell section-renvoi">
       <div class="swiss-grid border-t border-[var(--rule)]" data-reveal>
-        <a
-          href="/lab"
-          class="teaser group col-span-6 flex items-center justify-between gap-5 md:col-span-12"
-        >
+        <!-- L'intitulé nomme la section, il n'est pas le lien : seule la
+             phrase en dessous répond au pointeur. -->
+        <div class="teaser col-span-6 flex items-center justify-between gap-5 md:col-span-12">
           <span class="block min-w-0">
             <h2 class="section-label swiss-meta text-[var(--ink-soft)]">Creative lab</h2>
-            <p class="lab-teaser-title mt-[16px] text-[clamp(1.375rem,2.6vw,2rem)] font-medium leading-[1.1] tracking-[-0.035em] group-hover:text-[var(--accent)]">
+            <a href="/lab" class="lab-teaser-title mt-[16px] block text-[clamp(1.375rem,2.6vw,2rem)] font-medium leading-[1.1] tracking-[-0.035em] transition-colors duration-200 hover:text-[var(--accent)] focus-visible:text-[var(--accent)]">
               Experiments where AI, design and code collide <SwissArrow direction="right" size={24} />
-            </p>
+            </a>
           </span>
 
           <!-- Une courbe tracée à la main, puis continuée par la machine.
@@ -270,21 +269,20 @@ function domainLabel(link: string) {
               <path pathLength="100" d="M136 20h8v8h-8Z" />
             </g>
           </svg>
-        </a>
+        </div>
       </div>
     </section>
 
     <section class="swiss-shell section-renvoi">
       <div class="swiss-grid border-t border-[var(--rule)]" data-reveal>
-        <a
-          href="/lepolographe"
-          class="teaser group col-span-6 flex items-center justify-between gap-5 md:col-span-12"
-        >
+        <!-- L'intitulé nomme la section, il n'est pas le lien : seule la
+             phrase en dessous répond au pointeur. -->
+        <div class="teaser col-span-6 flex items-center justify-between gap-5 md:col-span-12">
           <span class="block min-w-0">
             <h2 class="section-label swiss-meta text-[var(--ink-soft)]">Le Polographe</h2>
-            <p class="lab-teaser-title mt-[16px] text-[clamp(1.375rem,2.6vw,2rem)] font-medium leading-[1.1] tracking-[-0.035em] group-hover:text-[var(--accent)]">
+            <a href="/lepolographe" class="lab-teaser-title mt-[16px] block text-[clamp(1.375rem,2.6vw,2rem)] font-medium leading-[1.1] tracking-[-0.035em] transition-colors duration-200 hover:text-[var(--accent)] focus-visible:text-[var(--accent)]">
               A few shapes on a grid, piled up into chaos <SwissArrow direction="right" size={24} />
-            </p>
+            </a>
           </span>
 
           <!-- Huit cases, huit formes : quarts de cercle, cercle, demi-cercle
@@ -314,7 +312,7 @@ function domainLabel(link: string) {
               <path pathLength="100" d="M112 38A37 37 0 0 1 149 75" />
             </g>
           </svg>
-        </a>
+        </div>
       </div>
     </section>
 
@@ -379,45 +377,79 @@ function domainLabel(link: string) {
     // Un clic n'importe où dans une ligne dépliée la referme et la ramène au
     // centre. Les liens gardent la main.
     (() => {
-      // La molette verticale fait avancer la planche : sur trackpad comme à la
-      // souris, on ne devrait pas avoir à chercher le geste latéral.
+      // Un pas = la largeur d'un visuel plus la gouttière. On vise toujours un
+      // cran entier, calculé depuis la position arrondie : Chrome, avec une
+      // accroche obligatoire, ramenait sur la même image un défilement relatif
+      // lancé pendant qu'un autre n'était pas fini.
+      const pas = (strip) => {
+        const figure = strip.querySelector('figure');
+        return figure ? figure.getBoundingClientRect().width + 10 : strip.clientWidth;
+      };
+
+      const aller = (strip, sens) => {
+        const p = pas(strip);
+        const rang = Math.round(strip.scrollLeft / p) + sens;
+        const max = strip.scrollWidth - strip.clientWidth;
+        strip.scrollTo({ left: Math.max(0, Math.min(max, rang * p)), behavior: 'smooth' });
+      };
+
       for (const wrap of document.querySelectorAll('.filmstrip-wrap')) {
         const strip = wrap.querySelector('.filmstrip');
         const prev = wrap.querySelector('[data-strip-prev]');
         const next = wrap.querySelector('[data-strip-next]');
         if (!strip || !prev || !next) continue;
 
-        // Un pas = la largeur d'un visuel plus la gouttière.
-        const step = () => {
-          const figure = strip.querySelector('figure');
-          return figure ? figure.getBoundingClientRect().width + 10 : strip.clientWidth;
-        };
-
         const sync = () => {
-          // La bande déborde des gouttières : son origine n'est pas zéro mais
-          // la valeur de son propre retrait.
-          const origin = parseFloat(getComputedStyle(strip).paddingLeft) || 0;
           const max = strip.scrollWidth - strip.clientWidth;
-          prev.disabled = strip.scrollLeft <= origin + 1;
+          // Ligne fermée : la planche ne mesure rien. On n'éteint pas les
+          // flèches sur une mesure nulle, on attend qu'elle ait une largeur.
+          if (strip.clientWidth === 0) return;
+          prev.disabled = strip.scrollLeft <= 1;
           next.disabled = strip.scrollLeft >= max - 1;
         };
 
-        prev.addEventListener('click', () => strip.scrollBy({ left: -step() }));
-        next.addEventListener('click', () => strip.scrollBy({ left: step() }));
+        prev.addEventListener('click', () => aller(strip, -1));
+        next.addEventListener('click', () => aller(strip, 1));
         strip.addEventListener('scroll', sync, { passive: true });
+        // La largeur arrive à l'ouverture de la ligne et au chargement des
+        // visuels, pas au chargement de la page : on se recale à chaque fois.
+        new ResizeObserver(sync).observe(strip);
+        strip.closest('details')?.addEventListener('toggle', () => requestAnimationFrame(sync));
+        for (const img of strip.querySelectorAll('img')) img.addEventListener('load', sync);
         sync();
       }
 
+      // La molette verticale fait avancer la planche, un visuel par geste. On
+      // cumule le geste et on avance d'un cran entier quand il est franc :
+      // poser scrollLeft par petits bouts se battait avec l'accroche sous
+      // Chrome, et la planche restait sur place.
       for (const strip of document.querySelectorAll('.filmstrip')) {
+        let cumul = 0;
+        let repos = null;
+        let bloque = false;
         strip.addEventListener(
           'wheel',
           (event) => {
-            if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+            // Le geste latéral du pavé tactile reste natif : il est fluide et
+            // l'accroche s'en occupe très bien.
+            if (Math.abs(event.deltaX) >= Math.abs(event.deltaY)) return;
+            const d = event.deltaY;
             const max = strip.scrollWidth - strip.clientWidth;
-            const next = strip.scrollLeft + event.deltaY;
-            if (next <= 0 || next >= max) return; // on rend la main à la page
+            // Au bout de la planche, on rend la main à la page.
+            if ((d < 0 && strip.scrollLeft <= 1) || (d > 0 && strip.scrollLeft >= max - 1)) return;
             event.preventDefault();
-            strip.scrollLeft = next;
+            clearTimeout(repos);
+            repos = setTimeout(() => {
+              cumul = 0;
+              bloque = false;
+            }, 180);
+            if (bloque) return;
+            cumul += d;
+            if (Math.abs(cumul) > 40) {
+              aller(strip, cumul > 0 ? 1 : -1);
+              cumul = 0;
+              bloque = true;
+            }
           },
           { passive: false }
         );
@@ -454,8 +486,7 @@ function domainLabel(link: string) {
           const figure = strip?.querySelector('figure');
           if (!strip || !figure) return;
           event.preventDefault();
-          const step = figure.getBoundingClientRect().width + 10;
-          strip.scrollBy({ left: event.key === 'ArrowRight' ? step : -step });
+          aller(strip, event.key === 'ArrowRight' ? 1 : -1);
           return;
         }
 

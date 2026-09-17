@@ -336,25 +336,65 @@ const ogImage = new URL('/og.png', Astro.site).href;
               // en ligne, elle se réduirait à rien et laisserait un signe de
               // largeur nulle au début du titre.
               if (!ch.trim()) {
+                precedent = null;
                 frag.appendChild(document.createTextNode(ch));
               } else {
                 const span = document.createElement('span');
                 span.textContent = ch;
                 span.style.display = 'inline-block';
                 frag.appendChild(span);
-                glyphs.push({ el: span, w: 700, tw: 700, painted: 700 });
+                const g = { el: span, ch, w: 700, tw: 700, painted: 700, avant: precedent };
+                glyphs.push(g);
+                precedent = g;
               }
             }
             child.replaceWith(frag);
-          } else if (child.nodeName !== 'BR') {
+          } else if (child.nodeName === 'BR') {
+            precedent = null;
+          } else {
             // Le point qui ferme le titre a cessé d'être une commande : c'est
             // un signe comme les autres, et il suit la graisse comme eux.
             split(child);
           }
         });
       };
+      let precedent = null;
       split(h1);
       if (!glyphs.length) return;
+
+      // Couper le titre en signes détruit le crénage : chaque lettre devient
+      // une boîte à part, et les paires que la fonte resserre — TA, AL, AV —
+      // ne se resserrent plus. La ligne « and digital » s'élargissait ainsi de
+      // près de neuf pixels à l'instant où le script tournait : un saut à
+      // l'arrivée. On relit donc le crénage de chaque paire dans la fonte elle-
+      // même, sur une sonde hors champ, et on le rend en marge à la première
+      // lettre. Le titre découpé retombe à la largeur du titre entier.
+      const crener = () => {
+        const cs = getComputedStyle(h1);
+        const sonde = document.createElement('span');
+        sonde.style.cssText =
+          'position:absolute;visibility:hidden;white-space:pre;left:-9999px;top:0';
+        for (const k of ['fontFamily', 'fontSize', 'fontWeight', 'letterSpacing', 'textTransform', 'fontFeatureSettings']) {
+          sonde.style[k] = cs[k];
+        }
+        document.body.appendChild(sonde);
+        const cache = new Map();
+        const largeur = (t) => {
+          if (!cache.has(t)) {
+            sonde.textContent = t;
+            cache.set(t, sonde.getBoundingClientRect().width);
+          }
+          return cache.get(t);
+        };
+        for (const g of glyphs) {
+          if (g.avant) {
+            const paire = g.avant.ch + g.ch;
+            const k = largeur(paire) - largeur(g.avant.ch) - largeur(g.ch);
+            g.avant.el.style.marginRight = Math.abs(k) > 0.05 ? `${k.toFixed(2)}px` : '';
+          }
+        }
+        sonde.remove();
+      };
 
       let pointer = null;
       let frame = null;
@@ -511,7 +551,13 @@ const ogImage = new URL('/og.png', Astro.site).href;
         start();
       });
 
-      addEventListener('resize', measure);
+      addEventListener('resize', () => {
+        crener();
+        measure();
+      });
+
+      if (document.fonts?.ready) document.fonts.ready.then(crener);
+      else crener();
     })();
   </script>
   </body>
