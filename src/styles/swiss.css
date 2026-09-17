@@ -12,8 +12,8 @@
 }
 
 /* L'accent est déclaré comme une couleur : le navigateur sait alors passer
-   d'une teinte à l'autre en fondu, au lieu de sauter. C'est ce qui rend
-   vivant le glissement vers la couleur d'un projet survolé, et le retour. */
+   d'une teinte à l'autre en fondu, au lieu de sauter — au changement de
+   thème, de teinte choisie, ou quand l'heure fait tourner la couleur. */
 @property --accent {
   syntax: "<color>";
   inherits: true;

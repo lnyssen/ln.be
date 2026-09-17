@@ -20,8 +20,8 @@
     window.__jeuxStop = () => arret.abort();
     const calme = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // La couleur se relit au moment de dessiner : elle suit l'heure, la
-    // teinte choisie et le projet survolé.
+    // La couleur se relit au moment de dessiner : elle suit l'heure et la
+    // teinte choisie.
     const sonde = document.createElement('span');
     sonde.style.cssText = 'position:absolute;visibility:hidden;color:var(--accent)';
     document.body.appendChild(sonde);
@@ -201,7 +201,7 @@
       else if (event.key === 'Escape' && pieces.length && !document.querySelector('[data-loupe]')) eclaircir();
     }, sig);
 
-    // La teinte change — l'heure, la capsule, un projet survolé, le thème :
+    // La teinte change — l'heure, la capsule, le thème :
     // la pile se repeint pendant le fondu.
     new MutationObserver(() => {
       if (!pieces.length || pluieTourne) return;

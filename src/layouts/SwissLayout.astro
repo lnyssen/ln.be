@@ -149,9 +149,8 @@ const ogImage = new URL('/og.png', Astro.site).href;
 
         // La teinte d'accent vit. Sans choix du visiteur, elle suit l'heure
         // de Bruxelles : froide le matin, la violette de la marque vers midi,
-        // chaude le soir. Au survol d'une image de la vitrine, elle prend la
-        // couleur du projet. Un choix fait à la capsule, ou le mode encre,
-        // l'emportent sur les deux.
+        // chaude le soir. Un choix fait à la capsule, ou le mode encre,
+        // l'emportent.
         //
         // La couleur se construit en OKLCH : à clarté égale, toutes les
         // teintes pèsent pareil et gardent le même contraste sur le papier —
@@ -183,22 +182,15 @@ const ogImage = new URL('/og.png', Astro.site).href;
           }
           return 285;
         };
-        window.__teinte = window.__teinte || { projet: null };
         const poserTeinte = () => {
           const root = document.documentElement;
-          const choisie = root.dataset.swissAccent || root.classList.contains('ink-on');
-          const projet = window.__teinte.projet;
-          if (choisie && !projet) {
+          if (root.dataset.swissAccent || root.classList.contains('ink-on')) {
             root.style.removeProperty('--accent');
             return;
           }
-          const sombre = root.dataset.swissTheme === 'dark';
-          const teinte = projet ? projet.teinte : teinteHeure();
-          const chroma = projet ? projet.chroma : 0.17;
-          const clarte = sombre ? 0.78 : 0.5;
-          root.style.setProperty('--accent', `oklch(${clarte} ${chroma.toFixed(3)} ${teinte.toFixed(1)})`);
+          const clarte = root.dataset.swissTheme === 'dark' ? 0.78 : 0.5;
+          root.style.setProperty('--accent', `oklch(${clarte} 0.170 ${teinteHeure().toFixed(1)})`);
         };
-        window.__teinte.poser = poserTeinte;
 
         // Safari teinte ses barres avec cette valeur, et c'est ce qui fait
         // déborder le violet du pied de page dans la barre d'adresse quand on
