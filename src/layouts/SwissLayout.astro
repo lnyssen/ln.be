@@ -405,6 +405,52 @@ const ogImage = new URL('/og.png', Astro.site).href;
     </script>
 
     <script is:inline data-astro-rerun>
+      // Les lignes se tracent en entrant à l'écran. On relève chaque filet
+      // horizontal de la page — sections, lignes de l'index, listes, pied —
+      // avec son épaisseur réelle ; la couleur suit le thème, celle de la
+      // page ou celle du texte du pied. Les lignes qui arrivent ensemble se
+      // suivent à soixante millisecondes d'écart, de haut en bas.
+      (() => {
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        if (!('IntersectionObserver' in window)) return;
+        const cibles = [];
+        for (const el of document.querySelectorAll('main *, .swiss-footer *')) {
+          const cs = getComputedStyle(el);
+          const cotes = [];
+          const haut = parseFloat(cs.borderTopWidth);
+          const bas = parseFloat(cs.borderBottomWidth);
+          const large = el.getBoundingClientRect().width > 120;
+          const ligne = (w, style) => w > 0 && style !== 'none' && large;
+          // Un bouton cerné n'est pas une ligne : il porte un filet des
+          // quatre côtés.
+          const cerne = parseFloat(cs.borderLeftWidth) > 0 || parseFloat(cs.borderRightWidth) > 0;
+          if (cerne) continue;
+          if (ligne(haut, cs.borderTopStyle)) cotes.push('haut');
+          if (ligne(bas, cs.borderBottomStyle)) cotes.push('bas');
+          if (!cotes.length) continue;
+          el.dataset.trait = cotes.join(' ');
+          el.style.setProperty('--trait', `${Math.max(haut, bas)}px`);
+          if (el.closest('.swiss-footer')) el.style.setProperty('--trait-couleur', 'currentColor');
+          cibles.push(el);
+        }
+        const vue = new IntersectionObserver(
+          (entrees) => {
+            const visibles = entrees
+              .filter((e) => e.isIntersecting)
+              .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+            visibles.forEach((e, i) => {
+              e.target.style.setProperty('--trait-delai', `${80 + i * 60}ms`);
+              e.target.classList.add('trait-trace');
+              vue.unobserve(e.target);
+            });
+          },
+          { rootMargin: '0px 0px -8% 0px' },
+        );
+        for (const el of cibles) vue.observe(el);
+      })();
+    </script>
+
+    <script is:inline data-astro-rerun>
       // Le pied de page est fixe, sous la page : il n'apparaît qu'une fois
       // arrivé en bas. Au clavier, on y entrait sans le voir — la tabulation
       // posait le focus sur des liens recouverts par le contenu. Dès qu'un
