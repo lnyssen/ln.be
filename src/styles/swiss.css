@@ -1340,6 +1340,12 @@
   /* La ligne ouverte reste sous l'en-tête pendant qu'on parcourt ses visuels.
      Elle ne peut se garer que là : l'en-tête étant collant en haut, tout autre
      point d'arrêt donnerait un bandeau flottant en plein écran. */
+  /* Une adresse comme /#moires mène à la ligne : le saut du navigateur
+     s'arrête là où l'intitulé ouvert se colle, sous la barre. */
+  .swiss #work details {
+    scroll-margin-top: calc(var(--header-h) + env(safe-area-inset-top));
+  }
+
   .swiss details[open] > summary {
     position: sticky;
     top: calc(var(--header-h) + env(safe-area-inset-top));

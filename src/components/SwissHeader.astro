@@ -133,6 +133,7 @@ const pages = [
   id="swiss-menu"
   data-menu-panel
   aria-hidden="true"
+  inert
   class="swiss-menu swiss-shell fixed inset-x-0 z-40 min-[820px]:hidden"
 >
   <div class="menu-card overflow-hidden rounded-[26px] pt-[12px]">
@@ -176,6 +177,9 @@ const pages = [
     const setState = (open) => {
       panel.classList.toggle('is-open', open);
       panel.setAttribute('aria-hidden', String(!open));
+      // Fermé, le panneau est inerte : ses liens ne se prennent ni au
+      // clavier ni par les lecteurs d'écran.
+      panel.inert = !open;
       button.setAttribute('aria-expanded', String(open));
       button.setAttribute('aria-label', open ? 'Fermer le menu' : 'Ouvrir le menu');
       document.documentElement.classList.toggle('menu-open', open);

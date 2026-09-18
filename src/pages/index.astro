@@ -92,7 +92,7 @@ function domainLabel(link: string) {
                   {vitrine.map((v, i) => (
                     <li class="shrink-0">
                       <a
-                        href="#work"
+                        href={`#${v.slug}`}
                         data-ouvrir={v.slug}
                         data-titre={v.title}
                         tabindex={tour === 1 ? -1 : undefined}
@@ -179,7 +179,7 @@ function domainLabel(link: string) {
         <div class="col-span-6 md:col-span-10">
           {
             rendered.map(({ project, slug, Body }, i) => (
-              <details name="work" class="group border-b border-[var(--rule)] last:border-b-0" data-slug={slug} data-reveal>
+              <details name="work" id={slug} class="group border-b border-[var(--rule)] last:border-b-0" data-slug={slug} data-reveal>
                 <!-- Grille explicite : le repli en flex désalignait tout sur
                      mobile. Colonne 1 le numéro, colonne 2 le titre et les
                      tags calés dessous, l'étiquette toujours à droite. -->
@@ -390,37 +390,78 @@ function domainLabel(link: string) {
     // trop bas. Les lignes pas encore révélées portaient aussi leur décalage
     // d'entrée. On coupe donc les animations le temps d'une image, on met la
     // page dans son état final, on mesure, puis on défile.
-    document.addEventListener('click', (event) => {
-      const lien = event.target.closest('[data-ouvrir]');
-      if (!lien) return;
-      const ligne = document.querySelector(`#work details[data-slug="${lien.dataset.ouvrir}"]`);
-      if (!ligne) return;
-      event.preventDefault();
+    (() => {
+      const ouvrirProjet = (slug, doux = true) => {
+        const ligne = document.querySelector(`#work details[data-slug="${CSS.escape(slug)}"]`);
+        if (!ligne) return false;
 
-      const racine = document.documentElement;
-      racine.classList.add('sans-filer');
+        const racine = document.documentElement;
+        racine.classList.add('sans-filer');
 
-      for (const el of document.querySelectorAll('main [data-reveal]')) {
-        const avant = el.compareDocumentPosition(ligne) & Node.DOCUMENT_POSITION_FOLLOWING;
-        if (avant || el === ligne || el.contains(ligne)) el.classList.add('is-in');
+        for (const el of document.querySelectorAll('main [data-reveal]')) {
+          const avant = el.compareDocumentPosition(ligne) & Node.DOCUMENT_POSITION_FOLLOWING;
+          if (avant || el === ligne || el.contains(ligne)) el.classList.add('is-in');
+        }
+        for (const autre of document.querySelectorAll('#work details[open]')) {
+          if (autre !== ligne) autre.open = false;
+        }
+        ligne.open = true;
+
+        // La ligne ouverte colle sous la barre : on s'aligne sur ce même arrêt.
+        // On mesure la ligne elle-même, pas son intitulé, qui une fois collant
+        // donnerait sa position figée plutôt que sa place.
+        const summary = ligne.querySelector(':scope > summary');
+        const arret = parseFloat(getComputedStyle(summary).top) || 0;
+        const y = ligne.getBoundingClientRect().top + scrollY - arret;
+
+        requestAnimationFrame(() => {
+          racine.classList.remove('sans-filer');
+          scrollTo({ top: Math.max(0, y), behavior: doux ? 'smooth' : 'instant' });
+        });
+        return true;
+      };
+
+      // Les écouteurs du document survivent aux navigations internes : on les
+      // pose une seule fois, et ils appellent la version courante.
+      window.__ouvrirProjet = ouvrirProjet;
+      if (!window.__ouvrirInstalle) {
+        window.__ouvrirInstalle = true;
+        document.addEventListener('click', (event) => {
+          const lien = event.target.closest('[data-ouvrir]');
+          if (!lien) return;
+          if (window.__ouvrirProjet?.(lien.dataset.ouvrir)) event.preventDefault();
+        });
+        addEventListener('hashchange', () => {
+          const slug = decodeURIComponent(location.hash.slice(1));
+          if (slug) window.__ouvrirProjet?.(slug, true);
+        });
       }
-      for (const autre of document.querySelectorAll('#work details[open]')) {
-        if (autre !== ligne) autre.open = false;
+
+      // Chaque projet a son adresse : laurentnyssen.be/#moires ouvre Moirés.
+      // L'adresse suit la ligne ouverte, si bien qu'il suffit de la copier
+      // pour envoyer un projet précis ; elle s'efface quand la ligne se
+      // referme. On la remplace sans l'empiler : le bouton retour ne repasse
+      // pas par chaque projet ouvert.
+      for (const ligne of document.querySelectorAll('#work details[data-slug]')) {
+        ligne.addEventListener('toggle', () => {
+          const ici = `#${ligne.dataset.slug}`;
+          if (ligne.open) history.replaceState(history.state, '', ici);
+          else if (location.hash === ici) history.replaceState(history.state, '', location.pathname + location.search);
+        });
       }
-      ligne.open = true;
 
-      // La ligne ouverte colle sous la barre : on s'aligne sur ce même arrêt.
-      // On mesure la ligne elle-même, pas son intitulé, qui une fois collant
-      // donnerait sa position figée plutôt que sa place.
-      const summary = ligne.querySelector(':scope > summary');
-      const arret = parseFloat(getComputedStyle(summary).top) || 0;
-      const y = ligne.getBoundingClientRect().top + scrollY - arret;
-
-      requestAnimationFrame(() => {
-        racine.classList.remove('sans-filer');
-        scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
-      });
-    });
+      const depuisAdresse = (doux) => {
+        const slug = decodeURIComponent(location.hash.slice(1));
+        if (slug) ouvrirProjet(slug, doux);
+      };
+      // À l'arrivée, on attend la fonte et la mise en page pour mesurer juste.
+      if (location.hash) {
+        if (document.fonts?.ready) document.fonts.ready.then(() => depuisAdresse(false));
+        // Les images chargées peuvent encore décaler la page : un dernier
+        // recalage, sans animation, une fois tout arrivé.
+        addEventListener('load', () => depuisAdresse(false), { once: true });
+      }
+    })();
   </script>
 
   <script is:inline data-astro-rerun>
