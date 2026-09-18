@@ -1,5 +1,5 @@
 ---
-import { Image } from 'astro:assets';
+import { Picture, getImage } from 'astro:assets';
 import { resolveImage } from '../lib/images';
 import SwissArrow from './SwissArrow.astro';
 
@@ -40,6 +40,27 @@ const resolved = images
   .filter((entry) => entry.asset !== null);
 
 const total = String(resolved.length).padStart(2, '0');
+
+// Deux jeux de fichiers, deux usages. La vignette de la planche est légère :
+// AVIF, avec un WebP de secours, à la taille où elle s'affiche. L'agrandi,
+// lui, a ses propres tirages, plus grands et plus soignés, qui ne sont
+// téléchargés qu'à l'ouverture de la loupe. La loupe réutilisait les
+// fichiers de la vignette : elle affichait d'abord le petit, flou, puis
+// sautait au grand.
+const agrandis = await Promise.all(
+  resolved.map(async (entry) => {
+    const largeur = entry.asset!.width;
+    const tailles = [960, 1440, 1920].filter((w) => w < largeur);
+    tailles.push(Math.min(largeur, 2400));
+    const tirage = await getImage({
+      src: entry.asset!,
+      widths: tailles,
+      format: 'webp',
+      quality: 86,
+    });
+    return { srcset: tirage.srcSet.attribute, src: tirage.src };
+  }),
+);
 ---
 
 <!-- Planche contact : les visuels s'alignent en bande. Barre de défilement
@@ -62,14 +83,18 @@ const total = String(resolved.length).padStart(2, '0');
             poster ? 'h-[64vw] max-h-[460px] md:h-[460px]' : 'w-[78vw] md:w-[440px]',
           ]}
         >
-          <Image
+          <Picture
             src={entry.asset!}
             alt={entry.alt ?? `${title} — visuel ${i + 1} sur ${resolved.length}`}
-            widths={poster ? [340, 520, 700, 1200] : [440, 720, 880, 1600, 1920]}
+            formats={['avif', 'webp']}
+            widths={poster ? [340, 520, 700] : [440, 660, 880]}
             sizes={poster ? '(min-width: 768px) 330px, 46vw' : '(min-width: 768px) 440px, 78vw'}
-            format="webp"
-            quality={poster ? 82 : 78}
+            quality={poster ? 68 : 62}
             loading="lazy"
+            decoding="async"
+            data-agrandi={agrandis[i].srcset}
+            data-agrandi-src={agrandis[i].src}
+            pictureAttributes={{ class: poster ? 'block h-full' : 'block' }}
             class:list={[poster ? 'h-full w-auto object-contain' : 'aspect-[3/2] w-full object-cover']}
           />
         </figure>

@@ -6,7 +6,7 @@ import SwissFooter from '../components/SwissFooter.astro';
 import also from '../data/also.json';
 import SwissArrow from '../components/SwissArrow.astro';
 import SwissFilmstrip from '../components/SwissFilmstrip.astro';
-import { Image } from 'astro:assets';
+import { Picture } from 'astro:assets';
 import { resolveImage } from '../lib/images';
 
 const projects = (await getCollection('projects')).sort(
@@ -98,15 +98,18 @@ function domainLabel(link: string) {
                         tabindex={tour === 1 ? -1 : undefined}
                         class="vitrine-lien block"
                       >
-                        <Image
+                        <Picture
                           src={v.asset!}
                           alt={v.title}
-                          widths={[450, 690, 900, 1380]}
-                          sizes="(min-width: 768px) 690px, 300px"
-                          format="webp"
-                          quality={78}
-                          loading={i < 5 && tour === 0 ? 'eager' : 'lazy'}
+                          formats={['avif', 'webp']}
+                          widths={[300, 450, 600, 690, 1000]}
+                          sizes="(min-width: 768px) and (max-height: 900px) 450px, (min-width: 768px) 690px, 300px"
+                          quality={48}
+                          loading={i < 3 && tour === 0 ? 'eager' : 'lazy'}
+                          fetchpriority={i === 0 && tour === 0 ? 'high' : undefined}
+                          decoding="async"
                           draggable="false"
+                          pictureAttributes={{ class: 'block' }}
                           class="vitrine-image aspect-[3/2] object-cover"
                         />
                       </a>
@@ -810,16 +813,45 @@ function domainLabel(link: string) {
           }
         };
 
-        const poser = (i) => {
-          rang = (i + visuels.length) % visuels.length;
-          const source = visuels[rang];
-          grand.src = source.currentSrc || source.src;
-          if (source.srcset) {
-            grand.srcset = source.srcset;
-            grand.sizes = '92vw';
-          }
+        // Chaque agrandi est chargé et décodé hors de l'écran avant d'être
+        // montré : l'image ne change qu'une fois prête, d'un coup, sans passer
+        // par la vignette floue ni par un cadre vide. Les voisines sont
+        // préparées dès qu'une image est posée, si bien que le passage à la
+        // suivante est presque toujours immédiat.
+        const prets = new Map();
+        const charger = (i) => {
+          const k = (i + visuels.length) % visuels.length;
+          if (prets.has(k)) return prets.get(k);
+          const source = visuels[k];
+          const tirage = new Image();
+          tirage.decoding = 'async';
+          tirage.sizes = '92vw';
+          if (source.dataset.agrandi) tirage.srcset = source.dataset.agrandi;
+          tirage.src = source.dataset.agrandiSrc || source.currentSrc || source.src;
+          const pret = tirage
+            .decode()
+            .catch(() => {})
+            .then(() => tirage);
+          prets.set(k, pret);
+          return pret;
+        };
+
+        const montrer = (tirage, source) => {
+          grand.sizes = tirage.sizes;
+          grand.srcset = tirage.srcset;
+          grand.src = tirage.src;
           grand.alt = source.alt;
-          if (grand.complete) caler();
+          caler();
+        };
+
+        const poser = async (i) => {
+          rang = (i + visuels.length) % visuels.length;
+          const k = rang;
+          const tirage = await charger(k);
+          if (k !== rang) return;
+          montrer(tirage, visuels[k]);
+          charger(k + 1);
+          charger(k - 1);
         };
 
         // Le visuel ne se remplace pas sur place : il sort par le bord vers
@@ -839,8 +871,15 @@ function domainLabel(link: string) {
           grand.classList.add('file');
           glisser(-sens * ecart);
           voiler(0);
-          setTimeout(() => {
-            poser(rang + sens);
+          // La sortie et le chargement courent ensemble ; l'entrée attend les
+          // deux. Une image pas encore prête ne s'affiche jamais à moitié.
+          const suivant = (rang + sens + visuels.length) % visuels.length;
+          const sortie = new Promise((fin) => setTimeout(fin, 170));
+          Promise.all([charger(suivant), sortie]).then(([tirage]) => {
+            rang = suivant;
+            montrer(tirage, visuels[suivant]);
+            charger(suivant + 1);
+            charger(suivant - 1);
             grand.classList.add('sans-transition');
             grand.classList.remove('file');
             glisser(sens * ecart);
@@ -855,11 +894,16 @@ function domainLabel(link: string) {
                 enVol = false;
               });
             });
-          }, 170);
+          });
         };
 
         grand.addEventListener('load', caler);
 
+        // À l'ouverture, la vignette déjà chargée s'affiche aussitôt, pour que
+        // le geste réponde ; l'agrandi la remplace dès qu'il est décodé — une
+        // mise au point, sans saut de cadrage.
+        grand.src = img.currentSrc || img.src;
+        grand.alt = img.alt;
         poser(rang);
         scene.append(grand);
         cadre.append(scene);
