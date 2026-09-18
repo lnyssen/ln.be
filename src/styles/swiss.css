@@ -173,6 +173,14 @@
     --accent: color(display-p3 0.263 0.824 0.627);
   }
 
+  .swiss:not(.ink-on)[data-swiss-accent="mauve"] {
+    --accent: color(display-p3 0.702 0.271 0.843);
+  }
+
+  .swiss:not(.ink-on)[data-swiss-accent="mauve"][data-swiss-theme="dark"] {
+    --accent: color(display-p3 0.831 0.502 0.929);
+  }
+
   .swiss:not(.ink-on)[data-swiss-accent="safran"] {
     --accent: color(display-p3 0.604 0.345 0.000);
   }
@@ -255,6 +263,14 @@
 
   .swiss:not(.ink-on)[data-swiss-accent="veronese"][data-swiss-theme="dark"] {
     --accent: #43d2a0;
+  }
+
+  .swiss:not(.ink-on)[data-swiss-accent="mauve"] {
+    --accent: #b640d8;
+  }
+
+  .swiss:not(.ink-on)[data-swiss-accent="mauve"][data-swiss-theme="dark"] {
+    --accent: #d77cf0;
   }
 
   .swiss:not(.ink-on)[data-swiss-accent="safran"] {
