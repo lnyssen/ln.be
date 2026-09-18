@@ -147,7 +147,7 @@ const pages = [
         pages.map((page, i) => (
           <a
             href={page.href}
-            class="menu-link"
+            class:list={['menu-link', page.label.length > 8 && 'menu-link-long']}
             style={`--i: ${i}`}
             aria-current={current === page.key ? 'page' : undefined}
           >
@@ -157,9 +157,19 @@ const pages = [
       }
     </nav>
 
-    <div class="menu-pied swiss-meta" style={`--i: ${pages.length}`}>
-      <a href="mailto:hello@laurentnyssen.be">hello@laurentnyssen.be ↗</a>
-      <a href="tel:+32497305080">+32 (0)497 30 50 80</a>
+    <div class="menu-pied" style={`--i: ${pages.length}`}>
+      <a href="mailto:hello@laurentnyssen.be" class="menu-contact swiss-meta">
+        Get in touch
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path
+            d="M3.5 6.5h17v11h-17z M3.5 7l8.5 6 8.5-6"
+            stroke="currentColor"
+            stroke-width="1.9"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </a>
     </div>
   </div>
 </div>

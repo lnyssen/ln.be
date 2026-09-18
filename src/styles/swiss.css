@@ -1421,15 +1421,33 @@
     transition: transform 0ms;
   }
 
+  /* Un intitulé long tient sur une seule ligne : il prend un corps plus
+     petit plutôt que de se couper en deux. */
+  .swiss .menu-link-long {
+    font-size: 0.86em;
+    white-space: nowrap;
+  }
+
   .swiss .menu-link[aria-current="page"] {
     color: var(--contre-accent);
   }
 
   .swiss .menu-pied {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
     opacity: 0;
+  }
+
+  /* Le seul bouton de l'affiche, à l'inverse de l'aplat : il prend la
+     couleur du texte, et son texte la couleur contraire. */
+  .swiss .menu-contact {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 48px;
+    border-radius: 9999px;
+    background-color: var(--sur-accent);
+    color: var(--contre-accent);
+    font-weight: 600;
   }
 
   .swiss .swiss-menu.is-open .menu-mot {
