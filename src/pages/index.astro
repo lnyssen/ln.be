@@ -240,7 +240,7 @@ function domainLabel(link: string) {
                     )}
                   </div>
 
-                  <SwissFilmstrip images={project.data.images} title={project.data.title} />
+                  <SwissFilmstrip images={project.data.images} title={project.data.title} zoom />
                 </div>
               </details>
             ))
@@ -479,6 +479,38 @@ function domainLabel(link: string) {
         if (e.pointerType === 'mouse') cible = 0.2;
       });
       bande.addEventListener('pointerleave', () => {
+        cible = clavier ? 0 : 1;
+      });
+
+      // Au clavier, la bande s'arrête net tant que le focus y est — un
+      // contenu qui défile seul doit pouvoir s'arrêter — et elle amène
+      // l'image qui a le focus sous les yeux. Le navigateur, lui, faisait
+      // défiler la bande de travers pour montrer le lien, en plus de notre
+      // propre défilement.
+      let clavier = false;
+      bande.addEventListener('focusin', (e) => {
+        const li = e.target.closest('li');
+        if (!li) return;
+        clavier = true;
+        cible = 0;
+        facteur = 0;
+        elan = 0;
+      });
+
+      // Pour montrer un lien qui reçoit le focus, le navigateur fait défiler
+      // la bande lui-même, par-dessus notre propre décalage. On reprend ce
+      // défilement à notre compte : il devient du décalage, et la bande
+      // reste à zéro. L'image arrive sous les yeux, une seule fois.
+      bande.addEventListener('scroll', () => {
+        const x = bande.scrollLeft;
+        if (!x) return;
+        bande.scrollLeft = 0;
+        decal += x;
+        poser();
+      });
+      bande.addEventListener('focusout', (e) => {
+        if (bande.contains(e.relatedTarget)) return;
+        clavier = false;
         cible = 1;
       });
 
@@ -780,6 +812,15 @@ function domainLabel(link: string) {
         const cadre = document.createElement('div');
         cadre.className = 'loupe';
         cadre.dataset.loupe = '';
+        // Au clavier, la loupe est une fenêtre à part entière : elle prend le
+        // focus à l'ouverture, le garde tant qu'elle est ouverte, et le rend
+        // à la vignette qui l'a ouverte. Le focus restait dans la page,
+        // derrière elle, et la tabulation parcourait des liens invisibles.
+        const retour = document.activeElement;
+        cadre.setAttribute('role', 'dialog');
+        cadre.setAttribute('aria-modal', 'true');
+        cadre.setAttribute('aria-label', 'Visuel agrandi — Échap pour fermer, flèches pour naviguer');
+        cadre.tabIndex = -1;
 
         // La scène épouse le visuel : les flèches se posent sur ses bords à
         // lui, et non sur ceux de la fenêtre, où elles flottaient loin de
@@ -1013,6 +1054,7 @@ function domainLabel(link: string) {
         }
 
         document.body.append(cadre);
+        cadre.focus({ preventScroll: true });
         requestAnimationFrame(() => {
           cadre.classList.add('is-open');
           caler();
@@ -1031,12 +1073,22 @@ function domainLabel(link: string) {
             { once: true },
           );
           document.removeEventListener('keydown', surTouche);
+          if (retour?.isConnected) retour.focus({ preventScroll: true });
           removeEventListener('resize', caler);
           cadre.removeEventListener('wheel', surRoulette);
           clearTimeout(repos);
         };
 
         const surTouche = (event) => {
+          // Tab tourne entre les commandes de la loupe, sans en sortir.
+          if (event.key === 'Tab') {
+            const commandes = [cadre, ...cadre.querySelectorAll('button')];
+            const i = commandes.indexOf(document.activeElement);
+            const j = (i + (event.shiftKey ? -1 : 1) + commandes.length) % commandes.length;
+            commandes[j].focus();
+            event.preventDefault();
+            return;
+          }
           if (event.key === 'Escape') fermer();
           else if (event.key === 'ArrowLeft') filer(-1);
           else if (event.key === 'ArrowRight') filer(1);
@@ -1058,6 +1110,15 @@ function domainLabel(link: string) {
       document.addEventListener('click', (event) => {
         const img = event.target.closest('.filmstrip img');
         if (img) loupe(img);
+      });
+
+      // Entrée ou espace sur une vignette : elle s'agrandit, comme au clic.
+      document.addEventListener('keydown', (event) => {
+        if (event.key !== 'Enter' && event.key !== ' ') return;
+        const img = event.target.closest?.('.filmstrip img');
+        if (!img) return;
+        event.preventDefault();
+        loupe(img);
       });
 
       for (const row of document.querySelectorAll('#work details')) {

@@ -785,6 +785,26 @@
     outline-offset: 1px;
   }
 
+  /* Le pied de page est un aplat d'accent : un cerne d'accent y était
+     invisible, et l'on tabulait à l'aveugle. Il y prend la couleur du texte
+     du pied, et s'écarte un peu plus du lien. */
+  .swiss .swiss-footer :focus-visible {
+    outline-color: var(--footer-fg);
+    outline-offset: 3px;
+  }
+
+  /* Une vignette de planche se prend au clavier comme à la souris : le
+     cerne entoure l'image entière, à l'intérieur de son cadre. */
+  .swiss .filmstrip img:focus-visible {
+    outline-offset: -4px;
+  }
+
+  /* La loupe reçoit le focus pour que le clavier y entre, mais elle n'est
+     pas une commande : pas de cerne autour de tout l'écran. */
+  .swiss .loupe:focus-visible {
+    outline: none;
+  }
+
   /* Les lignes de l'index sont des <details> : ouverture sans JavaScript.
      Le curseur « main » ne vaut que sans le disque, qui remplace la flèche. */
   .swiss:not([data-swiss-cursor]) summary {

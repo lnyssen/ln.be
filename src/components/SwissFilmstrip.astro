@@ -16,6 +16,9 @@ interface Props {
   // n'a pas besoin de flèches : elle se parcourt au doigt ou à la molette.
   bleed?: boolean;
   arrows?: boolean;
+  // La planche s'ouvre en loupe : chaque vignette porte alors ses tirages
+  // agrandis et se prend au clavier comme un bouton.
+  zoom?: boolean;
 }
 
 const {
@@ -24,6 +27,7 @@ const {
   variant = 'landscape',
   bleed = true,
   arrows = true,
+  zoom = false,
 } = Astro.props;
 const poster = variant === 'poster';
 
@@ -49,6 +53,7 @@ const total = String(resolved.length).padStart(2, '0');
 // sautait au grand.
 const agrandis = await Promise.all(
   resolved.map(async (entry) => {
+    if (!zoom) return null;
     const largeur = entry.asset!.width;
     const tailles = [960, 1440, 1920].filter((w) => w < largeur);
     tailles.push(Math.min(largeur, 2400));
@@ -92,8 +97,11 @@ const agrandis = await Promise.all(
             quality={poster ? 68 : 62}
             loading="lazy"
             decoding="async"
-            data-agrandi={agrandis[i].srcset}
-            data-agrandi-src={agrandis[i].src}
+            data-agrandi={agrandis[i]?.srcset}
+            data-agrandi-src={agrandis[i]?.src}
+            tabindex={zoom ? 0 : undefined}
+            role={zoom ? 'button' : undefined}
+            aria-label={zoom ? `Agrandir — ${entry.alt ?? `${title}, visuel ${i + 1} sur ${resolved.length}`}` : undefined}
             pictureAttributes={{ class: poster ? 'block h-full' : 'block' }}
             class:list={[poster ? 'h-full w-auto object-contain' : 'aspect-[3/2] w-full object-cover']}
           />

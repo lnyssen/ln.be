@@ -154,7 +154,7 @@ const ogImage = new URL('/og.png', Astro.site).href;
         //
         // La couleur se construit en OKLCH : à clarté égale, toutes les
         // teintes pèsent pareil et gardent le même contraste sur le papier —
-        // 0,50 sur fond clair, 0,78 sur fond sombre. C'est la teinte qui
+        // 0,52 sur fond clair, 0,66 sur fond sombre. C'est la teinte qui
         // change, jamais la lisibilité.
         const PALIERS = [
           [0, 295], [5, 270], [8, 235], [12, 285],
@@ -296,6 +296,25 @@ const ogImage = new URL('/og.png', Astro.site).href;
     <SwissLab />
     <SwissJeux />
     <SwissCursor client:idle />
+
+    <script is:inline data-astro-rerun>
+      // Le pied de page est fixe, sous la page : il n'apparaît qu'une fois
+      // arrivé en bas. Au clavier, on y entrait sans le voir — la tabulation
+      // posait le focus sur des liens recouverts par le contenu. Dès qu'un
+      // lien du pied reçoit le focus, la page descend jusqu'au bout et le
+      // découvre.
+      (() => {
+        if (window.__piedClavier) return;
+        window.__piedClavier = true;
+        document.addEventListener('focusin', (event) => {
+          if (!event.target.closest?.('.swiss-footer')) return;
+          const bas = document.documentElement.scrollHeight - innerHeight;
+          if (scrollY >= bas - 2) return;
+          const calme = matchMedia('(prefers-reduced-motion: reduce)').matches;
+          scrollTo({ top: bas, behavior: calme ? 'instant' : 'smooth' });
+        });
+      })();
+    </script>
 
     <script is:inline data-astro-rerun>
       // Grille : bouton dans l'en-tête, ou touche G. L'état est mémorisé.
