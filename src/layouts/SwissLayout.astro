@@ -182,7 +182,12 @@ const ogImage = new URL('/og.png', Astro.site).href;
           return 285;
         };
         // Les teintes de la capsule, relevées sur leurs couleurs d'origine.
-        const GAMME = { vermillon: 32, outremer: 266, veronese: 161, safran: 66 };
+        // La quatrième était un safran : à la clarté commune, il tombait dans
+        // l'ocre moutarde. C'est désormais un orange franc, un peu plus clair
+        // que les autres — les tons chauds s'éteignent vite quand on les
+        // assombrit.
+        const GAMME = { vermillon: 32, outremer: 266, veronese: 161, safran: 50 };
+        const CLARTE = { safran: 0.72 };
 
         // OKLCH vers sRGB linéaire — assez pour savoir si une couleur tient
         // dans ce que l'écran affiche, et combien elle éclaire.
@@ -237,8 +242,9 @@ const ogImage = new URL('/og.png', Astro.site).href;
             return;
           }
           const h = GAMME[root.dataset.swissAccent] ?? teinteHeure();
-          const cv = saturer(0.68, h, (y) => y >= 0.235);
-          const vive = `oklch(0.68 ${cv.toFixed(3)} ${h.toFixed(1)})`;
+          const L = CLARTE[root.dataset.swissAccent] ?? 0.68;
+          const cv = saturer(L, h, (y) => y >= 0.235);
+          const vive = `oklch(${L} ${cv.toFixed(3)} ${h.toFixed(1)})`;
           root.style.setProperty('--accent', vive);
           if (root.dataset.swissTheme === 'dark') {
             root.style.setProperty('--accent-texte', vive);
@@ -248,7 +254,7 @@ const ogImage = new URL('/og.png', Astro.site).href;
             // papier. Une saturation poussée à part donnait un violet
             // électrique qui ne ressemblait plus à l'accent.
             let bas = 0.3;
-            let haut = 0.68;
+            let haut = L;
             for (let i = 0; i < 20; i++) {
               const mi = (bas + haut) / 2;
               if (luminance(lineaire(mi, cv, h)) <= 0.155) bas = mi;
