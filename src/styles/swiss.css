@@ -1680,48 +1680,30 @@
     transform: none;
   }
 
-  /* Toutes les lignes du site se tracent de gauche à droite en entrant à
-     l'écran, comme des traits tirés à la règle. Le script marque chaque
-     élément qui porte un filet ; le vrai filet garde sa place dans la mise
-     en page mais devient transparent, et un trait de même épaisseur et de
-     même couleur le remplace et se déroule depuis la gauche. Sans script,
-     rien n'est marqué et les filets restent tels quels. */
-  .swiss [data-trait] {
+  /* Le filet d'une section se trace de gauche à droite quand elle apparaît,
+     comme un trait tiré à la règle. Le vrai filet garde sa place dans la
+     mise en page mais devient transparent ; un trait de même épaisseur le
+     remplace et se déroule depuis la gauche, un peu après l'arrivée du
+     bloc. */
+  .swiss[data-reveal-ready] [data-reveal][class*="border-t"] {
     position: relative;
+    border-top-color: transparent;
   }
 
-  .swiss [data-trait~="haut"] {
-    border-top-color: transparent !important;
-  }
-
-  .swiss [data-trait~="bas"] {
-    border-bottom-color: transparent !important;
-  }
-
-  .swiss [data-trait~="haut"]::before,
-  .swiss [data-trait~="bas"]::after {
+  .swiss[data-reveal-ready] [data-reveal][class*="border-t"]::before {
     content: "";
     position: absolute;
     left: 0;
     right: 0;
+    top: calc(-1 * var(--trait, 1px));
     height: var(--trait, 1px);
-    background-color: var(--trait-couleur, var(--rule));
+    background-color: var(--rule);
     transform: scaleX(0);
     transform-origin: left center;
-    transition: transform 900ms cubic-bezier(0.65, 0, 0.35, 1) var(--trait-delai, 80ms);
-    pointer-events: none;
+    transition: transform 900ms cubic-bezier(0.65, 0, 0.35, 1) 80ms;
   }
 
-  .swiss [data-trait~="haut"]::before {
-    top: calc(-1 * var(--trait, 1px));
-  }
-
-  .swiss [data-trait~="bas"]::after {
-    bottom: calc(-1 * var(--trait, 1px));
-  }
-
-  .swiss .trait-trace[data-trait~="haut"]::before,
-  .swiss .trait-trace[data-trait~="bas"]::after {
+  .swiss[data-reveal-ready] [data-reveal][class*="border-t"].is-in::before {
     transform: none;
   }
 
@@ -1746,6 +1728,10 @@
       transition: none;
     }
 
+    .swiss[data-reveal-ready] [data-reveal][class*="border-t"]::before {
+      transform: none;
+      transition: none;
+    }
   }
 }
 
