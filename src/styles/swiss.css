@@ -1244,9 +1244,11 @@
     min-width: 50%;
     margin-left: auto;
     border: 1px solid var(--rule);
-    background-color: var(--header-bg);
-    -webkit-backdrop-filter: blur(52px) saturate(1.35);
-    backdrop-filter: blur(52px) saturate(1.35);
+    /* Plus transparente encore que la barre : on doit voir la page sous le
+       menu, floutée. Le flou, plus fort, garde les intitulés lisibles. */
+    background-color: color-mix(in srgb, var(--paper) 28%, transparent);
+    -webkit-backdrop-filter: blur(64px) saturate(1.5);
+    backdrop-filter: blur(64px) saturate(1.5);
   }
 
   @media (prefers-reduced-transparency: reduce) {

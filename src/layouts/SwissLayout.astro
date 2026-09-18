@@ -455,6 +455,16 @@ const ogImage = new URL('/og.png', Astro.site).href;
         });
       };
       let precedent = null;
+      // Le titre est lu d'un seul tenant. Découpé en trente-six boîtes, il
+      // risquait d'être épelé lettre par lettre par certains lecteurs
+      // d'écran : on lui donne son texte entier comme nom, et les lettres
+      // deviennent de la pure typographie.
+      // Le texte tel qu'écrit, et non tel qu'affiché en capitales : un
+      // lecteur d'écran épellerait peut-être des capitales. Les retours à la
+      // ligne deviennent des espaces.
+      const nom = h1.cloneNode(true);
+      for (const br of nom.querySelectorAll('br')) br.replaceWith(' ');
+      h1.setAttribute('aria-label', nom.textContent.replace(/\s+/g, ' ').trim());
       split(h1);
       if (!glyphs.length) return;
 
