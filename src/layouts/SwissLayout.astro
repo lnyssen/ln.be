@@ -368,6 +368,42 @@ const ogImage = new URL('/og.png', Astro.site).href;
     <SwissJeux />
     <SwissCursor client:idle />
 
+    <script is:inline>
+      // Sur iPhone, Safari n'envoie ni l'inclinaison ni le mouvement tant que
+      // le visiteur ne l'a pas permis, et ne pose la question qu'à la suite
+      // d'un toucher. Elle vivait dans le script du titre de l'accueil : qui
+      // arrivait par une autre page ne la voyait jamais, et la secousse n'y
+      // faisait rien. Elle est ici, sur toutes les pages, une seule fois par
+      // chargement ; l'inclinaison et le mouvement se demandent dans le même
+      // geste, iOS n'affiche qu'une fenêtre pour les deux.
+      (() => {
+        if (window.__permissionMouvement) return;
+        window.__permissionMouvement = true;
+        const orientation = window.DeviceOrientationEvent?.requestPermission;
+        const mouvement = window.DeviceMotionEvent?.requestPermission;
+        if (typeof orientation !== 'function' && typeof mouvement !== 'function') return;
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        let repondu = false;
+        const demander = () => {
+          if (repondu) return;
+          Promise.all([
+            typeof orientation === 'function'
+              ? orientation.call(DeviceOrientationEvent).catch(() => 'denied')
+              : 'granted',
+            typeof mouvement === 'function'
+              ? mouvement.call(DeviceMotionEvent).catch(() => 'denied')
+              : 'granted',
+          ]).then(([o, m]) => {
+            repondu = true;
+            removeEventListener('touchend', demander);
+            if (o === 'granted') dispatchEvent(new Event('orientation-autorisee'));
+            if (m === 'granted') dispatchEvent(new Event('mouvement-autorise'));
+          });
+        };
+        addEventListener('touchend', demander, { passive: true });
+      })();
+    </script>
+
     <script is:inline data-astro-rerun>
       // Le pied de page est fixe, sous la page : il n'apparaît qu'une fois
       // arrivé en bas. Au clavier, on y entrait sans le voir — la tabulation
@@ -837,40 +873,12 @@ const ogImage = new URL('/og.png', Astro.site).href;
         };
 
         // On écoute d'emblée : Android envoie l'inclinaison sans rien
-        // demander. Safari sur iPhone, lui, n'envoie rien tant que le
-        // visiteur n'a pas donné sa permission, et ne la demande qu'à la
-        // suite d'un toucher. Le premier toucher de la page la réclame — le
-        // titre seul ne suffisait pas : iOS n'y déclenche pas de clic, ce
-        // n'est pas un élément qu'on touche. On redemande tant qu'aucune
-        // réponse n'est venue. Écouter deux fois ne double rien, le
-        // navigateur ignore le doublon.
+        // demander. Sur iPhone, la permission est réclamée par le gabarit, au
+        // premier toucher de n'importe quelle page ; on se réabonne quand elle
+        // est accordée. Écouter deux fois ne double rien.
         const ecouter = () => addEventListener('deviceorientation', incliner, { passive: true });
         if ('DeviceOrientationEvent' in window) ecouter();
-        const demande = window.DeviceOrientationEvent?.requestPermission;
-        if (typeof demande === 'function') {
-          let repondu = false;
-          const demander = () => {
-            if (repondu) return;
-            // L'inclinaison et le mouvement se demandent dans le même geste :
-            // iOS n'affiche qu'une fenêtre pour les deux. Le mouvement sert à
-            // la pluie de formes qu'on déclenche en secouant le téléphone.
-            const mouvement = window.DeviceMotionEvent?.requestPermission;
-            Promise.all([
-              demande.call(DeviceOrientationEvent),
-              typeof mouvement === 'function'
-                ? mouvement.call(DeviceMotionEvent).catch(() => 'denied')
-                : 'granted',
-            ])
-              .then(([etat, etatMouvement]) => {
-                repondu = true;
-                removeEventListener('touchend', demander);
-                if (etat === 'granted') ecouter();
-                if (etatMouvement === 'granted') dispatchEvent(new Event('mouvement-autorise'));
-              })
-              .catch(() => {});
-          };
-          addEventListener('touchend', demander, { passive: true });
-        }
+        addEventListener('orientation-autorisee', ecouter);
       }
 
       // La souris quitte la fenêtre : on repose tout.
