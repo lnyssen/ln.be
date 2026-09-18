@@ -50,7 +50,7 @@
   --accent-texte: var(--accent);
   --footer-fg: var(--sur-accent);
   transition: --accent 700ms cubic-bezier(0.22, 1, 0.36, 1);
-  --footer-h: 280px;
+  --footer-h: 400px;
   --header-h: 75px;
   /* Respiration unique : distance entre un filet et le texte, en haut comme
      en bas de chaque section. */
@@ -77,7 +77,7 @@
    placée dans @layer base perdrait contre eux. */
 @media (max-width: 767px) {
   .swiss {
-    --footer-h: 352px;
+    --footer-h: 410px;
   }
 }
 
@@ -980,9 +980,103 @@
     text-box: trim-both cap alphabetic;
   }
 
+  /* L'accroche du pied, à la voix du titre : même corps, même graisse, mêmes
+     capitales serrées. Son point est du papier sur l'aplat, comme celui du
+     titre est de l'accent sur le papier. */
+  .swiss .footer-appel {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.12em;
+    font-size: clamp(2.75rem, 11vw, 8.5rem);
+  }
+
+  .swiss .footer-accroche {
+    font-size: 1em;
+    line-height: 0.88;
+    letter-spacing: -0.045em;
+    text-transform: uppercase;
+    font-weight: 700;
+    text-box: trim-both cap alphabetic;
+  }
+
+  .swiss .footer-point {
+    color: #f4f2ed;
+  }
+
+  /* Les liens à flèche s'épaississent au survol ; l'accroche, déjà au plus
+     gras, ne doit pas maigrir pour autant. */
+  .swiss a.footer-appel:hover,
+  .swiss a.footer-appel:focus-visible {
+    font-variation-settings: normal;
+  }
+
+  /* La flèche s'envole au survol, comme toutes les flèches du site, mais de
+     plus loin : elle est à l'échelle de l'accroche. */
+  .swiss .footer-fleche {
+    display: block;
+    line-height: 0;
+    margin-top: 0.02em;
+  }
+
+  .swiss .footer-fleche .swiss-arrow {
+    width: 0.34em;
+    height: 0.34em;
+  }
+
+  .swiss .footer-appel:hover .swiss-arrow,
+  .swiss .footer-appel:focus-visible .swiss-arrow {
+    --pousse: 0.06em;
+  }
+
+  .swiss .footer-contacts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px 40px;
+    margin-top: 36px;
+  }
+
   .swiss .footer-mail {
     display: block;
     width: fit-content;
+    font-size: clamp(1.125rem, 1.8vw, 1.5rem);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.18em;
+    text-decoration-color: transparent;
+    transition: text-decoration-color 200ms ease;
+  }
+
+  .swiss .footer-mail:hover,
+  .swiss .footer-mail:focus-visible {
+    text-decoration-color: currentColor;
+  }
+
+  /* Une seule ligne de mentions, séparée de ce qui précède par un filet. Elle
+     se replie sur plusieurs lignes au téléphone. */
+  .swiss .footer-ligne {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 12px 32px;
+    margin-top: 32px;
+    padding-top: 20px;
+    border-top: 1px solid currentColor;
+  }
+
+  .swiss .footer-ligne > * {
+    text-box: trim-both cap alphabetic;
+  }
+
+  .swiss .footer-liens {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 24px;
+  }
+
+  .swiss .footer-droits {
+    margin-left: auto;
   }
 
   /* La flèche accompagne le mot sans sortir de sa ligne : en ligne, calée sur

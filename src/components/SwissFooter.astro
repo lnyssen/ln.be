@@ -9,10 +9,8 @@ import SwissArrow from './SwissArrow.astro';
 // qui reste au-dessus d'elle, et le panneau est assez haut pour que ce
 // recentrage ne le colle pas à son bord supérieur.
 //
-// Sans intitulés, l'ours n'a plus qu'une règle : toutes les lignes ont le même
-// corps, donc la ligne n de chaque colonne tombe à la même hauteur que la
-// ligne n des autres. L'adresse, seule à changer de corps, prend une ligne à
-// elle au-dessus plutôt que de décaler sa colonne d'un cran.
+// Trois étages, du plus grand au plus petit : l'accroche, les deux moyens de
+// joindre, puis une seule ligne de mentions.
 const elsewhere = [
   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/laurentnyssen/' },
   { label: 'Spotify', href: 'https://open.spotify.com/user/laurentnyssen' },
@@ -25,73 +23,72 @@ const site = [
 ---
 
 <footer
-  class="swiss-footer fixed inset-x-0 bottom-0 z-0 flex h-[var(--footer-h)] flex-col justify-center pb-[calc(96px+env(safe-area-inset-bottom))]"
+  class="swiss-footer fixed inset-x-0 bottom-0 z-0 flex h-[var(--footer-h)] flex-col justify-end pb-[calc(96px+env(safe-area-inset-bottom))]"
 >
-  <div class="swiss-shell swiss-grid footer-cols items-start gap-y-[26px]">
-    <a
-      href="mailto:hello@laurentnyssen.be"
-      class="footer-mail col-span-6 text-[clamp(1.25rem,2.4vw,2rem)] font-medium tracking-[-0.03em] transition-colors duration-200 hover:underline hover:decoration-1 hover:underline-offset-[3px] md:col-span-12"
-    >
-      hello@laurentnyssen.be
+  <div class="swiss-shell">
+    <!-- La fin de la page parle avec la voix de son titre : une accroche à
+         l'échelle de l'ouverture, qui est tout entière le lien vers le mail.
+         C'est la seule action du site, elle ne chuchote plus. -->
+    <a href="mailto:hello@laurentnyssen.be" class="footer-appel group block w-fit" aria-label="Let's talk — hello@laurentnyssen.be">
+      <span class="footer-accroche" aria-hidden="true">Let's talk<span class="footer-point">.</span></span>
+      <span class="footer-fleche" aria-hidden="true">
+        <SwissArrow size={44} direction="up-right" />
+      </span>
     </a>
 
-    <div class="footer-col col-span-3 md:col-span-3">
-      <a href="tel:+32497305080" class="swiss-meta w-fit transition-colors duration-200 hover:underline hover:decoration-1 hover:underline-offset-[3px] ">
-        +32 (0)497 30 50 80
-      </a>
-      <p class="swiss-meta">Brussels — BE</p>
-      <p class="swiss-meta">Available for commissions</p>
+    <div class="footer-contacts">
+      <a href="mailto:hello@laurentnyssen.be" class="footer-mail">hello@laurentnyssen.be</a>
+      <a href="tel:+32497305080" class="footer-mail">+32 (0)497 30 50 80</a>
     </div>
 
-    <div class="footer-col col-span-3 md:col-span-3">
-      {
-        elsewhere.map((item) => {
-          // Une page du site ne s'ouvre pas dans un onglet neuf, et sa flèche
-          // pointe devant plutôt que dehors.
-          const away = item.href.startsWith('http');
-          return (
-            <a
-              href={item.href}
-              target={away ? '_blank' : undefined}
-              rel={away ? 'noopener noreferrer' : undefined}
-              class="swiss-meta block w-fit transition-colors duration-200"
-            >
+    <div class="footer-ligne swiss-meta">
+      <p>
+        Brussels <span data-heure-bruxelles></span>
+      </p>
+      <p>Available for commissions</p>
+      <nav aria-label="Elsewhere" class="footer-liens">
+        {
+          elsewhere.map((item) => (
+            <a href={item.href} target="_blank" rel="noopener noreferrer">
               {item.label}
               <span class="footer-arrow">
-                <SwissArrow size={12} direction={away ? 'up-right' : 'right'} />
+                <SwissArrow size={11} direction="up-right" />
               </span>
             </a>
-          );
-        })
-      }
-    </div>
-
-    <div class="footer-col col-span-3 md:col-span-3">
-      {
-        site.map((item) => (
-          <a
-            href={item.href}
-            class="swiss-meta block w-fit transition-colors duration-200"
-          >
-            {item.label}
-            <span class="footer-arrow">
-              <SwissArrow size={12} direction="right" />
-            </span>
-          </a>
-        ))
-      }
-      <a
-        href="https://www.typedump.com/font/switzer"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="swiss-meta block w-fit transition-colors duration-200"
-      >
-        Set in Switzer<span class="footer-arrow"><SwissArrow size={12} /></span>
-      </a>
-    </div>
-
-    <div class="footer-col col-span-3 md:col-span-2 md:items-end md:text-right">
-      <p class="swiss-meta">© {new Date().getFullYear()} LN</p>
+          ))
+        }
+        {
+          site.map((item) => (
+            <a href={item.href}>
+              {item.label}
+              <span class="footer-arrow">
+                <SwissArrow size={11} direction="right" />
+              </span>
+            </a>
+          ))
+        }
+      </nav>
+      <p class="footer-droits">© {new Date().getFullYear()} LN</p>
     </div>
   </div>
 </footer>
+
+<script is:inline data-astro-rerun>
+  // L'heure de Bruxelles, à la minute : elle rappelle d'où l'on écrit, et
+  // c'est elle qui fait tourner la couleur du site.
+  (() => {
+    const cible = document.querySelector('[data-heure-bruxelles]');
+    if (!cible) return;
+    const format = new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'Europe/Brussels',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+    const poser = () => {
+      cible.textContent = format.format(new Date());
+    };
+    poser();
+    clearInterval(window.__heureBruxelles);
+    window.__heureBruxelles = setInterval(poser, 30000);
+  })();
+</script>
