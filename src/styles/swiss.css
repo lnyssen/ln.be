@@ -1085,12 +1085,14 @@
     display: block;
   }
 
+  /* Le rognage descend un peu sous la ligne de base : les lettres rondes,
+     le S, la dépassent légèrement. */
   .swiss .footer-appel[data-apparition] .footer-accroche {
-    clip-path: inset(-0.3em -0.3em 0 -0.3em);
+    clip-path: inset(-0.3em -0.3em -0.08em -0.3em);
   }
 
   .swiss .footer-appel[data-apparition] .footer-mot {
-    transform: translateY(105%);
+    transform: translateY(115%);
     transition: transform 800ms cubic-bezier(0.2, 0.8, 0.2, 1);
   }
 
@@ -1259,8 +1261,8 @@
     transition: font-variation-settings 220ms ease-out;
   }
 
-  .swiss a:has(.swiss-arrow):hover,
-  .swiss a:has(.swiss-arrow):focus-visible {
+  .swiss a:not(.footer-appel):has(.swiss-arrow):hover,
+  .swiss a:not(.footer-appel):has(.swiss-arrow):focus-visible {
     font-variation-settings: 'wght' var(--gras-survol, 520);
   }
 
