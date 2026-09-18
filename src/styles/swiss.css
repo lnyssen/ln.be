@@ -1362,90 +1362,125 @@
     transform: translateX(30px);
   }
 
-  /* La carte se pose sous la barre, jamais dessus : 16 de marge interne,
-     70 de pilule, 10 d'écart.
-
-     Toute l'animation est portée par la carte, et par elle seule. Elle était
-     répartie sur trois étages — le conteneur glissait, la carte se fondait,
-     chaque ligne se fondait à son tour — et ces trois horloges ne tombaient
-     jamais ensemble : la carte finissait d'arriver que ses lignes montaient
-     encore. Un seul geste, une seule courbe, et la carte se déplie depuis le
-     bord de la barre. */
+  /* Le menu en affiche. L'aplat de couleur tombe du haut comme un rideau,
+     puis chaque page monte de sous sa ligne de base, l'une après l'autre,
+     comme le « Let's talk » du pied. À la fermeture, tout repart d'un coup. */
   .swiss .swiss-menu {
-    top: calc(96px + env(safe-area-inset-top));
     visibility: hidden;
     pointer-events: none;
-    transition: visibility 0s linear 260ms;
-  }
-
-  .swiss .swiss-menu .menu-card {
-    opacity: 0;
-    transform: translateY(-14px) scale(0.97);
-    transform-origin: top right;
-    /* La carte est promue sur sa propre couche pendant le trajet : sans cela
-       le navigateur la recompose à chaque image, et le mouvement accroche. */
-    will-change: transform, opacity;
+    background-color: var(--accent);
+    color: var(--sur-accent);
+    clip-path: inset(0 0 100% 0);
     transition:
-      opacity 200ms cubic-bezier(0.22, 1, 0.36, 1),
-      transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+      clip-path 300ms cubic-bezier(0.65, 0, 0.35, 1),
+      visibility 0s linear 300ms;
   }
 
   .swiss .swiss-menu.is-open {
     visibility: visible;
     pointer-events: auto;
-    transition-delay: 0s;
+    clip-path: inset(0);
+    transition:
+      clip-path 460ms cubic-bezier(0.65, 0, 0.35, 1),
+      visibility 0s;
   }
 
-  .swiss .swiss-menu.is-open .menu-card {
-    opacity: 1;
+  .swiss .menu-affiche {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    padding-top: calc(118px + env(safe-area-inset-top));
+    padding-bottom: calc(104px + env(safe-area-inset-bottom));
+  }
+
+  .swiss .menu-pages {
+    display: flex;
+    flex-direction: column;
+    /* Plus d'écart entre deux pages qu'entre les deux lignes d'une même
+       page : « Le Polographe » se lit d'un seul tenant. */
+    gap: 0.3em;
+    font-size: clamp(2.75rem, 13vw, 4.5rem);
+  }
+
+  .swiss .menu-link {
+    display: block;
+    width: fit-content;
+    font-weight: 700;
+    line-height: 0.88;
+    letter-spacing: -0.045em;
+    text-transform: uppercase;
+    text-box: trim-both cap alphabetic;
+    /* Rogné juste sous la ligne de base : le mot en sort. */
+    clip-path: inset(-0.3em -0.3em -0.08em -0.3em);
+  }
+
+  .swiss .menu-mot {
+    display: block;
+    transform: translateY(115%);
+    transition: transform 0ms;
+  }
+
+  .swiss .menu-link[aria-current="page"] {
+    color: var(--contre-accent);
+  }
+
+  .swiss .menu-pied {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    opacity: 0;
+  }
+
+  .swiss .swiss-menu.is-open .menu-mot {
     transform: none;
+    transition: transform 700ms cubic-bezier(0.2, 0.8, 0.2, 1) calc(200ms + var(--i) * 70ms);
   }
 
-  /* La capsule d'outils reste, menu ouvert ou non. Elle s'effaçait à
-     l'ouverture : les outils du visiteur disparaissaient au moment précis où
-     il ouvre quelque chose, et le bas de l'écran se vidait sans raison. Le
-     menu est une carte posée sous la barre, en haut ; il ne lui dispute pas
-     la place. */
+  .swiss .swiss-menu.is-open .menu-pied {
+    opacity: 1;
+    transition: opacity 400ms ease calc(200ms + var(--i) * 70ms);
+  }
+
+  /* Le doigt posé sur une page la décale d'un cran, comme une flèche. */
+  .swiss .menu-link:active .menu-mot {
+    transform: translateX(0.08em);
+  }
 
   @media (prefers-reduced-motion: reduce) {
     .swiss .swiss-menu,
-    .swiss .swiss-menu .menu-card {
+    .swiss .swiss-menu.is-open,
+    .swiss .swiss-menu.is-open .menu-mot,
+    .swiss .swiss-menu.is-open .menu-pied {
       transition: none;
     }
 
-    .swiss .swiss-menu .menu-card {
+    .swiss .menu-mot {
       transform: none;
     }
   }
 
-  /* La carte du menu prend la matière de la barre : même verre, même
-     contour. Elle occupe la moitié de la largeur, au moins ce qu'il faut à
-     son plus long intitulé, et se range à droite, sous le bouton qui
-     l'ouvre — c'est de là qu'elle se déplie. */
-  .swiss .menu-card {
-    position: relative;
-    isolation: isolate;
-    width: fit-content;
-    min-width: 50%;
-    margin-left: auto;
-    border: 1px solid var(--rule);
-    /* Plus transparente encore que la barre : on doit voir la page sous le
-       menu, floutée. Le flou, plus fort, garde les intitulés lisibles. */
-    background-color: color-mix(in srgb, var(--paper) 28%, transparent);
-    -webkit-backdrop-filter: blur(64px) saturate(1.5);
-    backdrop-filter: blur(64px) saturate(1.5);
+  /* Menu ouvert, la barre se fond dans l'affiche : plus de verre ni de
+     papier autour, le logo et la croix prennent la couleur du texte posé
+     sur l'accent. */
+  .swiss.menu-open body > header {
+    --ink: var(--sur-accent);
+    --rule: var(--sur-accent);
   }
 
-  @media (prefers-reduced-transparency: reduce) {
-    .swiss .menu-card {
-      background-color: var(--paper);
-      -webkit-backdrop-filter: none;
-      backdrop-filter: none;
-    }
+  .swiss.menu-open .header-plate {
+    visibility: hidden;
   }
 
-  .swiss .menu-link {
-    text-box: trim-both cap alphabetic;
+  .swiss.menu-open .header-pill {
+    background-color: transparent;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  /* Menu ouvert, la page ne défile plus derrière l'affiche. */
+  .swiss.menu-open body {
+    overflow: hidden;
   }
 
   /* Le fond ne défile plus derrière le panneau. */
