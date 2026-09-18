@@ -42,9 +42,7 @@ const site = [
     </div>
 
     <div class="footer-ligne swiss-meta">
-      <p>
-        Brussels <span data-heure-bruxelles></span>
-      </p>
+      <p>Brussels — BE</p>
       <p>Available for commissions</p>
       <nav aria-label="Elsewhere" class="footer-liens">
         {
@@ -72,23 +70,3 @@ const site = [
     </div>
   </div>
 </footer>
-
-<script is:inline data-astro-rerun>
-  // L'heure de Bruxelles, à la minute : elle rappelle d'où l'on écrit, et
-  // c'est elle qui fait tourner la couleur du site.
-  (() => {
-    const cible = document.querySelector('[data-heure-bruxelles]');
-    if (!cible) return;
-    const format = new Intl.DateTimeFormat('en-GB', {
-      timeZone: 'Europe/Brussels',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-    const poser = () => {
-      cible.textContent = format.format(new Date());
-    };
-    poser();
-    clearInterval(window.__heureBruxelles);
-    window.__heureBruxelles = setInterval(poser, 30000);
-  })();
-</script>
