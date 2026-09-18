@@ -1078,6 +1078,50 @@
     color: #f4f2ed;
   }
 
+  /* L'arrivée : le mot monte de sous sa ligne de base, rogné au ras de
+     celle-ci, puis le point se pose et la flèche part. Sans script, rien
+     n'est caché. */
+  .swiss .footer-mot {
+    display: block;
+  }
+
+  .swiss .footer-appel[data-apparition] .footer-accroche {
+    clip-path: inset(-0.3em -0.3em 0 -0.3em);
+  }
+
+  .swiss .footer-appel[data-apparition] .footer-mot {
+    transform: translateY(105%);
+    transition: transform 800ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .swiss .footer-appel[data-apparition] .footer-point {
+    display: inline-block;
+    transform: scale(0);
+    transform-origin: 50% 85%;
+    transition: transform 380ms cubic-bezier(0.34, 1.56, 0.64, 1) 520ms;
+  }
+
+  .swiss .footer-appel[data-apparition] .footer-fleche {
+    opacity: 0;
+    transform: translate(-0.25em, 0.25em);
+    transition:
+      opacity 400ms ease 640ms,
+      transform 600ms cubic-bezier(0.2, 0.8, 0.2, 1) 640ms;
+  }
+
+  .swiss .footer-appel[data-apparition].est-la .footer-mot,
+  .swiss .footer-appel[data-apparition].est-la .footer-point,
+  .swiss .footer-appel[data-apparition].est-la .footer-fleche {
+    transform: none;
+    opacity: 1;
+  }
+
+  /* Recouvert, le pied se remet en place sans animation visible. */
+  .swiss .footer-appel[data-apparition]:not(.est-la) * {
+    transition-duration: 0ms;
+    transition-delay: 0ms;
+  }
+
   /* Les liens à flèche s'épaississent au survol ; l'accroche, elle, ne
      change pas de graisse — seule sa flèche part. */
   .swiss a.footer-appel:hover,

@@ -30,7 +30,7 @@ const site = [
          l'échelle de l'ouverture, qui est tout entière le lien vers le mail.
          C'est la seule action du site, elle ne chuchote plus. -->
     <a href="mailto:hello@laurentnyssen.be" class="footer-appel group block w-fit" aria-label="Let's talk — hello@laurentnyssen.be">
-      <span class="footer-accroche" aria-hidden="true">Let's talk<span class="footer-point">.</span></span>
+      <span class="footer-accroche" aria-hidden="true"><span class="footer-mot">Let's talk<span class="footer-point">.</span></span></span>
       <span class="footer-fleche" aria-hidden="true">
         <SwissArrow size={44} direction="up-right" />
       </span>
@@ -76,3 +76,26 @@ const site = [
     </div>
   </div>
 </footer>
+
+<script is:inline data-astro-rerun>
+  // L'accroche monte de sa ligne de base quand on découvre le pied, puis son
+  // point tombe et la flèche part. Elle se cache de nouveau quand la page
+  // recouvre entièrement le pied : on la revoit à chaque arrivée.
+  (() => {
+    const appel = document.querySelector('.footer-appel');
+    if (!appel || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    window.__appelStop?.();
+    const arret = new AbortController();
+    window.__appelStop = () => arret.abort();
+    appel.dataset.apparition = '';
+    const regarder = () => {
+      const pied = appel.closest('.swiss-footer').offsetHeight;
+      const decouvert = scrollY + innerHeight - (document.documentElement.scrollHeight - pied);
+      if (decouvert > pied * 0.35) appel.classList.add('est-la');
+      else if (decouvert <= 0) appel.classList.remove('est-la');
+    };
+    addEventListener('scroll', regarder, { passive: true, signal: arret.signal });
+    addEventListener('resize', regarder, { signal: arret.signal });
+    requestAnimationFrame(regarder);
+  })();
+</script>
