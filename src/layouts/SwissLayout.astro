@@ -226,8 +226,9 @@ const ogImage = new URL('/og.png', Astro.site).href;
         // Une seule couleur, vive, identique en clair et en sombre : clarté
         // 0,68, saturation au maximum affichable. Ce qui s'écrit dessus est
         // toujours foncé, à plus de 4,5:1. Seul le petit texte en accent posé
-        // sur le papier clair descend à 0,50, même teinte : aucune couleur ne
-        // se lit à la fois sur le papier clair et sur le fond sombre.
+        // sur le papier clair descend en clarté, même teinte et même
+        // saturation : aucune couleur ne se lit à la fois sur le papier clair
+        // et sur le fond sombre.
         const poserTeinte = () => {
           const root = document.documentElement;
           if (root.classList.contains('ink-on')) {
@@ -242,8 +243,19 @@ const ogImage = new URL('/og.png', Astro.site).href;
           if (root.dataset.swissTheme === 'dark') {
             root.style.setProperty('--accent-texte', vive);
           } else {
-            const ct = saturer(0.5, h, (y) => y <= 0.155);
-            root.style.setProperty('--accent-texte', `oklch(0.5 ${ct.toFixed(3)} ${h.toFixed(1)})`);
+            // Même teinte, même saturation que la couleur vive : seule la
+            // clarté descend, et juste assez pour atteindre 4,5:1 sur le
+            // papier. Une saturation poussée à part donnait un violet
+            // électrique qui ne ressemblait plus à l'accent.
+            let bas = 0.3;
+            let haut = 0.68;
+            for (let i = 0; i < 20; i++) {
+              const mi = (bas + haut) / 2;
+              if (luminance(lineaire(mi, cv, h)) <= 0.155) bas = mi;
+              else haut = mi;
+            }
+            const ct = Math.min(cv, saturer(bas, h, () => true));
+            root.style.setProperty('--accent-texte', `oklch(${bas.toFixed(3)} ${ct.toFixed(3)} ${h.toFixed(1)})`);
           }
         };
 
@@ -308,6 +320,20 @@ const ogImage = new URL('/og.png', Astro.site).href;
         // dessiner à chaque navigation lasserait. Le drapeau est posé avant
         // le premier paint, sinon le logo paraîtrait entier le temps d'une
         // image avant de s'effacer.
+        // Le titre de l'accueil s'écrit lui-même à la première page vue de la
+        // session. Il est tenu invisible avant le premier paint, sinon on le
+        // verrait entier le temps que le script le découpe.
+        try {
+          if (
+            location.pathname === '/' &&
+            !sessionStorage.getItem('swiss-titre-vu') &&
+            !matchMedia('(prefers-reduced-motion: reduce)').matches
+          ) {
+            document.documentElement.classList.add('titre-intro');
+            sessionStorage.setItem('swiss-titre-vu', '1');
+          }
+        } catch {}
+
         try {
           if (!sessionStorage.getItem('swiss-logo-vu')) {
             document.documentElement.classList.add('logo-draw');
@@ -861,9 +887,36 @@ const ogImage = new URL('/og.png', Astro.site).href;
         measure();
       });
 
+      // L'écriture du titre, une fois par session : chaque lettre arrive de
+      // gauche à droite, d'une graisse fine à sa graisse, en se posant. Douze
+      // millisecondes d'écart entre deux lettres, trois cent vingt pour
+      // chacune : le titre est écrit en trois quarts de seconde. Les lettres
+      // encore invisibles sont les seules que poussent celles qui grossissent :
+      // rien ne bouge de ce qu'on voit.
+      const ecrire = () => {
+        const racine = document.documentElement;
+        if (!racine.classList.contains('titre-intro')) return;
+        glyphs.forEach((g, i) => {
+          g.el.animate(
+            [
+              { opacity: 0, fontWeight: 250, transform: 'translateY(0.08em)' },
+              { opacity: 1, fontWeight: 700, transform: 'none' },
+            ],
+            {
+              duration: 320,
+              delay: 60 + i * 12,
+              easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+              fill: 'backwards',
+            },
+          );
+        });
+        racine.classList.remove('titre-intro');
+      };
+
       const installer = () => {
         crener();
         figerHauteur();
+        ecrire();
       };
       if (document.fonts?.ready) document.fonts.ready.then(installer);
       else installer();

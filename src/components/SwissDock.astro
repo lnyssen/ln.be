@@ -1,7 +1,7 @@
 ---
 import SwissThemeToggle from './SwissThemeToggle.jsx';
 
-// Les outils du visiteur — la grille, la pluie, la teinte et le thème — ne
+// Les outils du visiteur — la grille, la teinte et le thème — ne
 // sont pas de la navigation : ils quittent la barre et se posent en capsule
 // flottante, centrée au bas de l'écran et à portée du pouce. Le contact n'y
 // figure pas : la barre le porte sur grand écran, la carte du menu sur
@@ -34,23 +34,6 @@ import SwissThemeToggle from './SwissThemeToggle.jsx';
       </svg>
     </button>
 
-    <!-- La pluie de formes du Polographe, qui ne se trouvait qu'à la touche P
-         ou en secouant le téléphone : elle a désormais son bouton. Un appui
-         fait pleuvoir, un second efface la pile. -->
-    <button
-      type="button"
-      data-pluie-toggle
-      aria-pressed="false"
-      aria-label="Faire pleuvoir les formes du Polographe"
-      title="Pluie (P)"
-      class="swiss-meta flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-full border border-[var(--rule)] transition-colors duration-200 hover:border-[var(--accent)] hover:bg-[var(--accent)] hover:text-[var(--sur-accent)] aria-pressed:bg-[var(--ink)] aria-pressed:text-[var(--paper)]"
-    >
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true">
-        <path d="M1.5 8.5A6.5 6.5 0 0 1 8 2" />
-        <path d="M8 8.5h6.5V15H8Z" />
-        <path d="M1.5 15 4.75 9.5 8 15" />
-      </svg>
-    </button>
 
     <button
       type="button"

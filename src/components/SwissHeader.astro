@@ -42,7 +42,11 @@ const pages = [
           <LogoLockup class="h-[32px] w-auto shrink-0 text-[var(--ink)]" />
         </span>
       ) : (
-        <a href="/" class="flex items-center">
+        <!-- Le logo mène à l'accueil pour la main, comme partout. Au clavier
+             et pour les lecteurs d'écran, il doublait le lien « Index »
+             posé juste à côté — et le menu mobile porte le même : il se
+             retire de leur parcours plutôt que de répéter. -->
+        <a href="/" class="flex items-center" tabindex="-1" aria-hidden="true">
           <LogoLockup class="h-[32px] w-auto shrink-0 text-[var(--ink)]" />
         </a>
       )

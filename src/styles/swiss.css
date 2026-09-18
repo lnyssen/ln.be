@@ -270,6 +270,20 @@
      en plein dans la vague de graisse — et la ligne paraissait vriller. Il
      redevient ce qu'il est, une ponctuation, et la teinte se commande depuis
      la capsule. */
+  /* Tant que le script n'a pas pris la main, le titre de la première visite
+     reste caché ; s'il ne la prend jamais, il paraît quand même au bout
+     d'une seconde et demie. */
+  .swiss.titre-intro .swiss-display {
+    visibility: hidden;
+    animation: titre-secours 0s 1.5s forwards;
+  }
+
+  @keyframes titre-secours {
+    to {
+      visibility: visible;
+    }
+  }
+
   .swiss .titre-point {
     color: var(--accent);
     transition: color 260ms ease;
