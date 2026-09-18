@@ -1205,6 +1205,7 @@
   /* Le filet qui ouvre une section est le fort. */
   .swiss main section > [class*="border-t"] {
     border-top-width: var(--rule-fort);
+    --trait: var(--rule-fort);
   }
 
   .swiss main section {
@@ -1560,6 +1561,33 @@
     transform: none;
   }
 
+  /* Le filet d'une section se trace de gauche à droite quand elle apparaît,
+     comme un trait tiré à la règle. Le vrai filet garde sa place dans la
+     mise en page mais devient transparent ; un trait de même épaisseur le
+     remplace et se déroule depuis la gauche, un peu après l'arrivée du
+     bloc. */
+  .swiss[data-reveal-ready] [data-reveal][class*="border-t"] {
+    position: relative;
+    border-top-color: transparent;
+  }
+
+  .swiss[data-reveal-ready] [data-reveal][class*="border-t"]::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(-1 * var(--trait, 1px));
+    height: var(--trait, 1px);
+    background-color: var(--rule);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 900ms cubic-bezier(0.65, 0, 0.35, 1) 80ms;
+  }
+
+  .swiss[data-reveal-ready] [data-reveal][class*="border-t"].is-in::before {
+    transform: none;
+  }
+
   /* Le titre et le chapô entrent plus lentement et de plus loin : ils portent
      l'ouverture de la page, ils ne doivent pas arriver comme une ligne de
      liste. La courbe part plus vite et s'arrête plus doucement. */
@@ -1577,6 +1605,11 @@
 
     .swiss[data-reveal-ready] [data-reveal] {
       opacity: 1;
+      transform: none;
+      transition: none;
+    }
+
+    .swiss[data-reveal-ready] [data-reveal][class*="border-t"]::before {
       transform: none;
       transition: none;
     }
