@@ -42,8 +42,12 @@ const site = [
     </div>
 
     <div class="footer-ligne swiss-meta">
-      <p>Brussels — BE</p>
-      <p>Available for commissions</p>
+      <div class="footer-liens footer-liens-souple">
+        <p>Brussels — BE</p>
+        <p>Available for commissions</p>
+      </div>
+      <!-- Deux groupes qui ne se coupent jamais : ailleurs, puis le site. Au
+           téléphone, chacun tient sa propre ligne. -->
       <nav aria-label="Elsewhere" class="footer-liens">
         {
           elsewhere.map((item) => (
@@ -55,6 +59,8 @@ const site = [
             </a>
           ))
         }
+      </nav>
+      <nav aria-label="Site" class="footer-liens">
         {
           site.map((item) => (
             <a href={item.href}>

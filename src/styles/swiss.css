@@ -1072,12 +1072,35 @@
 
   .swiss .footer-liens {
     display: flex;
-    flex-wrap: wrap;
-    gap: 12px 24px;
+    flex-wrap: nowrap;
+    gap: 24px;
+    white-space: nowrap;
   }
 
-  .swiss .footer-droits {
-    margin-left: auto;
+  .swiss .footer-liens-souple {
+    flex-wrap: wrap;
+    row-gap: 12px;
+  }
+
+  .swiss .footer-liens > * {
+    text-box: trim-both cap alphabetic;
+  }
+
+  /* Au téléphone, chaque groupe prend sa ligne et le © ferme la colonne, à
+     gauche comme le reste ; sur grand écran, il se range au bout de la
+     ligne. */
+  .swiss .footer-ligne > * {
+    flex-basis: 100%;
+  }
+
+  @media (min-width: 768px) {
+    .swiss .footer-ligne > * {
+      flex-basis: auto;
+    }
+
+    .swiss .footer-droits {
+      margin-left: auto;
+    }
   }
 
   /* La flèche accompagne le mot sans sortir de sa ligne : en ligne, calée sur
