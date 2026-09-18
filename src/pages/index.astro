@@ -466,11 +466,11 @@ function domainLabel(link: string) {
 
   <script is:inline data-astro-rerun>
     // Mode affiche — touche A. L'accueil se recompose en affiche du Polographe :
-    // une grille de quatre cases sur cinq, au format 4:5 d'une publication,
-    // sur l'aplat de la couleur du moment. Chaque case reçoit une forme du
-    // jeu — quart de cercle, cercle, demi-cercle, triangle, carré —, pleine
-    // ou au trait, dans l'une de ses quatre orientations ; les titres des
-    // projets se posent dessus. Espace ou un clic tire une autre
+    // une grille de quatre cases sur sept, au format 9:16 d'une story, sur
+    // l'aplat de la couleur du moment, sans texte. Chaque case reçoit une
+    // forme du jeu — quart de cercle, cercle, demi-cercle, triangle, carré —,
+    // pleine ou au trait, dans l'une de ses quatre orientations. Espace ou
+    // un clic tire une autre
     // composition ; Échap ou A referme. De quoi faire une capture et la
     // publier.
     (() => {
@@ -498,28 +498,13 @@ function domainLabel(link: string) {
       let cadre = null;
       let retour = null;
 
+      // 28 cases, quatre sur sept : une forme par case, sans un mot.
+      const CASES = 28;
       const composer = (affiche) => {
-        const titres = [
-          ...new Set(
-            [...document.querySelectorAll('.vitrine [data-titre]')].map((a) => a.dataset.titre),
-          ),
-        ];
-        // 20 cases : la première rangée porte le nom et l'année sur deux
-        // cases chacun, la dernière finit par l'adresse sur deux cases ; les
-        // quatorze autres reçoivent une forme.
-        const libres = melanger([...Array(14).keys()]);
-        const places = new Map(titres.slice(0, 14).map((t, i) => [libres[i], t]));
-        let html =
-          '<div class="affiche-case affiche-nom"><span>Laurent<br />Nyssen</span></div>' +
-          '<div class="affiche-case affiche-annee"><span>Selected<br />work ' +
-          new Date().getFullYear() +
-          '</span></div>';
-        for (let i = 0; i < 14; i++) {
-          const titre = places.get(i);
+        let html = '';
+        for (let i = 0; i < CASES; i++) {
           const forme = noms[hasard(noms.length)];
-          // Une forme pleine sous un titre le rendrait illisible : sous un
-          // titre, la forme est toujours au trait.
-          const pleine = !titre && Math.random() < 0.5;
+          const pleine = Math.random() < 0.5;
           const rot = hasard(4) * 90;
           html +=
             '<div class="affiche-case">' +
@@ -530,11 +515,8 @@ function domainLabel(link: string) {
             ' 50 50)" class="' +
             (pleine ? 'pleine' : 'trait') +
             '"/></svg>' +
-            (titre ? '<span class="affiche-titre">' + titre + '</span>' : '') +
             '</div>';
         }
-        html +=
-          '<div class="affiche-case affiche-pied"><span>laurentnyssen.be</span></div>';
         affiche.innerHTML = html;
       };
 

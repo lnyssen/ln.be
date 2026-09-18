@@ -795,9 +795,8 @@
     outline-offset: -4px;
   }
 
-  /* Mode affiche : l'affiche au format 4:5, aussi grande que l'écran le
-     permet, sur le papier de la page. Tout s'y mesure en largeur d'affiche,
-     si bien que la composition reste la même quelle que soit sa taille. */
+  /* Mode affiche : l'affiche au format 9:16, aussi haute que l'écran le
+     permet, sur le papier de la page. */
   .swiss .mode-affiche {
     position: fixed;
     inset: 0;
@@ -812,25 +811,19 @@
   }
 
   .swiss .affiche {
-    container-type: inline-size;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(5, 1fr);
-    width: min(calc((100svh - 110px) * 0.8), calc(100vw - 48px));
-    aspect-ratio: 4 / 5;
+    grid-template-rows: repeat(7, 1fr);
+    width: min(calc((100svh - 110px) * 9 / 16), calc(100vw - 48px));
+    aspect-ratio: 9 / 16;
     padding: 0;
     border: 0;
     background-color: var(--accent);
-    color: #1d1f21;
-    text-align: left;
     cursor: pointer;
   }
 
   .swiss .affiche-case {
     position: relative;
-    display: flex;
-    align-items: flex-start;
-    padding: 2.4cqw;
     border-right: 1px solid #1d1f21;
     border-bottom: 1px solid #1d1f21;
     overflow: hidden;
@@ -838,30 +831,12 @@
 
   /* Pas de filet au bord de l'affiche : la dernière colonne et la dernière
      rangée s'en passent. */
-  .swiss .affiche-case:nth-child(4n + 2) {
+  .swiss .affiche-case:nth-child(4n) {
     border-right: 0;
   }
 
-  .swiss .affiche-case:nth-child(15),
-  .swiss .affiche-case:nth-child(16) {
+  .swiss .affiche-case:nth-child(n + 25) {
     border-bottom: 0;
-  }
-
-  .swiss .affiche-nom {
-    grid-column: span 2;
-  }
-
-  .swiss .affiche-annee {
-    grid-column: span 2;
-    border-right: 0;
-  }
-
-  .swiss .affiche-pied {
-    grid-column: 3 / span 2;
-    border-bottom: 0;
-    border-right: 0;
-    align-items: flex-end;
-    justify-content: flex-end;
   }
 
   .swiss .affiche-case svg {
@@ -880,34 +855,6 @@
     stroke: #1d1f21;
     stroke-width: 1.5px;
     vector-effect: non-scaling-stroke;
-  }
-
-  .swiss .affiche-nom span,
-  .swiss .affiche-annee span {
-    font-size: 7.2cqw;
-    line-height: 0.9;
-    font-weight: 700;
-    letter-spacing: -0.04em;
-    text-transform: uppercase;
-  }
-
-  .swiss .affiche-annee span {
-    font-weight: 400;
-  }
-
-  .swiss .affiche-titre,
-  .swiss .affiche-pied span {
-    position: relative;
-    font-size: 2.3cqw;
-    line-height: 1.1;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-
-  .swiss .affiche-titre {
-    padding: 0.35em 0.5em;
-    background-color: var(--accent);
   }
 
   .swiss .affiche-aide {
