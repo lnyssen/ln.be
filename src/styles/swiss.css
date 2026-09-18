@@ -990,37 +990,22 @@
     font-size: clamp(2.75rem, 11vw, 8.5rem);
   }
 
-  /* Au repos, l'accroche est légère ; sous le pointeur, elle prend toute sa
-     graisse. C'est la typographie qui répond, comme le titre de
-     l'ouverture — la fonte est variable, la graisse passe en fondu. */
+  /* L'accroche ne bouge pas : seule sa flèche répond au pointeur. */
   .swiss .footer-accroche {
     font-size: 1em;
     line-height: 0.88;
     letter-spacing: -0.045em;
     text-transform: uppercase;
-    font-weight: 300;
+    font-weight: 700;
     text-box: trim-both cap alphabetic;
-    transition: font-weight 380ms cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  .swiss .footer-appel:hover .footer-accroche,
-  .swiss .footer-appel:focus-visible .footer-accroche {
-    font-weight: 800;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .swiss .footer-accroche {
-      transition: none;
-    }
   }
 
   .swiss .footer-point {
     color: #f4f2ed;
   }
 
-  /* Les liens à flèche s'épaississent tous d'un même cran au survol ;
-     l'accroche a son propre geste, de léger à gras, qu'on ne doit pas
-     écraser. */
+  /* Les liens à flèche s'épaississent au survol ; l'accroche, elle, ne
+     change pas de graisse — seule sa flèche part. */
   .swiss a.footer-appel:hover,
   .swiss a.footer-appel:focus-visible {
     font-variation-settings: normal;
@@ -1041,7 +1026,7 @@
 
   .swiss .footer-appel:hover .swiss-arrow,
   .swiss .footer-appel:focus-visible .swiss-arrow {
-    --pousse: 0.06em;
+    --pousse: 0.09em;
   }
 
   .swiss .footer-contacts {
