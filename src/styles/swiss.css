@@ -17,7 +17,27 @@
 @property --accent {
   syntax: "<color>";
   inherits: true;
-  initial-value: #7b58e8;
+  initial-value: #7d39eb;
+}
+
+/* Tout ce qui dérive de la teinte glisse avec elle, au même rythme : sinon
+   un contour en accent traînait derrière son texte en accent-texte. */
+@property --accent-texte {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #7d39eb;
+}
+
+@property --sur-accent {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #f4f2ed;
+}
+
+@property --contre-accent {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #1e1e1e;
 }
 
 @tailwind base;
@@ -50,7 +70,11 @@
   --contre-accent: #1e1e1e;
   --accent-texte: var(--accent);
   --footer-fg: var(--sur-accent);
-  transition: --accent 700ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition:
+    --accent 700ms cubic-bezier(0.22, 1, 0.36, 1),
+    --accent-texte 700ms cubic-bezier(0.22, 1, 0.36, 1),
+    --sur-accent 700ms cubic-bezier(0.22, 1, 0.36, 1),
+    --contre-accent 700ms cubic-bezier(0.22, 1, 0.36, 1);
   --footer-h: 400px;
   --header-h: 75px;
   /* Respiration unique : distance entre un filet et le texte, en haut comme
