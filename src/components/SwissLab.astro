@@ -1,23 +1,7 @@
 ---
-// Deux outils cachés, dans la lignée de la grille.
-// W : réglette de graisse — Switzer est variable, autant le montrer. Elle a
-//     son bouton dans la barre du bas, la touche reste un raccourci.
+// Un outil caché, dans la lignée de la grille.
 // I : mode encre — le site simulé en risographie, deux encres et du grain.
 ---
-
-<div data-weight-panel hidden class="weight-panel swiss-meta" aria-hidden="true">
-  <span class="weight-label">Weight</span>
-  <input
-    type="range"
-    min="-150"
-    max="200"
-    step="10"
-    value="0"
-    data-weight-range
-    aria-label="Décalage de graisse"
-  />
-  <span data-weight-value class="weight-value">±0</span>
-</div>
 
 <script is:inline data-astro-rerun>
   (() => {
@@ -31,68 +15,9 @@
       ['INPUT', 'TEXTAREA'].includes(event.target?.tagName) ||
       event.target?.isContentEditable;
 
-    /* ---------- W : réglette de graisse --------------------------------- */
-
-    // Le décalage est relatif : chaque texte garde son rang, toute la page
-    // maigrit ou grossit ensemble. Les graisses de départ sont relevées une
-    // fois pour toutes, sinon le décalage se cumulerait à chaque cran.
-    const socle = new WeakMap();
-
-    const peser = (decalage) => {
-      for (const el of document.querySelectorAll('body *')) {
-        if (!el.firstChild) continue;
-        if (!socle.has(el)) {
-          const w = parseFloat(getComputedStyle(el).fontWeight);
-          if (!w) continue;
-          socle.set(el, w);
-        }
-        if (!decalage) {
-          el.style.fontVariationSettings = '';
-          continue;
-        }
-        const cible = Math.min(900, Math.max(200, socle.get(el) + decalage));
-        el.style.fontVariationSettings = `"wght" ${Math.round(cible)}`;
-      }
-    };
-
-    const panneau = () => document.querySelector('[data-weight-panel]');
-    const bouton = () => document.querySelector('[data-weight-toggle]');
-
-    const basculerGraisse = () => {
-      const p = panneau();
-      if (!p) return;
-      const ouvrir = p.hidden;
-      p.hidden = !ouvrir;
-      bouton()?.setAttribute('aria-pressed', String(ouvrir));
-      if (!ouvrir) {
-        p.querySelector('[data-weight-range]').value = '0';
-        p.querySelector('[data-weight-value]').textContent = '±0';
-        peser(0);
-      }
-    };
-
-    document.addEventListener('click', (event) => {
-      if (event.target.closest?.('[data-weight-toggle]')) basculerGraisse();
-    });
-
-    document.addEventListener('input', (event) => {
-      const curseur = event.target.closest?.('[data-weight-range]');
-      if (!curseur) return;
-      const v = Number(curseur.value);
-      curseur
-        .closest('[data-weight-panel]')
-        .querySelector('[data-weight-value]').textContent =
-        `${v > 0 ? '+' : v < 0 ? '−' : '±'}${Math.abs(v)}`;
-      peser(v);
-    });
-
-    /* ---------- I : mode encre ----------------------------------------- */
-
     document.addEventListener('keydown', (event) => {
       if (saisie(event)) return;
-      const k = event.key.toLowerCase();
-      if (k === 'w') basculerGraisse();
-      else if (k === 'i') document.documentElement.classList.toggle('ink-on');
+      if (event.key.toLowerCase() === 'i') document.documentElement.classList.toggle('ink-on');
     });
   })();
 </script>

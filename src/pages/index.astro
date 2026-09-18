@@ -135,8 +135,8 @@ function domainLabel(link: string) {
         </p>
 
         <ul class="swiss-meta col-span-6 space-y-2 text-left min-[901px]:col-span-3 min-[901px]:justify-self-end min-[901px]:text-right">
-          <li><a href="https://www.linkedin.com/in/laurentnyssen/" class="hover:text-[var(--accent)]">LinkedIn <SwissArrow /></a></li>
-          <li><a href="https://open.spotify.com/user/116697393?si=a871d45a9bb14fe0" class="hover:text-[var(--accent)]">Spotify <SwissArrow /></a></li>
+          <li><a href="https://www.linkedin.com/in/laurentnyssen/" class="hover:text-[var(--accent-texte)]">LinkedIn <SwissArrow /></a></li>
+          <li><a href="https://open.spotify.com/user/116697393?si=a871d45a9bb14fe0" class="hover:text-[var(--accent-texte)]">Spotify <SwissArrow /></a></li>
         </ul>
       </div>
     </section>
@@ -183,7 +183,7 @@ function domainLabel(link: string) {
                 <!-- Grille explicite : le repli en flex désalignait tout sur
                      mobile. Colonne 1 le numéro, colonne 2 le titre et les
                      tags calés dessous, l'étiquette toujours à droite. -->
-                <summary class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-[9px] py-[26px] hover:text-[var(--accent)] sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]">
+                <summary class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-[9px] py-[26px] hover:text-[var(--accent-texte)] sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]">
                   <h3 class="swiss-row-title col-start-1 row-start-1">{project.data.title}</h3>
 
                   <span class="swiss-meta col-start-1 col-end-2 row-start-2 text-[var(--ink-soft)] sm:col-start-2 sm:col-end-3 sm:row-start-1">
@@ -194,7 +194,7 @@ function domainLabel(link: string) {
                        et CLOSE au survol, mais au doigt il n'y a pas de
                        pointeur — le repère doit donc rester. -->
                   <span
-                    class="col-start-2 row-start-1 row-span-2 flex h-[16px] w-[16px] items-center justify-center justify-self-end self-center text-[var(--ink-soft)] group-open:text-[var(--accent)] sm:col-start-3 sm:row-span-1"
+                    class="col-start-2 row-start-1 row-span-2 flex h-[16px] w-[16px] items-center justify-center justify-self-end self-center text-[var(--ink-soft)] group-open:text-[var(--accent-texte)] sm:col-start-3 sm:row-span-1"
                     aria-hidden="true"
                   >
                     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4">
@@ -231,7 +231,7 @@ function domainLabel(link: string) {
                           rel="noopener noreferrer"
                           data-cursor-mirror={domainLabel(project.data.link)}
                           data-cursor-ink="var(--accent)"
-                          class="inline-flex items-center gap-[10px] rounded-full border border-[var(--accent)] px-[24px] py-[11px] text-[15px] font-medium tracking-[-0.01em] text-[var(--accent)] transition-colors duration-200 hover:bg-[var(--accent)] hover:text-[var(--paper)]"
+                          class="inline-flex items-center gap-[10px] rounded-full border border-[var(--accent)] px-[24px] py-[11px] text-[15px] font-medium tracking-[-0.01em] text-[var(--accent-texte)] transition-colors duration-200 hover:bg-[var(--accent)] hover:text-[var(--sur-accent)]"
                         >
                           {domainLabel(project.data.link)}
                           <SwissArrow size={16} />
@@ -263,7 +263,7 @@ function domainLabel(link: string) {
                   href={item.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-[9px] py-[22px] hover:text-[var(--accent)] sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]"
+                  class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-[9px] py-[22px] hover:text-[var(--accent-texte)] sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]"
                 >
                   <h3 class="also-title col-start-1 row-start-1 text-[clamp(1.125rem,1.8vw,1.5rem)] font-medium tracking-[-0.025em]">
                     {item.title}
@@ -295,7 +295,7 @@ function domainLabel(link: string) {
         <div class="teaser col-span-6 flex items-center justify-between gap-5 md:col-span-12">
           <span class="block min-w-0">
             <h2 class="section-label swiss-meta text-[var(--ink-soft)]">Creative lab</h2>
-            <a href="/lab" class="lab-teaser-title mt-[16px] block text-[clamp(1.375rem,2.6vw,2rem)] font-medium leading-[1.1] tracking-[-0.035em] transition-colors duration-200 hover:text-[var(--accent)] focus-visible:text-[var(--accent)]">
+            <a href="/lab" class="lab-teaser-title mt-[16px] block text-[clamp(1.375rem,2.6vw,2rem)] font-medium leading-[1.1] tracking-[-0.035em] transition-colors duration-200 hover:text-[var(--accent-texte)] focus-visible:text-[var(--accent)]">
               Experiments where AI, design and code collide <SwissArrow direction="right" size={24} />
             </a>
           </span>
@@ -340,7 +340,7 @@ function domainLabel(link: string) {
         <div class="teaser col-span-6 flex items-center justify-between gap-5 md:col-span-12">
           <span class="block min-w-0">
             <h2 class="section-label swiss-meta text-[var(--ink-soft)]">Le Polographe</h2>
-            <a href="/lepolographe" class="lab-teaser-title mt-[16px] block text-[clamp(1.375rem,2.6vw,2rem)] font-medium leading-[1.1] tracking-[-0.035em] transition-colors duration-200 hover:text-[var(--accent)] focus-visible:text-[var(--accent)]">
+            <a href="/lepolographe" class="lab-teaser-title mt-[16px] block text-[clamp(1.375rem,2.6vw,2rem)] font-medium leading-[1.1] tracking-[-0.035em] transition-colors duration-200 hover:text-[var(--accent-texte)] focus-visible:text-[var(--accent)]">
               A few shapes on a grid, piled up into chaos <SwissArrow direction="right" size={24} />
             </a>
           </span>

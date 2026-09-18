@@ -5,6 +5,8 @@
 //     « piled up into chaos ». Échap les efface.
 // Au téléphone, on secoue : la pluie tombe, et la pile s'efface deux
 // secondes après que la dernière forme s'est posée.
+// Le bouton de la capsule fait de même partout : un appui fait pleuvoir, un
+// second efface.
 ---
 
 <canvas data-jeu-pluie class="pointer-events-none fixed inset-0 z-[44]" aria-hidden="true"></canvas>
@@ -142,6 +144,7 @@
       }
       pieces = pieces.filter((p) => p.alpha > 0);
       peindrePluie();
+      marquer();
       if (encore) requestAnimationFrame(animerPluie);
       else {
         pluieTourne = false;
@@ -248,6 +251,23 @@
     const ecouterMouvement = () => addEventListener('devicemotion', secouer, { passive: true, signal: arret.signal });
     if ('DeviceMotionEvent' in window) ecouterMouvement();
     addEventListener('mouvement-autorise', ecouterMouvement, sig);
+
+    // Le bouton de la capsule : un appui fait pleuvoir, un second efface la
+    // pile. Il dit son état, enfoncé tant que des formes sont à l'écran.
+    const bouton = () => document.querySelector('[data-pluie-toggle]');
+    const marquer = () => bouton()?.setAttribute('aria-pressed', String(pieces.some((p) => !p.efface)));
+    document.addEventListener(
+      'click',
+      (event) => {
+        if (!event.target.closest?.('[data-pluie-toggle]')) return;
+        clearTimeout(minuterie);
+        effacerApres = false;
+        if (pieces.some((p) => !p.efface)) eclaircir();
+        else pleuvoir();
+        marquer();
+      },
+      sig,
+    );
 
     document.addEventListener('keydown', (event) => {
       if (event.metaKey || event.ctrlKey || event.altKey) return;

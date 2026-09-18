@@ -42,7 +42,13 @@
      éclaircis et le papier est sombre : le contraste tient des deux côtés
      sans qu'on ait à décider deux fois. */
   --footer-bg: var(--accent);
-  --footer-fg: var(--paper);
+  /* Deux usages de l'accent. La couleur elle-même est vive et identique
+     dans les deux thèmes ; ce qui s'écrit dessus est toujours foncé, et le
+     petit texte en accent posé sur le papier clair prend la même teinte un
+     cran plus sombre, seule concession à la lecture. */
+  --sur-accent: #1d1f21;
+  --accent-texte: var(--accent);
+  --footer-fg: var(--sur-accent);
   transition: --accent 700ms cubic-bezier(0.22, 1, 0.36, 1);
   --footer-h: 280px;
   --header-h: 75px;
@@ -463,7 +469,7 @@
      utilitaire posée dans le balisage, elle l'emporte sans qu'il faille
      retoucher six pages. */
   .swiss .section-label {
-    color: var(--accent);
+    color: var(--accent-texte);
   }
 
   /* Sur téléphone, l'intitulé est seul sur sa ligne : il se décolle du filet
@@ -591,7 +597,7 @@
   /* Seul le mot recouvert par la pastille change de couleur, et il la reprend
      dès qu'elle passe au suivant. */
   .swiss [data-nav-link].is-lit {
-    color: var(--paper);
+    color: var(--sur-accent);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -604,38 +610,6 @@
      flou lissait la texture de ce qui passait dessous, si bien qu'elle se
      lisait comme un noir différent de celui qui l'entoure. Seuls son contour
      et sa forme la désignent désormais. */
-  /* ---- Réglette de graisse (W) -------------------------------------- */
-
-  .swiss .weight-panel {
-    position: fixed;
-    left: 50%;
-    bottom: calc(78px + env(safe-area-inset-bottom));
-    z-index: 56;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    transform: translateX(-50%);
-    padding: 10px 18px;
-    border: 1px solid var(--rule);
-    border-radius: 999px;
-    background-color: var(--paper);
-    color: var(--ink);
-    box-shadow: 0 4px 24px rgb(0 0 0 / 0.18);
-  }
-
-  .swiss .weight-panel[hidden] {
-    display: none;
-  }
-
-  .swiss .weight-panel input[type="range"] {
-    width: 160px;
-    accent-color: var(--accent);
-  }
-
-  .swiss .weight-value {
-    width: 46px;
-    text-align: right;
-  }
 
   /* ---- Mode encre (I) ------------------------------------------------ */
 
@@ -944,7 +918,7 @@
      du bas et les adresses des projets. */
   .swiss .strip-nav:hover {
     background-color: var(--accent);
-    color: var(--paper);
+    color: var(--sur-accent);
   }
 
   /* La grille se déplie colonne après colonne, les repères suivent. */
@@ -1324,7 +1298,7 @@
   }
 
   .swiss .privacy-body a {
-    color: var(--accent);
+    color: var(--accent-texte);
     text-decoration: underline;
     text-underline-offset: 3px;
   }
@@ -1334,7 +1308,7 @@
   }
 
   .swiss .project-body a {
-    color: var(--accent);
+    color: var(--accent-texte);
     text-decoration: underline;
     text-underline-offset: 3px;
   }

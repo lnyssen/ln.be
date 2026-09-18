@@ -75,7 +75,7 @@ function labelFor(node) {
 
   if (node.closest('[data-accent-cycle]')) return 'TINT';
   if (node.closest('[data-grid-toggle]')) return 'GRID';
-  if (node.closest('[data-weight-toggle]')) return 'WEIGHT';
+  if (node.closest('[data-pluie-toggle]')) return 'RAIN';
   if (node.closest('[role="switch"]')) return 'THEME';
 
   // Un visuel de la vitrine dit le nom du projet qu'il ouvre.
@@ -120,9 +120,9 @@ const GLYPHS = {
   CALL: 'M6.5 3.5h3l1.5 4-2 1.5a11 11 0 0 0 5 5l1.5-2 4 1.5v3a1.5 1.5 0 0 1-1.7 1.5A16.5 16.5 0 0 1 4.5 5.2 1.5 1.5 0 0 1 6 3.5Z',
   THEME: 'M12 2.8a9.2 9.2 0 1 0 0 18.4 9.2 9.2 0 0 0 0-18.4Z M12 2.8v18.4',
   GRID: 'M4.5 3.5v17M9.5 3.5v17M14.5 3.5v17M19.5 3.5v17',
-  // Trois barres qui épaississent : le trait seul ne peut pas varier, on
-  // les trace donc pleines.
-  WEIGHT: 'M4 5.6h16v1.3H4zM4 10.8h16v2.2H4zM4 16.6h16v3.4H4z',
+  // Trois formes du Polographe qui se touchent : quart de cercle, carré,
+  // triangle.
+  RAIN: 'M3 12.5A9.5 9.5 0 0 1 12.5 3 M12.5 12.5h8.5V21h-8.5Z M3 21l4.75-8.5L12.5 21',
   CLICK: 'M6 3.5l12.5 8.2-5.4 1.2 2.6 5.6-2.4 1.1-2.6-5.6-3.7 4V3.5Z',
   // Un astérisque à six branches : rien à faire, seulement à regarder.
   ENJOY: 'M12 3.5v17M4.6 7.75l14.8 8.5M19.4 7.75l-14.8 8.5',
@@ -247,8 +247,8 @@ export default function SwissCursor() {
           >
             <path
               d={GLYPHS[signe]}
-              fill={signe === 'WEIGHT' ? 'currentColor' : 'none'}
-              stroke={signe === 'WEIGHT' ? 'none' : 'currentColor'}
+              fill="none"
+              stroke="currentColor"
             />
           </svg>
         )}

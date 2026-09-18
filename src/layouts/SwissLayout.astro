@@ -153,9 +153,8 @@ const ogImage = new URL('/og.png', Astro.site).href;
         // l'emportent.
         //
         // La couleur se construit en OKLCH : à clarté égale, toutes les
-        // teintes pèsent pareil et gardent le même contraste sur le papier —
-        // 0,52 sur fond clair, 0,66 sur fond sombre. C'est la teinte qui
-        // change, jamais la lisibilité.
+        // teintes pèsent pareil et gardent le même contraste : c'est la
+        // teinte qui change, jamais la lisibilité.
         const PALIERS = [
           [0, 295], [5, 270], [8, 235], [12, 285],
           [16, 320], [19, 15], [21, 10], [23, 300], [24, 295],
@@ -182,30 +181,70 @@ const ogImage = new URL('/og.png', Astro.site).href;
           }
           return 285;
         };
-        // Les teintes de la capsule, relevées sur leurs couleurs d'origine :
-        // [teinte, saturation].
-        const GAMME = {
-          vermillon: [32, 0.18],
-          outremer: [266, 0.2],
-          veronese: [161, 0.13],
-          safran: [66, 0.13],
+        // Les teintes de la capsule, relevées sur leurs couleurs d'origine.
+        const GAMME = { vermillon: 32, outremer: 266, veronese: 161, safran: 66 };
+
+        // OKLCH vers sRGB linéaire — assez pour savoir si une couleur tient
+        // dans ce que l'écran affiche, et combien elle éclaire.
+        const lineaire = (L, C, h) => {
+          const a = C * Math.cos((h * Math.PI) / 180);
+          const b = C * Math.sin((h * Math.PI) / 180);
+          const l = (L + 0.3963377774 * a + 0.2158037573 * b) ** 3;
+          const m = (L - 0.1055613458 * a - 0.0638541728 * b) ** 3;
+          const s = (L - 0.0894841775 * a - 1.291485548 * b) ** 3;
+          return [
+            4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s,
+            -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s,
+            -0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s,
+          ];
         };
-        // Une même couleur dans les deux thèmes : même teinte, même
-        // saturation, et seulement l'écart de clarté qu'exige la lecture —
-        // 0,52 sur le papier clair, 0,66 sur le fond sombre, soit au moins
-        // 4,5:1 dans les deux cas. L'écart était de 0,50 à 0,78 : si clair
-        // en sombre que l'écran ne pouvait plus y mettre de saturation, et
-        // le violet devenait lavande, le vermillon corail.
+        const p3 = matchMedia('(color-gamut: p3)').matches;
+        const affichable = ([r, g, b]) => {
+          const v = p3
+            ? [0.8224621 * r + 0.177538 * g, 0.0331941 * r + 0.9668058 * g, 0.0170827 * r + 0.0723974 * g + 0.9105199 * b]
+            : [r, g, b];
+          return v.every((x) => x >= -0.0005 && x <= 1.0005);
+        };
+        const luminance = ([r, g, b]) => 0.2126 * r + 0.7152 * g + 0.0722 * b;
+        // La saturation la plus forte que l'écran rende sans déformer la
+        // teinte — au-delà, le navigateur la ramène de force et le safran
+        // vire à l'orange —, bornée par une luminance à tenir pour que le
+        // texte reste lisible.
+        const saturer = (L, h, lisible) => {
+          let bas = 0;
+          let haut = 0.4;
+          for (let i = 0; i < 24; i++) {
+            const mi = (bas + haut) / 2;
+            if (affichable(lineaire(L, mi, h))) bas = mi;
+            else haut = mi;
+          }
+          let c = bas;
+          while (c > 0 && !lisible(luminance(lineaire(L, c, h)))) c -= 0.004;
+          return Math.max(0, c);
+        };
+
+        // Une seule couleur, vive, identique en clair et en sombre : clarté
+        // 0,68, saturation au maximum affichable. Ce qui s'écrit dessus est
+        // toujours foncé, à plus de 4,5:1. Seul le petit texte en accent posé
+        // sur le papier clair descend à 0,50, même teinte : aucune couleur ne
+        // se lit à la fois sur le papier clair et sur le fond sombre.
         const poserTeinte = () => {
           const root = document.documentElement;
           if (root.classList.contains('ink-on')) {
             root.style.removeProperty('--accent');
+            root.style.removeProperty('--accent-texte');
             return;
           }
-          const choisie = GAMME[root.dataset.swissAccent];
-          const [teinte, chroma] = choisie || [teinteHeure(), 0.17];
-          const clarte = root.dataset.swissTheme === 'dark' ? 0.66 : 0.52;
-          root.style.setProperty('--accent', `oklch(${clarte} ${chroma.toFixed(3)} ${teinte.toFixed(1)})`);
+          const h = GAMME[root.dataset.swissAccent] ?? teinteHeure();
+          const cv = saturer(0.68, h, (y) => y >= 0.235);
+          const vive = `oklch(0.68 ${cv.toFixed(3)} ${h.toFixed(1)})`;
+          root.style.setProperty('--accent', vive);
+          if (root.dataset.swissTheme === 'dark') {
+            root.style.setProperty('--accent-texte', vive);
+          } else {
+            const ct = saturer(0.5, h, (y) => y <= 0.155);
+            root.style.setProperty('--accent-texte', `oklch(0.5 ${ct.toFixed(3)} ${h.toFixed(1)})`);
+          }
         };
 
         // Safari teinte ses barres avec cette valeur, et c'est ce qui fait
