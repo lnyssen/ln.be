@@ -28,10 +28,10 @@
    d'ombre — la grille et la typographie portent tout. */
 .swiss {
   --paper: #f4f2ed;
-  --ink: #222222;
+  --ink: #1e1e1e;
   --ink-soft: #6a6a6a;
-  --rule: #222222;
-  --accent: #7b58e8;
+  --rule: #1e1e1e;
+  --accent: #7d39eb;
   /* Fond de la barre : assez de papier pour que la typographie reste lisible,
      assez de vide pour qu'on devine le contenu passer dessous. */
   --header-bg: color-mix(in srgb, #f4f2ed 46%, transparent);
@@ -46,7 +46,8 @@
      dans les deux thèmes ; ce qui s'écrit dessus est toujours foncé, et le
      petit texte en accent posé sur le papier clair prend la même teinte un
      cran plus sombre, seule concession à la lecture. */
-  --sur-accent: #1d1f21;
+  --sur-accent: #f4f2ed;
+  --contre-accent: #1e1e1e;
   --accent-texte: var(--accent);
   --footer-fg: var(--sur-accent);
   transition: --accent 700ms cubic-bezier(0.22, 1, 0.36, 1);
@@ -108,15 +109,12 @@
 }
 
 .swiss[data-swiss-theme="dark"] {
-  --paper: #1d1f21;
+  --paper: #1e1e1e;
   --ink: #f4f2ed;
   --ink-soft: #d6d6d6;
   --rule: #f4f2ed;
-  /* Le violet de la marque tombe à 3,9:1 sur fond noir : on passe à la
-     lavande, l'autre violet du site, qui remonte à 7,7:1. */
-  --accent: #9e9eff;
   /* Le bruit se voit davantage sur l'encre : on le retient un peu. */
-  --header-bg: color-mix(in srgb, #1d1f21 46%, transparent);
+  --header-bg: color-mix(in srgb, #1e1e1e 46%, transparent);
 }
 
 /* Deux encres sur un papier chaud et un très léger
@@ -135,56 +133,11 @@
   --grid-ink: color-mix(in srgb, #ff4d6d 75%, transparent);
 }
 
-/* Les teintes, redéclarées dans la gamme de l'écran. Les mêmes valeurs lues
-   en display-p3 au lieu de sRGB : sur un écran large — un iPhone, un portable
-   récent — elles occupent toute la place disponible au lieu d'être bornées à
-   la gamme la plus étroite, où elles paraissaient ternes. Ailleurs, la
-   déclaration est ignorée et le sRGB reste. */
+/* Le mode encre, lu dans la gamme de l'écran quand il est large. */
 @supports (color: color(display-p3 1 1 1)) {
-  .swiss {
-    --accent: color(display-p3 0.482 0.345 0.910);
-  }
-
-  .swiss[data-swiss-theme="dark"] {
-    --accent: color(display-p3 0.620 0.620 1.000);
-  }
-
-  .swiss:not(.ink-on)[data-swiss-accent="vermillon"] {
-    --accent: color(display-p3 0.761 0.204 0.106);
-  }
-
-  .swiss:not(.ink-on)[data-swiss-accent="vermillon"][data-swiss-theme="dark"] {
-    --accent: color(display-p3 1.000 0.478 0.361);
-  }
-
-  .swiss:not(.ink-on)[data-swiss-accent="outremer"] {
-    --accent: color(display-p3 0.122 0.271 0.839);
-  }
-
-  .swiss:not(.ink-on)[data-swiss-accent="outremer"][data-swiss-theme="dark"] {
-    --accent: color(display-p3 0.478 0.635 1.000);
-  }
-
-  .swiss:not(.ink-on)[data-swiss-accent="veronese"] {
-    --accent: color(display-p3 0.047 0.490 0.329);
-  }
-
-  .swiss:not(.ink-on)[data-swiss-accent="veronese"][data-swiss-theme="dark"] {
-    --accent: color(display-p3 0.263 0.824 0.627);
-  }
-
-  .swiss:not(.ink-on)[data-swiss-accent="safran"] {
-    --accent: color(display-p3 0.604 0.345 0.000);
-  }
-
-  .swiss:not(.ink-on)[data-swiss-accent="safran"][data-swiss-theme="dark"] {
-    --accent: color(display-p3 0.961 0.694 0.239);
-  }
-
   .swiss.ink-on {
     --accent: color(display-p3 1.000 0.302 0.427);
   }
-
 }
 
 @layer base {
@@ -227,42 +180,6 @@
     height: 100%;
     border-radius: 9999px;
     box-shadow: 0 0 0 100vw var(--paper);
-  }
-
-  /* Les teintes d'accent, que le visiteur fait tourner en cliquant sur le
-     point du titre. Chacune vient par paire : la sombre est éclaircie, sans
-     quoi elle s'éteindrait sur le fond noir. Le mode encre garde les siennes
-     — c'est une simulation d'impression, pas un thème à décorer. */
-  .swiss:not(.ink-on)[data-swiss-accent="vermillon"] {
-    --accent: #c2341b;
-  }
-
-  .swiss:not(.ink-on)[data-swiss-accent="vermillon"][data-swiss-theme="dark"] {
-    --accent: #ff7a5c;
-  }
-
-  .swiss:not(.ink-on)[data-swiss-accent="outremer"] {
-    --accent: #1f45d6;
-  }
-
-  .swiss:not(.ink-on)[data-swiss-accent="outremer"][data-swiss-theme="dark"] {
-    --accent: #7aa2ff;
-  }
-
-  .swiss:not(.ink-on)[data-swiss-accent="veronese"] {
-    --accent: #0c7d54;
-  }
-
-  .swiss:not(.ink-on)[data-swiss-accent="veronese"][data-swiss-theme="dark"] {
-    --accent: #43d2a0;
-  }
-
-  .swiss:not(.ink-on)[data-swiss-accent="safran"] {
-    --accent: #9a5800;
-  }
-
-  .swiss:not(.ink-on)[data-swiss-accent="safran"][data-swiss-theme="dark"] {
-    --accent: #f5b13d;
   }
 
   /* Le point qui ferme le titre est la seule couleur de la page. Il a été un
@@ -654,18 +571,18 @@
      ses commandes se composent alors comme sur leur propre papier, sans
      qu'aucune n'ait à connaître le thème de la page. */
   .swiss:not(.ink-on) .dock-capsule {
-    --paper: #1d1f21;
+    --paper: #1e1e1e;
     --ink: #f4f2ed;
     --ink-soft: #b4b4b4;
     --rule: #f4f2ed;
-    background-color: #1d1f21;
+    background-color: #1e1e1e;
   }
 
   .swiss:not(.ink-on)[data-swiss-theme="dark"] .dock-capsule {
     --paper: #f4f2ed;
-    --ink: #222222;
+    --ink: #1e1e1e;
     --ink-soft: #727272;
-    --rule: #222222;
+    --rule: #1e1e1e;
     background-color: #f4f2ed;
   }
 
@@ -824,8 +741,8 @@
 
   .swiss .affiche-case {
     position: relative;
-    border-right: 1px solid #1d1f21;
-    border-bottom: 1px solid #1d1f21;
+    border-right: 1px solid var(--sur-accent);
+    border-bottom: 1px solid var(--sur-accent);
     overflow: hidden;
   }
 
@@ -847,12 +764,12 @@
   }
 
   .swiss .affiche-case .pleine {
-    fill: #1d1f21;
+    fill: var(--sur-accent);
   }
 
   .swiss .affiche-case .trait {
     fill: none;
-    stroke: #1d1f21;
+    stroke: var(--sur-accent);
     stroke-width: 1.5px;
     vector-effect: non-scaling-stroke;
   }
@@ -1075,7 +992,7 @@
   }
 
   .swiss .footer-point {
-    color: #f4f2ed;
+    color: var(--contre-accent);
   }
 
   /* L'arrivée : le mot monte de sous sa ligne de base, rogné au ras de
