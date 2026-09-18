@@ -465,6 +465,143 @@ function domainLabel(link: string) {
   </script>
 
   <script is:inline data-astro-rerun>
+    // Mode affiche — touche A. L'accueil se recompose en affiche du Polographe :
+    // une grille de quatre cases sur cinq, au format 4:5 d'une publication,
+    // sur l'aplat de la couleur du moment. Chaque case reçoit une forme du
+    // jeu — quart de cercle, cercle, demi-cercle, triangle, carré —, pleine
+    // ou au trait, dans l'une de ses quatre orientations ; les titres des
+    // projets se posent dessus. Espace ou un clic tire une autre
+    // composition ; Échap ou A referme. De quoi faire une capture et la
+    // publier.
+    (() => {
+      if (window.__modeAffiche) return;
+      window.__modeAffiche = true;
+
+      const FORMES = {
+        quart: 'M0 100A100 100 0 0 1 100 0V100Z',
+        cercle: 'M0 50a50 50 0 1 0 100 0a50 50 0 1 0-100 0',
+        demi: 'M0 100a50 50 0 0 1 100 0Z',
+        triangle: 'M0 100 50 0 100 100Z',
+        carre: 'M25 25h50v50H25Z',
+      };
+      const noms = Object.keys(FORMES);
+      const hasard = (n) => Math.floor(Math.random() * n);
+      const melanger = (t) => {
+        const r = [...t];
+        for (let i = r.length - 1; i > 0; i--) {
+          const j = hasard(i + 1);
+          [r[i], r[j]] = [r[j], r[i]];
+        }
+        return r;
+      };
+
+      let cadre = null;
+      let retour = null;
+
+      const composer = (affiche) => {
+        const titres = [
+          ...new Set(
+            [...document.querySelectorAll('.vitrine [data-titre]')].map((a) => a.dataset.titre),
+          ),
+        ];
+        // 20 cases : la première rangée porte le nom et l'année sur deux
+        // cases chacun, la dernière finit par l'adresse sur deux cases ; les
+        // quatorze autres reçoivent une forme.
+        const libres = melanger([...Array(14).keys()]);
+        const places = new Map(titres.slice(0, 14).map((t, i) => [libres[i], t]));
+        let html =
+          '<div class="affiche-case affiche-nom"><span>Laurent<br />Nyssen</span></div>' +
+          '<div class="affiche-case affiche-annee"><span>Selected<br />work ' +
+          new Date().getFullYear() +
+          '</span></div>';
+        for (let i = 0; i < 14; i++) {
+          const titre = places.get(i);
+          const forme = noms[hasard(noms.length)];
+          // Une forme pleine sous un titre le rendrait illisible : sous un
+          // titre, la forme est toujours au trait.
+          const pleine = !titre && Math.random() < 0.5;
+          const rot = hasard(4) * 90;
+          html +=
+            '<div class="affiche-case">' +
+            '<svg viewBox="0 0 100 100" aria-hidden="true"><path d="' +
+            FORMES[forme] +
+            '" transform="rotate(' +
+            rot +
+            ' 50 50)" class="' +
+            (pleine ? 'pleine' : 'trait') +
+            '"/></svg>' +
+            (titre ? '<span class="affiche-titre">' + titre + '</span>' : '') +
+            '</div>';
+        }
+        html +=
+          '<div class="affiche-case affiche-pied"><span>laurentnyssen.be</span></div>';
+        affiche.innerHTML = html;
+      };
+
+      const fermer = () => {
+        if (!cadre) return;
+        cadre.remove();
+        cadre = null;
+        document.removeEventListener('keydown', surTouche, true);
+        if (retour?.isConnected) retour.focus({ preventScroll: true });
+      };
+
+      const surTouche = (event) => {
+        if (!cadre) return;
+        const k = event.key;
+        if (k === 'Escape' || k.toLowerCase() === 'a') {
+          event.preventDefault();
+          event.stopPropagation();
+          fermer();
+        } else if (k === ' ' || k === 'Enter') {
+          event.preventDefault();
+          composer(cadre.querySelector('.affiche'));
+        } else if (k === 'Tab') {
+          event.preventDefault();
+        }
+      };
+
+      const ouvrir = () => {
+        if (!document.querySelector('.vitrine')) return;
+        retour = document.activeElement;
+        cadre = document.createElement('div');
+        cadre.className = 'mode-affiche';
+        cadre.setAttribute('role', 'dialog');
+        cadre.setAttribute('aria-modal', 'true');
+        cadre.setAttribute('aria-label', 'Affiche — Espace pour recomposer, Échap pour fermer');
+        const affiche = document.createElement('button');
+        affiche.type = 'button';
+        affiche.className = 'affiche';
+        affiche.setAttribute('aria-label', 'Recomposer l’affiche');
+        affiche.dataset.cursorAffiche = '';
+        const aide = document.createElement('p');
+        aide.className = 'affiche-aide swiss-meta';
+        aide.textContent = 'Space — new composition · A — close';
+        cadre.append(affiche, aide);
+        composer(affiche);
+        affiche.addEventListener('click', () => composer(affiche));
+        cadre.addEventListener('click', (e) => {
+          if (e.target === cadre) fermer();
+        });
+        document.body.append(cadre);
+        affiche.focus({ preventScroll: true });
+        document.addEventListener('keydown', surTouche, true);
+      };
+
+      document.addEventListener('keydown', (event) => {
+        if (event.metaKey || event.ctrlKey || event.altKey || cadre) return;
+        const t = event.target;
+        if (t?.tagName === 'INPUT' || t?.tagName === 'TEXTAREA' || t?.isContentEditable) return;
+        if (document.querySelector('[data-loupe]')) return;
+        if (event.key.toLowerCase() === 'a') {
+          event.preventDefault();
+          ouvrir();
+        }
+      });
+    })();
+  </script>
+
+  <script is:inline data-astro-rerun>
     // La vitrine avance seule, ralentit au survol, et se prend en main : on
     // la fait glisser au doigt ou à la souris, on la pousse au pavé tactile.
     // Relâchée, elle garde un peu d'élan puis reprend son allure. Un

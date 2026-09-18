@@ -795,6 +795,125 @@
     outline-offset: -4px;
   }
 
+  /* Mode affiche : l'affiche au format 4:5, aussi grande que l'écran le
+     permet, sur le papier de la page. Tout s'y mesure en largeur d'affiche,
+     si bien que la composition reste la même quelle que soit sa taille. */
+  .swiss .mode-affiche {
+    position: fixed;
+    inset: 0;
+    z-index: 80;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    padding: 24px;
+    background-color: var(--paper);
+  }
+
+  .swiss .affiche {
+    container-type: inline-size;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    width: min(calc((100svh - 110px) * 0.8), calc(100vw - 48px));
+    aspect-ratio: 4 / 5;
+    padding: 0;
+    border: 0;
+    background-color: var(--accent);
+    color: #1d1f21;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .swiss .affiche-case {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    padding: 2.4cqw;
+    border-right: 1px solid #1d1f21;
+    border-bottom: 1px solid #1d1f21;
+    overflow: hidden;
+  }
+
+  /* Pas de filet au bord de l'affiche : la dernière colonne et la dernière
+     rangée s'en passent. */
+  .swiss .affiche-case:nth-child(4n + 2) {
+    border-right: 0;
+  }
+
+  .swiss .affiche-case:nth-child(15),
+  .swiss .affiche-case:nth-child(16) {
+    border-bottom: 0;
+  }
+
+  .swiss .affiche-nom {
+    grid-column: span 2;
+  }
+
+  .swiss .affiche-annee {
+    grid-column: span 2;
+    border-right: 0;
+  }
+
+  .swiss .affiche-pied {
+    grid-column: 3 / span 2;
+    border-bottom: 0;
+    border-right: 0;
+    align-items: flex-end;
+    justify-content: flex-end;
+  }
+
+  .swiss .affiche-case svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .swiss .affiche-case .pleine {
+    fill: #1d1f21;
+  }
+
+  .swiss .affiche-case .trait {
+    fill: none;
+    stroke: #1d1f21;
+    stroke-width: 1.5px;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .swiss .affiche-nom span,
+  .swiss .affiche-annee span {
+    font-size: 7.2cqw;
+    line-height: 0.9;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    text-transform: uppercase;
+  }
+
+  .swiss .affiche-annee span {
+    font-weight: 400;
+  }
+
+  .swiss .affiche-titre,
+  .swiss .affiche-pied span {
+    position: relative;
+    font-size: 2.3cqw;
+    line-height: 1.1;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .swiss .affiche-titre {
+    padding: 0.35em 0.5em;
+    background-color: var(--accent);
+  }
+
+  .swiss .affiche-aide {
+    color: var(--ink-soft);
+  }
+
   /* La loupe reçoit le focus pour que le clavier y entre, mais elle n'est
      pas une commande : pas de cerne autour de tout l'écran. */
   .swiss .loupe:focus-visible {
