@@ -1157,21 +1157,38 @@
   }
 
   .swiss .footer-mail {
+    position: relative;
     display: block;
     width: fit-content;
     font-size: clamp(1.125rem, 1.8vw, 1.5rem);
     font-weight: 500;
     letter-spacing: -0.02em;
-    text-decoration: underline;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 0.18em;
-    text-decoration-color: transparent;
-    transition: text-decoration-color 200ms ease;
   }
 
-  .swiss .footer-mail:hover,
-  .swiss .footer-mail:focus-visible {
-    text-decoration-color: currentColor;
+  /* La flèche attend, cachée derrière le mot ; au survol elle en sort et
+     monte vers la droite. Le mot, lui, ne bouge pas. */
+  .swiss .footer-mail-fleche {
+    position: absolute;
+    top: 0;
+    left: 100%;
+    margin-left: 0.25em;
+    line-height: 0;
+    opacity: 0;
+    transform: translate(-0.35em, 0.2em);
+    transition:
+      opacity 180ms ease,
+      transform 320ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .swiss .footer-mail-fleche .swiss-arrow {
+    width: 0.6em;
+    height: 0.6em;
+  }
+
+  .swiss .footer-mail:hover .footer-mail-fleche,
+  .swiss .footer-mail:focus-visible .footer-mail-fleche {
+    opacity: 1;
+    transform: none;
   }
 
   /* Une seule ligne de mentions, séparée de ce qui précède par un filet. Elle
@@ -1261,8 +1278,8 @@
     transition: font-variation-settings 220ms ease-out;
   }
 
-  .swiss a:not(.footer-appel):has(.swiss-arrow):hover,
-  .swiss a:not(.footer-appel):has(.swiss-arrow):focus-visible {
+  .swiss a:not(.footer-appel, .footer-mail):has(.swiss-arrow):hover,
+  .swiss a:not(.footer-appel, .footer-mail):has(.swiss-arrow):focus-visible {
     font-variation-settings: 'wght' var(--gras-survol, 520);
   }
 

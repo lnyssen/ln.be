@@ -37,8 +37,14 @@ const site = [
     </a>
 
     <div class="footer-contacts">
-      <a href="mailto:hello@laurentnyssen.be" class="footer-mail">hello@laurentnyssen.be</a>
-      <a href="tel:+32497305080" class="footer-mail">+32 (0)497 30 50 80</a>
+      <!-- Au survol, pas de soulignement : une petite flèche sort du mot et
+           part, comme sur tous les liens du site. -->
+      <a href="mailto:hello@laurentnyssen.be" class="footer-mail">
+        hello@laurentnyssen.be<span class="footer-mail-fleche" aria-hidden="true"><SwissArrow size={16} direction="up-right" /></span>
+      </a>
+      <a href="tel:+32497305080" class="footer-mail">
+        +32 (0)497 30 50 80<span class="footer-mail-fleche" aria-hidden="true"><SwissArrow size={16} direction="up-right" /></span>
+      </a>
     </div>
 
     <div class="footer-ligne swiss-meta">
