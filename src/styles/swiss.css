@@ -648,11 +648,20 @@
     backdrop-filter: blur(52px) saturate(1.35);
   }
 
-  /* La capsule d'outils est un objet constant : elle reste blanche quel que
-     soit le thème, pour se détacher du fond au lieu de s'y fondre. Redéfinir
-     les jetons à l'intérieur suffit — ses commandes se composent alors comme
-     sur du papier, sans qu'aucune n'ait à connaître le thème de la page. */
+  /* La capsule d'outils prend toujours le contre-pied du thème : foncée sur
+     la page claire, claire sur la page sombre. C'est ainsi qu'elle se
+     détache du fond, sans ombre. Redéfinir les jetons à l'intérieur suffit —
+     ses commandes se composent alors comme sur leur propre papier, sans
+     qu'aucune n'ait à connaître le thème de la page. */
   .swiss:not(.ink-on) .dock-capsule {
+    --paper: #1d1f21;
+    --ink: #f4f2ed;
+    --ink-soft: #b4b4b4;
+    --rule: #f4f2ed;
+    background-color: #1d1f21;
+  }
+
+  .swiss:not(.ink-on)[data-swiss-theme="dark"] .dock-capsule {
     --paper: #f4f2ed;
     --ink: #222222;
     --ink-soft: #727272;
@@ -663,9 +672,8 @@
   .swiss .dock-capsule {
     background-color: var(--paper);
     /* La couleur du texte s'hérite du corps, pas des jetons : sans cette
-       ligne, l'icône de grille restait claire sur le blanc en thème sombre. */
+       ligne, les icônes gardaient la couleur de la page. */
     color: var(--ink);
-    box-shadow: 0 4px 24px rgb(0 0 0 / 0.18);
   }
 
   /* Quand le système demande moins de transparence, la barre redevient
