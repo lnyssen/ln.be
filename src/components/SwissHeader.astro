@@ -108,7 +108,7 @@ const pages = [
         data-menu-toggle
         aria-expanded="false"
         aria-controls="swiss-menu"
-        aria-label="Ouvrir le menu"
+        aria-label="Open menu"
         class="swiss-meta flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-full border border-[var(--rule)] transition-colors duration-200 min-[820px]:hidden"
       >
         <!-- Fermé, un carré plein dans la teinte : un morceau de l'affiche
@@ -187,7 +187,7 @@ const pages = [
       // clavier ni par les lecteurs d'écran.
       panel.inert = !open;
       button.setAttribute('aria-expanded', String(open));
-      button.setAttribute('aria-label', open ? 'Fermer le menu' : 'Ouvrir le menu');
+      button.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
       document.documentElement.classList.toggle('menu-open', open);
       if (open) requestAnimationFrame(() => document.addEventListener('click', dehors));
       else document.removeEventListener('click', dehors);

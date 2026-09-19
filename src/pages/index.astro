@@ -83,7 +83,7 @@ function domainLabel(link: string) {
            964 px sur un écran de 800 — on arrivait toujours sans une image.
            Un visuel mène à sa ligne, qui s'ouvre. La bande est doublée pour
            boucler sans couture ; la copie est cachée aux lecteurs d'écran. -->
-      <div class="vitrine border-t border-[var(--rule)]" role="region" aria-label="Aperçu des projets" data-reveal data-reveal-slow data-reveal-delay="80">
+      <div class="vitrine border-t border-[var(--rule)]" role="region" aria-label="Project preview" data-reveal data-reveal-slow data-reveal-delay="80">
         <div class="marquee marquee-images overflow-hidden">
           <div class="marquee-track flex w-max">
             {
@@ -104,7 +104,7 @@ function domainLabel(link: string) {
                           formats={['avif', 'webp']}
                           widths={[300, 450, 600, 690, 1000]}
                           sizes="(min-width: 768px) and (max-height: 900px) 450px, (min-width: 768px) 690px, 300px"
-                          quality={48}
+                          quality={70}
                           loading={i < 3 && tour === 0 ? 'eager' : 'lazy'}
                           fetchpriority={i === 0 && tour === 0 ? 'high' : undefined}
                           decoding="async"
@@ -550,7 +550,7 @@ function domainLabel(link: string) {
         cadre.className = 'mode-affiche';
         cadre.setAttribute('role', 'dialog');
         cadre.setAttribute('aria-modal', 'true');
-        cadre.setAttribute('aria-label', 'Affiche — Espace pour recomposer, Échap pour fermer');
+        cadre.setAttribute('aria-label', 'Poster — Space to recompose, Escape to close');
         const affiche = document.createElement('button');
         affiche.type = 'button';
         affiche.className = 'affiche';
@@ -979,7 +979,7 @@ function domainLabel(link: string) {
         const retour = document.activeElement;
         cadre.setAttribute('role', 'dialog');
         cadre.setAttribute('aria-modal', 'true');
-        cadre.setAttribute('aria-label', 'Visuel agrandi — Échap pour fermer, flèches pour naviguer');
+        cadre.setAttribute('aria-label', 'Enlarged image — Escape to close, arrow keys to navigate');
         cadre.tabIndex = -1;
 
         // La scène épouse le visuel : les flèches se posent sur ses bords à
@@ -1120,7 +1120,7 @@ function domainLabel(link: string) {
             bouton.dataset.loupeNav = '';
             bouton.dataset.cursorMirror = '';
             bouton.dataset.cursorInk = 'var(--accent)';
-            bouton.setAttribute('aria-label', sens < 0 ? 'Visuel précédent' : 'Visuel suivant');
+            bouton.setAttribute('aria-label', sens < 0 ? 'Previous image' : 'Next image');
             bouton.innerHTML =
               '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
               (sens < 0 ? '<path d="M15 5l-7 7 7 7"/>' : '<path d="M9 5l7 7-7 7"/>') +

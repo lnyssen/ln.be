@@ -427,7 +427,7 @@ const ogImage = new URL('/og.png', Astro.site).href;
         const apply = (on) => {
           overlay.hidden = !on;
           button.setAttribute('aria-pressed', String(on));
-          button.setAttribute('aria-label', on ? 'Masquer la grille' : 'Afficher la grille');
+          button.setAttribute('aria-label', on ? 'Hide grid' : 'Show grid');
           try {
             localStorage.setItem('swiss-grid', on ? '1' : '0');
           } catch {}

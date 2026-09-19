@@ -43,7 +43,6 @@ const resolved = images
   })
   .filter((entry) => entry.asset !== null);
 
-const total = String(resolved.length).padStart(2, '0');
 
 // Deux jeux de fichiers, deux usages. La vignette de la planche est légère :
 // AVIF, avec un WebP de secours, à la taille où elle s'affiche. L'agrandi,
@@ -77,7 +76,7 @@ const agrandis = await Promise.all(
       bleed && '-mx-[20px] px-[20px] md:-mx-[40px] md:px-[40px]',
     ]}
     role="group"
-    aria-label={`${title} — ${total} visuels`}
+    aria-label={`${title} — ${resolved.length} images`}
     tabindex="0"
   >
     {
@@ -90,7 +89,7 @@ const agrandis = await Promise.all(
         >
           <Picture
             src={entry.asset!}
-            alt={entry.alt ?? `${title} — visuel ${i + 1} sur ${resolved.length}`}
+            alt={entry.alt ?? `${title} — image ${i + 1} of ${resolved.length}`}
             formats={['avif', 'webp']}
             widths={poster ? [340, 520, 700] : [440, 660, 880]}
             sizes={poster ? '(min-width: 768px) 330px, 46vw' : '(min-width: 768px) 440px, 78vw'}
@@ -101,7 +100,7 @@ const agrandis = await Promise.all(
             data-agrandi-src={agrandis[i]?.src}
             tabindex={zoom ? 0 : undefined}
             role={zoom ? 'button' : undefined}
-            aria-label={zoom ? `Agrandir — ${entry.alt ?? `${title}, visuel ${i + 1} sur ${resolved.length}`}` : undefined}
+            aria-label={zoom ? `Enlarge — ${entry.alt ?? `${title}, image ${i + 1} of ${resolved.length}`}` : undefined}
             pictureAttributes={{ class: poster ? 'block h-full' : 'block' }}
             class:list={[poster ? 'h-full w-auto object-contain' : 'aspect-[3/2] w-full object-cover']}
           />
@@ -116,7 +115,7 @@ const agrandis = await Promise.all(
         <button
           type="button"
           data-strip-prev
-          aria-label="Visuel précédent"
+          aria-label="Previous image"
           data-cursor-mirror="" data-cursor-ink="var(--accent)" class="strip-nav absolute left-[10px] top-[calc(50%-16px)] flex h-[44px] w-[44px] -translate-y-1/2 items-center justify-center rounded-full bg-[var(--ink)] text-[var(--paper)] transition-colors duration-200 disabled:pointer-events-none disabled:opacity-0"
         >
           <SwissArrow direction="left" size={17} />
@@ -125,7 +124,7 @@ const agrandis = await Promise.all(
         <button
           type="button"
           data-strip-next
-          aria-label="Visuel suivant"
+          aria-label="Next image"
           data-cursor-mirror="" data-cursor-ink="var(--accent)" class="strip-nav absolute right-[10px] top-[calc(50%-16px)] flex h-[44px] w-[44px] -translate-y-1/2 items-center justify-center rounded-full bg-[var(--ink)] text-[var(--paper)] transition-colors duration-200 disabled:pointer-events-none disabled:opacity-0"
         >
           <SwissArrow direction="right" size={17} />
