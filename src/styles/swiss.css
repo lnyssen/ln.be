@@ -1065,13 +1065,6 @@
     transition-delay: 0ms;
   }
 
-  /* Les liens à flèche s'épaississent au survol ; l'accroche, elle, ne
-     change pas de graisse — seule sa flèche part. */
-  .swiss a.footer-appel:hover,
-  .swiss a.footer-appel:focus-visible {
-    font-variation-settings: normal;
-  }
-
   /* La flèche s'envole au survol, comme toutes les flèches du site, mais de
      plus loin : elle est à l'échelle de l'accroche. */
   .swiss .footer-fleche {
@@ -1209,37 +1202,11 @@
     --pousse: 3.5px;
   }
 
-  /* Et le lien s'épaissit d'un cran. C'est la même idée que le titre : ce qui
-     répond au pointeur, c'est la lettre elle-même. La graisse ne saute pas
-     d'un palier nommé — elle monte de cent vingt crans sur l'axe de la fonte
-     variable, assez pour se sentir, trop peu pour décaler la ligne. Le cran
-     est le même partout ; seul le point de départ change, puisque tous les
-     liens ne partent pas de la même graisse. */
-  .swiss a:has(.swiss-arrow) {
-    transition: font-variation-settings 220ms ease-out;
-  }
-
-  .swiss a:not(.footer-appel, .footer-mail):has(.swiss-arrow):hover,
-  .swiss a:not(.footer-appel, .footer-mail):has(.swiss-arrow):focus-visible {
-    font-variation-settings: 'wght' var(--gras-survol, 520);
-  }
-
-  /* Ceux qui partent déjà d'un demi-gras montent d'autant. */
-  .swiss a.font-medium:has(.swiss-arrow) {
-    --gras-survol: 620;
-  }
-
-  /* Les deux grands renvois ne s'épaississent pas : à ce corps, la phrase
-     entière changerait de longueur. Seules la couleur et la flèche
-     répondent. */
-  .swiss a.lab-teaser-title:hover,
-  .swiss a.lab-teaser-title:focus-visible {
-    font-variation-settings: normal;
-  }
+  /* Une seule règle pour tous les liens à flèche : seule la flèche part.
+     Le texte garde sa graisse, la ligne ne bouge pas. */
 
   @media (prefers-reduced-motion: reduce) {
-    .swiss .swiss-arrow,
-    .swiss a:has(.swiss-arrow) {
+    .swiss .swiss-arrow {
       transition: none;
     }
   }
@@ -1517,6 +1484,16 @@
 
   .swiss [data-menu-toggle][aria-expanded="true"] .icon-bars {
     opacity: 0;
+    transform: rotate(45deg) scale(0.4);
+  }
+
+  /* Le carré pivote en s'effaçant, et la croix prend sa place. */
+  .swiss .menu-icon .icon-bars {
+    transform-box: fill-box;
+    transform-origin: center;
+    transition:
+      opacity 180ms ease,
+      transform 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
   }
 
   /* La capsule d'outils et le calque de grille s'effacent derrière le
