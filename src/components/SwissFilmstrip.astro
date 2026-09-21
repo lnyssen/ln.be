@@ -90,7 +90,7 @@ const agrandis = await Promise.all(
           <Picture
             src={entry.asset!}
             alt={entry.alt ?? `${title} — image ${i + 1} of ${resolved.length}`}
-            formats={['avif', 'webp']}
+            formats={['avif']}
             widths={poster ? [340, 520, 700] : [440, 660, 880]}
             sizes={poster ? '(min-width: 768px) 330px, 46vw' : '(min-width: 768px) 440px, 78vw'}
             quality={poster ? 68 : 62}

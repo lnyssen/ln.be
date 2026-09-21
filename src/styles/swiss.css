@@ -225,9 +225,25 @@
     }
   }
 
+  /* La teinte elle-même est animée, tout en haut : le point suit sans avoir
+     sa propre transition. Lui en donner une le faisait courir après une
+     valeur qui bouge déjà, et il finissait après le reste de la page. */
   .swiss .titre-point {
     color: var(--accent);
-    transition: color 260ms ease;
+  }
+
+  /* Même raison pour les boutons cerclés de teinte : leur contour et leur
+     texte sont la couleur en cours, ils glissent donc avec elle. Seul le fond
+     du survol garde un rythme propre — c'est un autre geste, déclenché par la
+     souris et non par le changement de couleur. */
+  .swiss .bouton-accent {
+    transition: background-color 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .swiss .bouton-accent {
+      transition: none;
+    }
   }
 
   /* La pastille du bouton de teinte : un aplat de la couleur en cours. Le
@@ -238,7 +254,6 @@
     width: 15px;
     border-radius: 999px;
     background-color: var(--accent);
-    transition: background-color 260ms ease;
   }
 
   /* Le logo se trace à la première arrivée, une fois par session. Le

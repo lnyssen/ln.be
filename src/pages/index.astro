@@ -101,7 +101,7 @@ function domainLabel(link: string) {
                         <Picture
                           src={v.asset!}
                           alt={v.title}
-                          formats={['avif', 'webp']}
+                          formats={['avif']}
                           widths={[300, 450, 600, 690, 1000]}
                           sizes="(min-width: 768px) and (max-height: 900px) 450px, (min-width: 768px) 690px, 300px"
                           quality={70}
@@ -231,7 +231,7 @@ function domainLabel(link: string) {
                           rel="noopener noreferrer"
                           data-cursor-mirror={domainLabel(project.data.link)}
                           data-cursor-ink="var(--accent)"
-                          class="inline-flex items-center gap-[10px] rounded-full border border-[var(--accent)] px-[24px] py-[11px] text-[15px] font-medium tracking-[-0.01em] text-[var(--accent-texte)] transition-colors duration-200 hover:bg-[var(--accent)] hover:text-[var(--sur-accent)]"
+                          class="inline-flex items-center gap-[10px] rounded-full border border-[var(--accent)] px-[24px] py-[11px] text-[15px] font-medium tracking-[-0.01em] text-[var(--accent-texte)] bouton-accent hover:bg-[var(--accent)] hover:text-[var(--sur-accent)]"
                         >
                           {domainLabel(project.data.link)}
                           <SwissArrow size={16} />
