@@ -180,34 +180,65 @@ const pages = [
     const panel = document.querySelector('[data-menu-panel]');
     if (!button || !panel) return;
 
-    // L'affiche se retire vers le haut : la barre est donc la dernière chose
-    // qu'elle découvre. Lui rendre son papier dès le clic la montrait posée
-    // sur la couleur, une demi-seconde durant, encre sombre sur fond vif —
-    // le haut et le bas ne racontaient plus la même chose. Elle garde la
-    // robe de l'affiche jusqu'à ce que celle-ci l'ait quittée.
-    const SORTIE = 300;
-    let retour;
+    // La barre suit le rideau en deux temps. Son papier se retire avec lui,
+    // rogné au même rythme (`menu-rideau`, posé dès le clic) : la couleur la
+    // traverse sans à-coup. Son encre et son verre (`menu-open`), eux, ne
+    // peuvent que basculer : ils le font à l'instant où le bord du rideau
+    // passe le milieu de la pilule — ni avant, où le logo clair se serait
+    // posé sur le papier, ni après, où l'encre sombre serait restée sur la
+    // couleur. Cet instant dépend de la hauteur de l'écran : il est calculé,
+    // pas deviné, à partir de la courbe et de la durée réelles du rideau.
+    const pill = document.querySelector('.header-pill');
+    const racine = document.documentElement;
+    let bascule;
+
+    // Fraction du temps écoulé quand une courbe de Bézier atteint `y`.
+    const instant = (courbe, y) => {
+      const [x1, y1, x2, y2] = courbe;
+      const b = (a, c, s) => 3 * a * s * (1 - s) ** 2 + 3 * c * s * s * (1 - s) + s ** 3;
+      let bas = 0;
+      let haut = 1;
+      for (let i = 0; i < 24; i++) {
+        const s = (bas + haut) / 2;
+        if (b(y1, y2, s) < y) bas = s;
+        else haut = s;
+      }
+      return b(x1, x2, (bas + haut) / 2);
+    };
+
+    // Délai avant que le bord du rideau, qui descend (ou remonte), passe le
+    // milieu de la pilule. Durée et courbe sont lues sur le panneau, qui
+    // vient de recevoir sa transition : une seule source, la feuille de style.
+    const delai = (open) => {
+      const style = getComputedStyle(panel);
+      const duree = parseFloat(style.transitionDuration) * 1000;
+      const courbe = (style.transitionTimingFunction.match(/cubic-bezier\(([^)]+)\)/) || [])[1];
+      if (!duree || !courbe || !pill) return 0;
+      const r = pill.getBoundingClientRect();
+      const part = (r.top + r.bottom) / 2 / panel.offsetHeight;
+      const points = courbe.split(',').map(Number);
+      return instant(points, open ? part : 1 - part) * duree;
+    };
 
     const setState = (open) => {
-      clearTimeout(retour);
+      clearTimeout(bascule);
+      // Le papier de la barre descend exactement jusqu'au bas de l'affiche.
+      racine.style.setProperty('--rideau', `${panel.offsetHeight}px`);
       panel.classList.toggle('is-open', open);
+      racine.classList.toggle('menu-rideau', open);
       panel.setAttribute('aria-hidden', String(!open));
       // Fermé, le panneau est inerte : ses liens ne se prennent ni au
       // clavier ni par les lecteurs d'écran.
       panel.inert = !open;
       button.setAttribute('aria-expanded', String(open));
       button.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
-      const racine = document.documentElement;
-      if (open) {
-        racine.classList.add('menu-open');
-        requestAnimationFrame(() => document.addEventListener('click', dehors));
-      } else {
-        document.removeEventListener('click', dehors);
-        // Sans mouvement, il n'y a rien à attendre : l'affiche disparaît
-        // d'un coup, la barre revient avec elle.
-        if (matchMedia('(prefers-reduced-motion: reduce)').matches) racine.classList.remove('menu-open');
-        else retour = setTimeout(() => racine.classList.remove('menu-open'), SORTIE);
-      }
+      if (open) requestAnimationFrame(() => document.addEventListener('click', dehors));
+      else document.removeEventListener('click', dehors);
+      // Sans mouvement, la durée lue vaut zéro : la bascule est immédiate.
+      const attente = delai(open);
+      const basculer = () => racine.classList.toggle('menu-open', open);
+      if (attente > 0) bascule = setTimeout(basculer, attente);
+      else basculer();
     };
 
     // Un clic hors de la carte la referme, comme on referme un tiroir.

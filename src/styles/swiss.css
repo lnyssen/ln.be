@@ -1468,8 +1468,26 @@
     --rule: var(--sur-accent);
   }
 
-  .swiss.menu-open .header-plate {
-    visibility: hidden;
+  /* Le papier de la barre ne s'efface pas d'un bloc : il se retire devant le
+     rideau, rogné par le haut à la même courbe et sur la même durée, jusqu'à
+     la hauteur de l'affiche (--rideau, mesurée par le script). Les deux bords
+     avancent donc ensemble, au pixel, et la couleur traverse la barre au lieu
+     d'y apparaître d'un coup. */
+  .swiss .header-plate {
+    clip-path: inset(0);
+    transition: clip-path 300ms cubic-bezier(0.65, 0, 0.35, 1);
+  }
+
+  .swiss.menu-rideau .header-plate {
+    clip-path: inset(var(--rideau, 100vh) 0 0 0);
+    transition: clip-path 460ms cubic-bezier(0.65, 0, 0.35, 1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .swiss .header-plate,
+    .swiss.menu-rideau .header-plate {
+      transition: none;
+    }
   }
 
   .swiss.menu-open .header-pill {
@@ -1479,7 +1497,7 @@
   }
 
   /* Menu ouvert, la page ne défile plus derrière l'affiche. */
-  .swiss.menu-open body {
+  .swiss.menu-rideau body {
     overflow: hidden;
   }
 
