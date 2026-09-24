@@ -8,6 +8,11 @@
          robot : la balise, elle, part avec la page. -->
     <meta name="robots" content="noindex, nofollow" />
     <title>Contenu — Laurent Nyssen</title>
+    <!-- L'adresse du fichier de réglages est déclarée, et non devinée : sans
+         elle, l'atelier la cherche à côté de la page, et « /admin » sans
+         barre oblique finale l'envoyait à la racine du site, où il n'y a
+         rien. Les deux écritures de l'adresse marchent désormais. -->
+    <link href="/admin/config.yml" type="text/yaml" rel="cms-config-url" />
   </head>
   <body>
     <script src="https://unpkg.com/decap-cms@^3.8.0/dist/decap-cms.js"></script>
