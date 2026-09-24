@@ -131,6 +131,8 @@ const GLYPHS = {
 export default function SwissCursor() {
   const ref = useRef(null);
   const mots = useRef(null);
+  const plaque = useRef(null);
+  const etiquette = useRef(false);
   const [visible, setVisible] = useState(false);
   const [label, setLabel] = useState(null);
 
@@ -204,11 +206,11 @@ export default function SwissCursor() {
   const taille = miroir ? label.taille : 13;
   const dessin = miroir ? label.dessin : null;
 
-  // À chaque changement d'étiquette, le disque respire : il part d'un rien
-  // plus petit et se pose sur sa taille sans jamais la dépasser, et le mot
-  // monte en même temps qu'il paraît. Pas de rebond — le geste doit se sentir
-  // plutôt que se voir. La largeur, elle, glisse toujours par transition, sur
-  // la même courbe et sur une durée voisine.
+  // Le disque respire quand il prend ou quitte une étiquette : il part d'un
+  // rien plus petit et se pose sur sa taille sans jamais la dépasser. D'une
+  // étiquette à l'autre, en revanche, il ne respire pas — la pilule glisse
+  // d'une largeur à la suivante, et un ressaut d'échelle par-dessus hachait
+  // le passage. Seul le mot se relaie, en montant à peine.
   //
   // Le geste passe par `scale` et non par `transform` : la position du disque
   // est réécrite à chaque image par le script, et les deux propriétés sont
@@ -216,17 +218,44 @@ export default function SwissCursor() {
   // animation devant être relancée à chaque fois, même vers la même valeur.
   useEffect(() => {
     const disque = ref.current;
+    const avait = etiquette.current;
+    etiquette.current = Boolean(mot);
     if (!disque?.animate) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const douceur = 'cubic-bezier(0.33, 0, 0.16, 1)';
-    disque.animate([{ scale: 0.94 }, { scale: 1 }], { duration: 520, easing: douceur });
+    const douceur = 'cubic-bezier(0.4, 0, 0.2, 1)';
+    if (avait !== Boolean(mot)) {
+      disque.animate([{ scale: 0.96 }, { scale: 1 }], { duration: 620, easing: douceur });
+    }
     // Sans mot — le disque nu —, il n'y a rien à faire monter.
     if (mot && mots.current) {
       mots.current.animate([{ opacity: 0, translate: '0 3px' }, { opacity: 1, translate: '0 0' }], {
-        duration: 400,
+        duration: 520,
         easing: douceur,
       });
     }
+  }, [mot, signe, miroir]);
+
+  // La largeur de la pilule est mesurée puis posée en pixels. Laissée à
+  // `auto`, elle ne s'anime pas : passer d'un verbe à l'autre ne change pas
+  // la valeur déclarée, seulement celle qui en découle, et la pilule sautait
+  // d'une taille à la suivante.
+  useEffect(() => {
+    const plaquette = plaque.current;
+    const contenu = mots.current;
+    if (!plaquette || !contenu) return;
+    if (!mot) {
+      // Repliée, elle n'a pas de largeur à tenir : la relâcher évite qu'elle
+      // reparaisse à la taille de l'étiquette précédente.
+      plaquette.style.width = '';
+      return;
+    }
+    const style = getComputedStyle(plaquette);
+    const bords =
+      parseFloat(style.paddingLeft) +
+      parseFloat(style.paddingRight) +
+      parseFloat(style.borderLeftWidth) +
+      parseFloat(style.borderRightWidth);
+    plaquette.style.width = `${Math.ceil(contenu.getBoundingClientRect().width + bords)}px`;
   }, [mot, signe, miroir]);
 
   return (
@@ -245,6 +274,7 @@ export default function SwissCursor() {
       <span className={`curseur-point ${label ? 'is-off' : ''}`} />
 
       <div
+        ref={plaque}
         className={`curseur-etiquette ${label ? '' : 'is-off'} ${miroir ? 'is-mirror border' : ''}`}
         style={cadre}
       >

@@ -754,7 +754,7 @@
   }
 
   .swiss .filmstrip img[role='button'] {
-    transition: transform 620ms cubic-bezier(0.33, 0, 0.16, 1);
+    transition: transform 760ms cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .swiss .filmstrip figure:hover img[role='button'],
@@ -910,7 +910,7 @@
     display: block;
     height: 200px;
     width: auto;
-    transition: transform 620ms cubic-bezier(0.33, 0, 0.16, 1);
+    transition: transform 760ms cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   @media (min-width: 768px) {
@@ -1672,14 +1672,12 @@
     transition: none !important;
   }
 
-  /* Le disque inverse ce qu'il couvre ; la largeur s'anime grâce à
-     `interpolate-size` déjà posé sur .swiss. */
-  /* Le disque est en fusion « difference » : il inverse ce qu'il survole, donc
-     il reste lisible sur n'importe quel fond sans rien savoir du thème. Le
-     revers est que l'inverse d'une couleur est sa complémentaire : sur le
-     violet du pied de page, il vire à l'olive. C'est la même teinte vue de
-     l'autre côté, pas un accident — pour l'obtenir autrement, il faudrait
-     changer le violet. Un cerne le corrigerait, mais alourdirait le disque. */
+  /* Le disque prend l'encre du thème : sombre sur le papier, ivoire sur le
+     noir. Il était en fusion « difference », qui inversait ce qu'il couvre —
+     lisible partout sans rien savoir du thème, mais l'inverse d'une couleur
+     est sa complémentaire : sur le violet du pied de page il virait à
+     l'olive, et sur le papier clair il sortait bien trop pâle. La largeur de
+     l'étiquette s'anime grâce à `interpolate-size` déjà posé sur .swiss. */
   /* Le curseur n'a plus de corps : il n'est que la position, réécrite à
      chaque image par le script. Ses deux formes — le point et l'étiquette —
      sont posées dessus, centrées sur lui, et se relaient. */
@@ -1703,11 +1701,11 @@
     width: 21px;
     height: 21px;
     border-radius: 50%;
-    background-color: #fff;
-    mix-blend-mode: difference;
+    background-color: var(--ink);
     transition:
-      scale 420ms cubic-bezier(0.33, 0, 0.16, 1),
-      opacity 260ms cubic-bezier(0.33, 0, 0.16, 1);
+      scale 560ms cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 480ms cubic-bezier(0.4, 0, 0.2, 1),
+      background-color 700ms cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   /* L'étiquette est une pilule : elle paraît et disparaît en changeant
@@ -1729,9 +1727,16 @@
     -webkit-backdrop-filter: blur(6px);
     backdrop-filter: blur(6px);
     white-space: nowrap;
+    /* La largeur suit le mot : passer d'un verbe à l'autre sans elle faisait
+       sauter la pilule d'une taille à la suivante. */
+    width: auto;
     transition:
-      scale 420ms cubic-bezier(0.33, 0, 0.16, 1),
-      opacity 260ms cubic-bezier(0.33, 0, 0.16, 1);
+      width 520ms cubic-bezier(0.4, 0, 0.2, 1),
+      height 520ms cubic-bezier(0.4, 0, 0.2, 1),
+      padding 520ms cubic-bezier(0.4, 0, 0.2, 1),
+      scale 560ms cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 480ms cubic-bezier(0.4, 0, 0.2, 1),
+      background-color 700ms cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   /* Celle qui cède la place se retire vers le centre. Le point s'efface plus
@@ -1739,12 +1744,12 @@
      réduire autant la ferait tomber comme une pierre. */
   .swiss-cursor .curseur-point.is-off {
     opacity: 0;
-    scale: 0.4;
+    scale: 0.55;
   }
 
   .swiss-cursor .curseur-etiquette.is-off {
     opacity: 0;
-    scale: 0.82;
+    scale: 0.88;
   }
 
   /* En miroir d'un bouton, l'étiquette en reprend le corps, le contour et la
