@@ -872,11 +872,18 @@
     user-select: none;
   }
 
+  /* Le survol rapproche l'image au lieu de l'éteindre : elle avance d'un
+     rien dans son cadre, qui la rogne — les voisines gardent leur place et
+     la bande ne bouge pas d'un pixel. */
+  .swiss .vitrine-lien {
+    overflow: hidden;
+  }
+
   .swiss .vitrine-image {
     display: block;
     height: 200px;
     width: auto;
-    transition: opacity 200ms ease;
+    transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   @media (min-width: 768px) {
@@ -887,7 +894,20 @@
 
   .swiss .vitrine-lien:hover .vitrine-image,
   .swiss .vitrine-lien:focus-visible .vitrine-image {
-    opacity: 0.82;
+    transform: scale(1.06);
+  }
+
+  /* Sans mouvement, l'image ne bouge pas : le lien reste signalé par le
+     pointeur et par le contour au clavier. */
+  @media (prefers-reduced-motion: reduce) {
+    .swiss .vitrine-image {
+      transition: none;
+    }
+
+    .swiss .vitrine-lien:hover .vitrine-image,
+    .swiss .vitrine-lien:focus-visible .vitrine-image {
+      transform: none;
+    }
   }
 
   /* Au clavier, l'arrêt reste net : on n'y survole pas, on y arrive d'un
