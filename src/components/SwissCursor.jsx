@@ -230,52 +230,55 @@ export default function SwissCursor() {
   }, [mot, signe, miroir]);
 
   return (
+    // Le point et l'étiquette sont deux formes distinctes, posées au même
+    // endroit : la même boîte qui rétrécissait passait par tous les ovales
+    // intermédiaires entre la pilule et le disque. Elles se relaient
+    // maintenant en fondu, chacune changeant d'échelle sans jamais changer de
+    // forme — le point reste rond du début à la fin.
     <div
       ref={ref}
       aria-hidden="true"
-      className={`swiss-cursor pointer-events-none fixed left-0 top-0 z-[90] flex items-center justify-center overflow-hidden ${
-        label
-          ? `is-labelled w-auto rounded-full ${
-              miroir ? 'is-mirror border' : 'h-[34px] bg-[var(--ink)] px-[18px]'
-            }`
-          : 'h-[21px] w-[21px] rounded-full bg-white px-0'
-      } ${visible ? 'opacity-100' : 'opacity-0'}`}
-      style={cadre}
+      className={`swiss-cursor pointer-events-none fixed left-0 top-0 z-[90] ${
+        visible ? 'opacity-100' : 'opacity-0'
+      }`}
     >
-      {/* Le mot passe devant le signe, comme sur les boutons du site, où la
-          flèche suit toujours ce qu'elle annonce. */}
-      <span
-        ref={mots}
-        className={`flex items-center whitespace-nowrap leading-none ${
-          miroir ? '' : 'gap-[7px] text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--paper)]'
-        } ${label ? 'opacity-100' : 'opacity-0'}`}
-        style={lettres}
+      <span className={`curseur-point ${label ? 'is-off' : ''}`} />
+
+      <div
+        className={`curseur-etiquette ${label ? '' : 'is-off'} ${miroir ? 'is-mirror border' : ''}`}
+        style={cadre}
       >
-        {dessin ? (
-          <span className="flex items-center" dangerouslySetInnerHTML={{ __html: dessin }} />
-        ) : (
-          mot
-        )}
-        {signe && GLYPHS[signe] && (
-          <svg
-            width={taille}
-            height={taille}
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.9"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <path
-              d={GLYPHS[signe]}
+        {/* Le mot passe devant le signe, comme sur les boutons du site, où la
+            flèche suit toujours ce qu'elle annonce. */}
+        <span
+          ref={mots}
+          className={`flex items-center whitespace-nowrap leading-none ${
+            miroir ? '' : 'gap-[7px] text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--paper)]'
+          }`}
+          style={lettres}
+        >
+          {dessin ? (
+            <span className="flex items-center" dangerouslySetInnerHTML={{ __html: dessin }} />
+          ) : (
+            mot
+          )}
+          {signe && GLYPHS[signe] && (
+            <svg
+              width={taille}
+              height={taille}
+              viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
-            />
-          </svg>
-        )}
-      </span>
+              strokeWidth="1.9"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d={GLYPHS[signe]} fill="none" stroke="currentColor" />
+            </svg>
+          )}
+        </span>
+      </div>
     </div>
   );
 }

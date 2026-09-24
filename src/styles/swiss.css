@@ -1680,39 +1680,79 @@
      violet du pied de page, il vire à l'olive. C'est la même teinte vue de
      l'autre côté, pas un accident — pour l'obtenir autrement, il faudrait
      changer le violet. Un cerne le corrigerait, mais alourdirait le disque. */
+  /* Le curseur n'a plus de corps : il n'est que la position, réécrite à
+     chaque image par le script. Ses deux formes — le point et l'étiquette —
+     sont posées dessus, centrées sur lui, et se relaient. */
   .swiss-cursor {
-    mix-blend-mode: difference;
-    transition:
-      width 420ms cubic-bezier(0.33, 0, 0.16, 1),
-      height 420ms cubic-bezier(0.33, 0, 0.16, 1),
-      padding 420ms cubic-bezier(0.33, 0, 0.16, 1),
-      border-radius 320ms cubic-bezier(0.33, 0, 0.16, 1),
-      opacity 150ms ease;
+    width: 0;
+    height: 0;
+    transition: opacity 150ms ease;
   }
 
-  /* La fusion est coupée sur l'étiquette : sur le violet, elle virait à
-     l'olive sur toute sa surface, ce qui rendait le mot illisible.
+  .swiss-cursor .curseur-point,
+  .swiss-cursor .curseur-etiquette {
+    position: absolute;
+    left: 0;
+    top: 0;
+    translate: -50% -50%;
+  }
+
+  /* Le point garde sa taille : il ne fait que changer d'échelle, donc il
+     reste rond d'un bout à l'autre du geste. */
+  .swiss-cursor .curseur-point {
+    width: 21px;
+    height: 21px;
+    border-radius: 50%;
+    background-color: #fff;
+    mix-blend-mode: difference;
+    transition:
+      scale 420ms cubic-bezier(0.33, 0, 0.16, 1),
+      opacity 260ms cubic-bezier(0.33, 0, 0.16, 1);
+  }
+
+  /* L'étiquette est une pilule : elle paraît et disparaît en changeant
+     d'échelle, jamais de proportions. La fusion est coupée dessus : sur le
+     violet, elle virait à l'olive sur toute sa surface, ce qui rendait le mot
+     illisible.
 
      Elle garde un voile de transparence — on doit sentir ce qu'elle recouvre,
      c'est un curseur et non un panneau — avec un flou dessous pour que le mot
      tienne sur un visuel chargé. */
-  .swiss .swiss-cursor.is-labelled {
-    mix-blend-mode: normal;
+  .swiss-cursor .curseur-etiquette {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 34px;
+    padding: 0 18px;
+    border-radius: 9999px;
     background-color: color-mix(in srgb, var(--ink) 70%, transparent);
     -webkit-backdrop-filter: blur(6px);
     backdrop-filter: blur(6px);
+    white-space: nowrap;
+    transition:
+      scale 420ms cubic-bezier(0.33, 0, 0.16, 1),
+      opacity 260ms cubic-bezier(0.33, 0, 0.16, 1);
   }
 
-  /* En miroir d'un bouton, le disque en reprend le corps, le contour et la
-     couleur — il ne le commente pas, il le double. Son fond reste du papier
-     voilé : il faut bien qu'il se détache de ce qu'il survole, sans quoi il
-     ne serait plus un curseur mais un calque. */
-  .swiss .swiss-cursor.is-mirror {
+  /* Celle qui cède la place se retire vers le centre. Le point s'efface plus
+     petit qu'il n'est, l'étiquette à peine — elle est plus large, et s'y
+     réduire autant la ferait tomber comme une pierre. */
+  .swiss-cursor .curseur-point.is-off {
+    opacity: 0;
+    scale: 0.4;
+  }
+
+  .swiss-cursor .curseur-etiquette.is-off {
+    opacity: 0;
+    scale: 0.82;
+  }
+
+  /* En miroir d'un bouton, l'étiquette en reprend le corps, le contour et la
+     couleur — elle ne le commente pas, elle le double. Son fond reste du
+     papier voilé : il faut bien qu'elle se détache de ce qu'elle survole,
+     sans quoi elle ne serait plus un curseur mais un calque. */
+  .swiss-cursor .curseur-etiquette.is-mirror {
     background-color: color-mix(in srgb, var(--paper) 78%, transparent);
-  }
-
-  .swiss-cursor span {
-    transition: opacity 260ms cubic-bezier(0.33, 0, 0.16, 1);
   }
 
   /* Le curseur natif ne disparaît que si le disque est réellement actif. */
