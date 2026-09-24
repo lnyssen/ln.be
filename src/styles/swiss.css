@@ -1758,6 +1758,15 @@
      sans quoi elle ne serait plus un curseur mais un calque. */
   .swiss-cursor .curseur-etiquette.is-mirror {
     background-color: color-mix(in srgb, var(--paper) 78%, transparent);
+    /* Le miroir double un bouton : sa boîte se cale d'un coup sur la sienne.
+       La laisser glisser comme celle des verbes la montrait une demi-seconde
+       durant à une largeur qui n'était pas celle du bouton, et le décalage
+       se voyait d'autant mieux que les deux formes sont superposées. Seuls
+       le fondu et l'échelle restent. */
+    transition:
+      scale 560ms cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 480ms cubic-bezier(0.4, 0, 0.2, 1),
+      background-color 700ms cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   /* Le curseur natif ne disparaît que si le disque est réellement actif. */

@@ -37,7 +37,11 @@ function labelFor(node) {
       miroir: true,
       cadre: {
         height: `${Math.round(boite.height)}px`,
-        ...(dessin ? { width: `${Math.round(boite.width)}px` } : {}),
+        // La largeur est relevée sur le bouton lui-même, et non recalculée
+        // d'après le mot : l'interlettrage laisse un blanc en fin de ligne
+        // que le bouton compte et qu'une mesure du texte perd. Le miroir
+        // était alors plus étroit de quelques points que ce qu'il double.
+        width: `${Math.round(boite.width)}px`,
         paddingLeft: style.paddingLeft,
         paddingRight: style.paddingRight,
         borderColor: encre,
@@ -249,6 +253,11 @@ export default function SwissCursor() {
       plaquette.style.width = '';
       return;
     }
+    // En miroir, la largeur vient du bouton : elle est déjà posée.
+    if (miroir && cadre?.width) {
+      plaquette.style.width = cadre.width;
+      return;
+    }
     const style = getComputedStyle(plaquette);
     const bords =
       parseFloat(style.paddingLeft) +
@@ -256,7 +265,7 @@ export default function SwissCursor() {
       parseFloat(style.borderLeftWidth) +
       parseFloat(style.borderRightWidth);
     plaquette.style.width = `${Math.ceil(contenu.getBoundingClientRect().width + bords)}px`;
-  }, [mot, signe, miroir]);
+  }, [mot, signe, miroir, cadre?.width]);
 
   return (
     // Le point et l'étiquette sont deux formes distinctes, posées au même
