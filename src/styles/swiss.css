@@ -1050,8 +1050,6 @@
   .swiss .footer-col > *,
   .swiss .footer-mail {
     text-box: trim-both cap alphabetic;
-    /* Aucun intitulé ne se coupe en deux. */
-    white-space: nowrap;
   }
 
   /* L'accroche du pied, à la voix du titre : même corps, même graisse, mêmes
@@ -1072,8 +1070,6 @@
     text-transform: uppercase;
     font-weight: 700;
     text-box: trim-both cap alphabetic;
-    /* Aucun intitulé ne se coupe en deux. */
-    white-space: nowrap;
   }
 
   .swiss .footer-point {
@@ -1200,8 +1196,6 @@
 
   .swiss .footer-ligne > * {
     text-box: trim-both cap alphabetic;
-    /* Aucun intitulé ne se coupe en deux. */
-    white-space: nowrap;
   }
 
   .swiss .footer-liens {
@@ -1218,8 +1212,6 @@
 
   .swiss .footer-liens > * {
     text-box: trim-both cap alphabetic;
-    /* Aucun intitulé ne se coupe en deux. */
-    white-space: nowrap;
   }
 
   /* Au téléphone, chaque groupe prend sa ligne et le © ferme la colonne, à
@@ -1297,8 +1289,6 @@
   .swiss .swiss-lede,
   .swiss .lab-teaser-title {
     text-box: trim-both cap alphabetic;
-    /* Aucun intitulé ne se coupe en deux. */
-    white-space: nowrap;
   }
 
   /* Le rythme, en une seule valeur. */
@@ -1441,14 +1431,15 @@
 
   .swiss .menu-link {
     display: block;
+    /* Aucun intitulé du menu ne se coupe en deux : ils sont tous au corps
+       que « Le Polographe » impose pour tenir sur une ligne. */
+    white-space: nowrap;
     width: fit-content;
     font-weight: 700;
     line-height: 0.88;
     letter-spacing: -0.045em;
     text-transform: uppercase;
     text-box: trim-both cap alphabetic;
-    /* Aucun intitulé ne se coupe en deux. */
-    white-space: nowrap;
     /* Rogné juste sous la ligne de base : le mot en sort. */
     clip-path: inset(-0.3em -0.3em -0.08em -0.3em);
   }
