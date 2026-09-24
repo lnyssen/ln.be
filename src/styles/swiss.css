@@ -31,7 +31,7 @@
 @property --sur-accent {
   syntax: "<color>";
   inherits: true;
-  initial-value: #f3e9d7;
+  initial-value: #f8f2e6;
 }
 
 @property --contre-accent {
@@ -48,14 +48,14 @@
    nuancier. Pas de dégradé ni
    d'ombre — la grille et la typographie portent tout. */
 .swiss {
-  --paper: #f3e9d7;
+  --paper: #f8f2e6;
   --ink: #151415;
   --ink-soft: #6f6458;
   --rule: #151415;
   --accent: #775aff;
   /* Fond de la barre : assez de papier pour que la typographie reste lisible,
      assez de vide pour qu'on devine le contenu passer dessous. */
-  --header-bg: color-mix(in srgb, #f3e9d7 46%, transparent);
+  --header-bg: color-mix(in srgb, #f8f2e6 46%, transparent);
   /* Pied de page : la teinte du nuancier, texte ivoire ou noir mat selon
      celui des deux qui s'y lit. Le violet par défaut — 4,10:1. */
   /* Le pied est le seul aplat de couleur du site : il porte la teinte
@@ -68,7 +68,7 @@
      dans les deux thèmes ; ce qui s'écrit dessus est toujours foncé, et le
      petit texte en accent posé sur le papier clair prend la même teinte un
      cran plus sombre, seule concession à la lecture. */
-  --sur-accent: #f3e9d7;
+  --sur-accent: #f8f2e6;
   --contre-accent: #151415;
   --accent-texte: var(--accent);
   --footer-fg: var(--sur-accent);
@@ -136,9 +136,9 @@
 
 .swiss[data-swiss-theme="dark"] {
   --paper: #151415;
-  --ink: #f3e9d7;
+  --ink: #f8f2e6;
   --ink-soft: #c8bda8;
-  --rule: #f3e9d7;
+  --rule: #f8f2e6;
   /* Le bruit se voit davantage sur l'encre : on le retient un peu. */
   --header-bg: color-mix(in srgb, #151415 46%, transparent);
 }
@@ -146,14 +146,14 @@
 /* Deux encres sur un papier chaud et un très léger
    décalage de repérage sur les grands textes : ce qui trahit une riso. */
 .swiss.ink-on {
-  --paper: #f3e9d7;
+  --paper: #f8f2e6;
   --ink: #520f07;
   --ink-soft: #8a6a54;
   --rule: #520f07;
   --accent: #f23f3a;
   --footer-bg: #f23f3a;
-  --footer-fg: #f3e9d7;
-  --header-bg: color-mix(in srgb, #f3e9d7 46%, transparent);
+  --footer-fg: #f8f2e6;
+  --header-bg: color-mix(in srgb, #f8f2e6 46%, transparent);
   --grid-line: color-mix(in srgb, #f23f3a 34%, transparent);
   --grid-fill: color-mix(in srgb, #f23f3a 6%, transparent);
   --grid-ink: color-mix(in srgb, #f23f3a 75%, transparent);
@@ -606,18 +606,18 @@
      qu'aucune n'ait à connaître le thème de la page. */
   .swiss:not(.ink-on) .dock-capsule {
     --paper: #151415;
-    --ink: #f3e9d7;
+    --ink: #f8f2e6;
     --ink-soft: #a89d8a;
-    --rule: #f3e9d7;
+    --rule: #f8f2e6;
     background-color: #151415;
   }
 
   .swiss:not(.ink-on)[data-swiss-theme="dark"] .dock-capsule {
-    --paper: #f3e9d7;
+    --paper: #f8f2e6;
     --ink: #151415;
     --ink-soft: #6f6458;
     --rule: #151415;
-    background-color: #f3e9d7;
+    background-color: #f8f2e6;
   }
 
   .swiss .dock-capsule {
@@ -724,7 +724,7 @@
 
   .swiss ::selection {
     background-color: #775aff;
-    color: #f3e9d7;
+    color: #f8f2e6;
   }
 
   .swiss :focus-visible {
@@ -744,6 +744,33 @@
      cerne entoure l'image entière, à l'intérieur de son cadre. */
   .swiss .filmstrip img:focus-visible {
     outline-offset: -4px;
+  }
+
+  /* Comme la vitrine : le visuel qu'on peut agrandir se rapproche d'un rien
+     sous le pointeur, rogné par son cadre — la bande ne bouge pas. Seuls les
+     visuels qui s'ouvrent le font ; les autres n'ont rien à annoncer. */
+  .swiss .filmstrip figure:has(img[role='button']) {
+    overflow: hidden;
+  }
+
+  .swiss .filmstrip img[role='button'] {
+    transition: transform 620ms cubic-bezier(0.33, 0, 0.16, 1);
+  }
+
+  .swiss .filmstrip figure:hover img[role='button'],
+  .swiss .filmstrip img[role='button']:focus-visible {
+    transform: scale(1.05);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .swiss .filmstrip img[role='button'] {
+      transition: none;
+    }
+
+    .swiss .filmstrip figure:hover img[role='button'],
+    .swiss .filmstrip img[role='button']:focus-visible {
+      transform: none;
+    }
   }
 
   /* Mode affiche : l'affiche au format 9:16, aussi haute que l'écran le
@@ -883,7 +910,7 @@
     display: block;
     height: 200px;
     width: auto;
-    transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+    transition: transform 620ms cubic-bezier(0.33, 0, 0.16, 1);
   }
 
   @media (min-width: 768px) {
@@ -894,7 +921,7 @@
 
   .swiss .vitrine-lien:hover .vitrine-image,
   .swiss .vitrine-lien:focus-visible .vitrine-image {
-    transform: scale(1.06);
+    transform: scale(1.05);
   }
 
   /* Sans mouvement, l'image ne bouge pas : le lien reste signalé par le
@@ -1656,10 +1683,10 @@
   .swiss-cursor {
     mix-blend-mode: difference;
     transition:
-      width 260ms cubic-bezier(0.22, 1, 0.36, 1),
-      height 260ms cubic-bezier(0.22, 1, 0.36, 1),
-      padding 260ms cubic-bezier(0.22, 1, 0.36, 1),
-      border-radius 200ms cubic-bezier(0.22, 1, 0.36, 1),
+      width 420ms cubic-bezier(0.33, 0, 0.16, 1),
+      height 420ms cubic-bezier(0.33, 0, 0.16, 1),
+      padding 420ms cubic-bezier(0.33, 0, 0.16, 1),
+      border-radius 320ms cubic-bezier(0.33, 0, 0.16, 1),
       opacity 150ms ease;
   }
 
@@ -1685,7 +1712,7 @@
   }
 
   .swiss-cursor span {
-    transition: opacity 160ms ease;
+    transition: opacity 260ms cubic-bezier(0.33, 0, 0.16, 1);
   }
 
   /* Le curseur natif ne disparaît que si le disque est réellement actif. */

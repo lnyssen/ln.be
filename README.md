@@ -99,8 +99,8 @@ principal.
 
 | | clair | sombre |
 | --- | --- | --- |
-| Papier | `#f3e9d7` Medici ivory | `#151415` Matt black |
-| Encre | `#151415` | `#f3e9d7` |
+| Papier | `#f8f2e6` ivoire, Medici ivory éclairci | `#151415` Matt black |
+| Encre | `#151415` | `#f8f2e6` |
 | Secondaire | `#6f6458` | `#c8bda8` |
 | Accent | `#775aff` | `#775aff` |
 
@@ -114,7 +114,7 @@ de la barre et les liens en accent portent le hex du nuancier, sans
 ajustement. Les six sont claires : ce qui s'écrit sur l'aplat prend donc
 toujours le noir mat, de 4,10:1 pour le violet à 11,67:1 pour le jaune. En
 retour, aucune ne se lit sur le papier ivoire — de 1,31:1 pour le jaune à
-3,72:1 pour le violet : elles valent comme aplat, pas comme texte sur le
+3,70:1 pour le violet : elles valent comme aplat, pas comme texte sur le
 papier.
 
 Le bouton « Get in touch » reste hors de la teinte : contour et texte à

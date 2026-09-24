@@ -130,6 +130,7 @@ const GLYPHS = {
 
 export default function SwissCursor() {
   const ref = useRef(null);
+  const mots = useRef(null);
   const [visible, setVisible] = useState(false);
   const [label, setLabel] = useState(null);
 
@@ -203,6 +204,31 @@ export default function SwissCursor() {
   const taille = miroir ? label.taille : 13;
   const dessin = miroir ? label.dessin : null;
 
+  // À chaque changement d'étiquette, le disque respire : il part d'un rien
+  // plus petit et se pose sur sa taille sans jamais la dépasser, et le mot
+  // monte en même temps qu'il paraît. Pas de rebond — le geste doit se sentir
+  // plutôt que se voir. La largeur, elle, glisse toujours par transition, sur
+  // la même courbe et sur une durée voisine.
+  //
+  // Le geste passe par `scale` et non par `transform` : la position du disque
+  // est réécrite à chaque image par le script, et les deux propriétés sont
+  // indépendantes. Il est joué à la main plutôt que déclaré en CSS, une
+  // animation devant être relancée à chaque fois, même vers la même valeur.
+  useEffect(() => {
+    const disque = ref.current;
+    if (!disque?.animate) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const douceur = 'cubic-bezier(0.33, 0, 0.16, 1)';
+    disque.animate([{ scale: 0.94 }, { scale: 1 }], { duration: 520, easing: douceur });
+    // Sans mot — le disque nu —, il n'y a rien à faire monter.
+    if (mot && mots.current) {
+      mots.current.animate([{ opacity: 0, translate: '0 3px' }, { opacity: 1, translate: '0 0' }], {
+        duration: 400,
+        easing: douceur,
+      });
+    }
+  }, [mot, signe, miroir]);
+
   return (
     <div
       ref={ref}
@@ -219,6 +245,7 @@ export default function SwissCursor() {
       {/* Le mot passe devant le signe, comme sur les boutons du site, où la
           flèche suit toujours ce qu'elle annonce. */}
       <span
+        ref={mots}
         className={`flex items-center whitespace-nowrap leading-none ${
           miroir ? '' : 'gap-[7px] text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--paper)]'
         } ${label ? 'opacity-100' : 'opacity-0'}`}

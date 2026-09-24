@@ -90,7 +90,7 @@ const ogImage = new URL('/og.png', Astro.site).href;
          la barre d'adresse. Les deux déclarations couvrent le réglage du
          système ; le script ci-dessous les remplace par le thème réellement
          appliqué, que le visiteur l'ait choisi ou non. -->
-    <meta name="theme-color" content="#f3e9d7" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#f8f2e6" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#151415" media="(prefers-color-scheme: dark)" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -160,7 +160,7 @@ const ogImage = new URL('/og.png', Astro.site).href;
           ciel: '#6dd0f0',
         };
         const NOIR = '#151415';
-        const PAPIER = '#f3e9d7';
+        const PAPIER = '#f8f2e6';
 
         // Hexadécimal vers sRGB linéaire, puis vers luminance : de quoi
         // savoir laquelle du noir ou de l'ivoire se lit sur une couleur.
@@ -201,7 +201,7 @@ const ogImage = new URL('/og.png', Astro.site).href;
         // doit se voir jusque dans le chrome du navigateur. On lit le papier
         // réellement appliqué plutôt qu'une table, pour que le mode encre
         // l'emporte aussi.
-        const teintes = { light: '#f3e9d7', dark: '#151415' };
+        const teintes = { light: '#f8f2e6', dark: '#151415' };
         const poserBarre = () => {
           const root = document.documentElement;
           const papier = getComputedStyle(root).getPropertyValue('--paper').trim();
