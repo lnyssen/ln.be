@@ -114,12 +114,15 @@ const pages = [
         aria-label="Open menu"
         class="swiss-meta flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-full border border-[var(--rule)] transition-colors duration-200 min-[820px]:hidden"
       >
-        <!-- Fermé, un carré plein dans la teinte : un morceau de l'affiche
-             qui s'ouvre derrière. Ouvert, une croix. Deux signes superposés
-             qui se relaient, chacun dessiné à sa place exacte. -->
+        <!-- Fermé, deux barres à l'encre de la barre. Ouvert, une croix. Deux
+             signes superposés qui se relaient, chacun dessiné à sa place
+             exacte. -->
         <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" class="menu-icon">
           <g stroke="currentColor" stroke-width="1.2" stroke-linecap="round" fill="none">
-            <rect class="icon-bars" x="3" y="3" width="10" height="10" fill="var(--accent)" stroke="none" />
+            <g class="icon-bars">
+              <path d="M2 5h12" />
+              <path d="M2 11h12" />
+            </g>
             <g class="icon-cross">
               <path d="M4.6 4.6 11.4 11.4" />
               <path d="M11.4 4.6 4.6 11.4" />
@@ -147,7 +150,7 @@ const pages = [
         pages.map((page, i) => (
           <a
             href={page.href}
-            class:list={['menu-link', page.label.length > 8 && 'menu-link-long']}
+            class="menu-link"
             style={`--i: ${i}`}
             aria-current={current === page.key ? 'page' : undefined}
           >
