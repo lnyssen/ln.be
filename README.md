@@ -99,14 +99,26 @@ principal.
 
 | | clair | sombre |
 | --- | --- | --- |
-| Papier | `#faf9f6` | `#141414` |
-| Encre | `#141414` | `#faf9f6` |
-| Secondaire | `#6b6b6b` | `#9a9a9a` |
-| Accent | `#7b58e8` | `#9e9eff` |
+| Papier | `#f3e9d7` Medici ivory | `#151415` Matt black |
+| Encre | `#151415` | `#f3e9d7` |
+| Secondaire | `#6f6458` | `#c8bda8` |
+| Accent | `#775aff` | `#775aff` |
 
-L'accent reprend les deux violets du site, chacun là où il tient : `#7b58e8`
-sur papier (4,53:1), `#9e9eff` sur noir (7,71:1) — le premier tombe à 3,86:1
-sur fond sombre, le second à 2,27:1 sur papier.
+Six teintes au nuancier, posées telles quelles dans les deux thèmes : le
+violet `#775aff` par défaut, puis rouge `#f23f3a`, rose `#ff76b4`, jaune
+`#ffc549`, vert `#00b487` et ciel `#6dd0f0`. La capsule du bas les fait
+tourner.
+
+Une teinte n'a qu'une valeur, partout : l'aplat du pied de page, la pastille
+de la barre et les liens en accent portent le hex du nuancier, sans
+ajustement. Les six sont claires : ce qui s'écrit sur l'aplat prend donc
+toujours le noir mat, de 4,10:1 pour le violet à 11,67:1 pour le jaune. En
+retour, aucune ne se lit sur le papier ivoire — de 1,31:1 pour le jaune à
+3,72:1 pour le violet : elles valent comme aplat, pas comme texte sur le
+papier.
+
+Le bouton « Get in touch » reste hors de la teinte : contour et texte à
+l'encre du thème, ivoire sur le noir mat et noir mat sur l'ivoire.
 
 Les projets forment un index tabulaire numéroté. Chaque ligne est un
 `<details name="work">` : la planche s'ouvre **au clic** — au doigt comme à la

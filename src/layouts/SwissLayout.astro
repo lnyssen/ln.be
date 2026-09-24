@@ -90,8 +90,8 @@ const ogImage = new URL('/og.png', Astro.site).href;
          la barre d'adresse. Les deux déclarations couvrent le réglage du
          système ; le script ci-dessous les remplace par le thème réellement
          appliqué, que le visiteur l'ait choisi ou non. -->
-    <meta name="theme-color" content="#f4f2ed" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#1e1e1e" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f3e9d7" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#151415" media="(prefers-color-scheme: dark)" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
@@ -147,83 +147,36 @@ const ogImage = new URL('/og.png', Astro.site).href;
           }
         };
 
-        // Six teintes, relevées telles quelles sur le nuancier : violet par
-        // défaut, puis rouge, orange, pervenche, menthe et rose. La couleur
-        // posée est exactement celle du nuancier, en clair comme en sombre.
+        // Six teintes, relevées telles quelles sur le nuancier : le violet
+        // par défaut, puis rouge, rose, jaune, vert et ciel. La couleur posée
+        // est exactement celle du nuancier, en clair comme en sombre, sans
+        // ajustement.
         const TEINTES = {
-          violet: '#7d39eb',
-          rouge: '#d72638',
-          orange: '#f7562b',
-          pervenche: '#6173f4',
-          menthe: '#82fcaf',
-          rose: '#ff007d',
+          violet: '#775aff',
+          rouge: '#f23f3a',
+          rose: '#ff76b4',
+          jaune: '#ffc549',
+          vert: '#00b487',
+          ciel: '#6dd0f0',
         };
-        const NOIR = '#1e1e1e';
-        const PAPIER = '#f4f2ed';
+        const NOIR = '#151415';
+        const PAPIER = '#f3e9d7';
 
-        // OKLCH vers sRGB linéaire — assez pour savoir si une couleur tient
-        // dans ce que l'écran affiche, et combien elle éclaire.
-        const lineaire = (L, C, h) => {
-          const a = C * Math.cos((h * Math.PI) / 180);
-          const b = C * Math.sin((h * Math.PI) / 180);
-          const l = (L + 0.3963377774 * a + 0.2158037573 * b) ** 3;
-          const m = (L - 0.1055613458 * a - 0.0638541728 * b) ** 3;
-          const s = (L - 0.0894841775 * a - 1.291485548 * b) ** 3;
-          return [
-            4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s,
-            -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s,
-            -0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s,
-          ];
-        };
-        const p3 = matchMedia('(color-gamut: p3)').matches;
-        const affichable = ([r, g, b]) => {
-          const v = p3
-            ? [0.8224621 * r + 0.177538 * g, 0.0331941 * r + 0.9668058 * g, 0.0170827 * r + 0.0723974 * g + 0.9105199 * b]
-            : [r, g, b];
-          return v.every((x) => x >= -0.0005 && x <= 1.0005);
-        };
-        const luminance = ([r, g, b]) => 0.2126 * r + 0.7152 * g + 0.0722 * b;
-        // La saturation la plus forte que l'écran rende sans déformer la
-        // teinte — au-delà, le navigateur la ramène de force et le safran
-        // vire à l'orange —, bornée par une luminance à tenir pour que le
-        // texte reste lisible.
-        const saturer = (L, h, lisible) => {
-          let bas = 0;
-          let haut = 0.4;
-          for (let i = 0; i < 24; i++) {
-            const mi = (bas + haut) / 2;
-            if (affichable(lineaire(L, mi, h))) bas = mi;
-            else haut = mi;
-          }
-          let c = bas;
-          while (c > 0 && !lisible(luminance(lineaire(L, c, h)))) c -= 0.004;
-          return Math.max(0, c);
-        };
-
-        // Hexadécimal vers sRGB linéaire, puis vers OKLCH : de quoi mesurer
-        // une couleur et la déplacer en clarté sans toucher sa teinte.
+        // Hexadécimal vers sRGB linéaire, puis vers luminance : de quoi
+        // savoir laquelle du noir ou de l'ivoire se lit sur une couleur.
         const versLineaire = (hex) =>
           [1, 3, 5].map((i) => {
             const c = parseInt(hex.slice(i, i + 2), 16) / 255;
             return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
           });
-        const versOklch = (hex) => {
-          const [r, g, b] = versLineaire(hex);
-          const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b);
-          const m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b);
-          const s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b);
-          const L = 0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s;
-          const A = 1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s;
-          const B = 0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s;
-          return [L, Math.hypot(A, B), ((Math.atan2(B, A) * 180) / Math.PI + 360) % 360];
-        };
+        const luminance = ([r, g, b]) => 0.2126 * r + 0.7152 * g + 0.0722 * b;
         const contraste = (y1, y2) => (Math.max(y1, y2) + 0.05) / (Math.min(y1, y2) + 0.05);
 
-        // La couleur du nuancier est posée telle quelle. Ce qui s'écrit
-        // dessus prend le noir ou le papier, celui des deux qui se lit le
-        // mieux ; le point du « Let's talk » prend l'autre. Le petit texte en
-        // accent garde la teinte et la saturation, et ne bouge en clarté que
-        // s'il le faut pour atteindre 4,5:1 sur le fond du thème.
+        // Une seule valeur par teinte, partout : l'aplat du pied de page, la
+        // pastille de la barre et les liens en accent portent exactement la
+        // couleur du nuancier, sans ajustement — c'est le nuancier qui fait
+        // foi. Ce qui s'écrit dessus prend le noir mat ou l'ivoire, celui des
+        // deux qui se lit le mieux ; le point du « Let's talk » prend l'autre.
         const poserTeinte = () => {
           const root = document.documentElement;
           const proprietes = ['--accent', '--accent-texte', '--sur-accent', '--contre-accent'];
@@ -233,33 +186,11 @@ const ogImage = new URL('/og.png', Astro.site).href;
           }
           const hex = TEINTES[root.dataset.swissAccent] ?? TEINTES.violet;
           const y = luminance(versLineaire(hex));
-          const yNoir = luminance(versLineaire(NOIR));
-          const yPapier = luminance(versLineaire(PAPIER));
-          const clair = contraste(y, yPapier) >= contraste(y, yNoir);
+          const clair = contraste(y, luminance(versLineaire(PAPIER))) >= contraste(y, luminance(versLineaire(NOIR)));
           root.style.setProperty('--accent', hex);
+          root.style.setProperty('--accent-texte', hex);
           root.style.setProperty('--sur-accent', clair ? PAPIER : NOIR);
           root.style.setProperty('--contre-accent', clair ? NOIR : PAPIER);
-
-          const sombre = root.dataset.swissTheme === 'dark';
-          const fond = sombre ? yNoir : yPapier;
-          if (contraste(y, fond) >= 4.5) {
-            root.style.setProperty('--accent-texte', hex);
-            return;
-          }
-          const [L0, C, h] = versOklch(hex);
-          const lisible = (L) => contraste(luminance(lineaire(L, C, h)), fond) >= 4.5;
-          // Sur le papier on descend, sur le noir on monte, jusqu'au premier
-          // cran lisible.
-          let bas = sombre ? L0 : 0.2;
-          let haut = sombre ? 0.97 : L0;
-          for (let i = 0; i < 22; i++) {
-            const mi = (bas + haut) / 2;
-            if (lisible(mi) === sombre) haut = mi;
-            else bas = mi;
-          }
-          const L = sombre ? haut : bas;
-          const c = Math.min(C, saturer(L, h, () => true));
-          root.style.setProperty('--accent-texte', `oklch(${L.toFixed(3)} ${c.toFixed(3)} ${h.toFixed(1)})`);
         };
 
         // Safari teinte ses barres avec cette valeur, et c'est ce qui fait
@@ -270,7 +201,7 @@ const ogImage = new URL('/og.png', Astro.site).href;
         // doit se voir jusque dans le chrome du navigateur. On lit le papier
         // réellement appliqué plutôt qu'une table, pour que le mode encre
         // l'emporte aussi.
-        const teintes = { light: '#f4f2ed', dark: '#1e1e1e' };
+        const teintes = { light: '#f3e9d7', dark: '#151415' };
         const poserBarre = () => {
           const root = document.documentElement;
           const papier = getComputedStyle(root).getPropertyValue('--paper').trim();

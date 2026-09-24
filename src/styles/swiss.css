@@ -17,7 +17,7 @@
 @property --accent {
   syntax: "<color>";
   inherits: true;
-  initial-value: #7d39eb;
+  initial-value: #775aff;
 }
 
 /* Tout ce qui dérive de la teinte glisse avec elle, au même rythme : sinon
@@ -25,37 +25,39 @@
 @property --accent-texte {
   syntax: "<color>";
   inherits: true;
-  initial-value: #7d39eb;
+  initial-value: #775aff;
 }
 
 @property --sur-accent {
   syntax: "<color>";
   inherits: true;
-  initial-value: #f4f2ed;
+  initial-value: #f3e9d7;
 }
 
 @property --contre-accent {
   syntax: "<color>";
   inherits: true;
-  initial-value: #1e1e1e;
+  initial-value: #151415;
 }
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Variante suisse : papier, encre, un seul accent violet. Pas de dégradé ni
+/* Variante suisse : l'ivoire Medici, le noir mat et une seule teinte du
+   nuancier. Pas de dégradé ni
    d'ombre — la grille et la typographie portent tout. */
 .swiss {
-  --paper: #f4f2ed;
-  --ink: #1e1e1e;
-  --ink-soft: #6a6a6a;
-  --rule: #1e1e1e;
-  --accent: #7d39eb;
+  --paper: #f3e9d7;
+  --ink: #151415;
+  --ink-soft: #6f6458;
+  --rule: #151415;
+  --accent: #775aff;
   /* Fond de la barre : assez de papier pour que la typographie reste lisible,
      assez de vide pour qu'on devine le contenu passer dessous. */
-  --header-bg: color-mix(in srgb, #f4f2ed 46%, transparent);
-  /* Pied de page : violet de la marque, texte papier — 4,53:1. */
+  --header-bg: color-mix(in srgb, #f3e9d7 46%, transparent);
+  /* Pied de page : la teinte du nuancier, texte ivoire ou noir mat selon
+     celui des deux qui s'y lit. Le violet par défaut — 4,10:1. */
   /* Le pied est le seul aplat de couleur du site : il porte la teinte
      choisie, exactement. Son texte prend le papier du thème — en clair les
      accents sont soutenus et le papier est clair, en sombre ils sont
@@ -66,8 +68,8 @@
      dans les deux thèmes ; ce qui s'écrit dessus est toujours foncé, et le
      petit texte en accent posé sur le papier clair prend la même teinte un
      cran plus sombre, seule concession à la lecture. */
-  --sur-accent: #f4f2ed;
-  --contre-accent: #1e1e1e;
+  --sur-accent: #f3e9d7;
+  --contre-accent: #151415;
   --accent-texte: var(--accent);
   --footer-fg: var(--sur-accent);
   transition:
@@ -93,9 +95,9 @@
   --ouverture-space: var(--section-space);
   /* Calque de grille : couleurs prêtes à l'emploi, l'opacité ne peut pas
      s'appliquer à une variable depuis une classe utilitaire. */
-  --grid-line: color-mix(in srgb, #7b58e8 34%, transparent);
-  --grid-fill: color-mix(in srgb, #7b58e8 6%, transparent);
-  --grid-ink: color-mix(in srgb, #7b58e8 75%, transparent);
+  --grid-line: color-mix(in srgb, #775aff 34%, transparent);
+  --grid-fill: color-mix(in srgb, #775aff 6%, transparent);
+  --grid-ink: color-mix(in srgb, #775aff 75%, transparent);
 }
 
 /* Hauteurs dépendant du format, au même niveau que les jetons : une règle
@@ -133,35 +135,28 @@
 }
 
 .swiss[data-swiss-theme="dark"] {
-  --paper: #1e1e1e;
-  --ink: #f4f2ed;
-  --ink-soft: #d6d6d6;
-  --rule: #f4f2ed;
+  --paper: #151415;
+  --ink: #f3e9d7;
+  --ink-soft: #c8bda8;
+  --rule: #f3e9d7;
   /* Le bruit se voit davantage sur l'encre : on le retient un peu. */
-  --header-bg: color-mix(in srgb, #1e1e1e 46%, transparent);
+  --header-bg: color-mix(in srgb, #151415 46%, transparent);
 }
 
 /* Deux encres sur un papier chaud et un très léger
    décalage de repérage sur les grands textes : ce qui trahit une riso. */
 .swiss.ink-on {
-  --paper: #f2ead9;
-  --ink: #2b2350;
-  --ink-soft: #6a5f8c;
-  --rule: #2b2350;
-  --accent: #ff4d6d;
-  --footer-bg: #ff4d6d;
-  --footer-fg: #f2ead9;
-  --header-bg: color-mix(in srgb, #f2ead9 46%, transparent);
-  --grid-line: color-mix(in srgb, #ff4d6d 34%, transparent);
-  --grid-fill: color-mix(in srgb, #ff4d6d 6%, transparent);
-  --grid-ink: color-mix(in srgb, #ff4d6d 75%, transparent);
-}
-
-/* Le mode encre, lu dans la gamme de l'écran quand il est large. */
-@supports (color: color(display-p3 1 1 1)) {
-  .swiss.ink-on {
-    --accent: color(display-p3 1.000 0.302 0.427);
-  }
+  --paper: #f3e9d7;
+  --ink: #520f07;
+  --ink-soft: #8a6a54;
+  --rule: #520f07;
+  --accent: #f23f3a;
+  --footer-bg: #f23f3a;
+  --footer-fg: #f3e9d7;
+  --header-bg: color-mix(in srgb, #f3e9d7 46%, transparent);
+  --grid-line: color-mix(in srgb, #f23f3a 34%, transparent);
+  --grid-fill: color-mix(in srgb, #f23f3a 6%, transparent);
+  --grid-ink: color-mix(in srgb, #f23f3a 75%, transparent);
 }
 
 @layer base {
@@ -610,19 +605,19 @@
      ses commandes se composent alors comme sur leur propre papier, sans
      qu'aucune n'ait à connaître le thème de la page. */
   .swiss:not(.ink-on) .dock-capsule {
-    --paper: #1e1e1e;
-    --ink: #f4f2ed;
-    --ink-soft: #b4b4b4;
-    --rule: #f4f2ed;
-    background-color: #1e1e1e;
+    --paper: #151415;
+    --ink: #f3e9d7;
+    --ink-soft: #a89d8a;
+    --rule: #f3e9d7;
+    background-color: #151415;
   }
 
   .swiss:not(.ink-on)[data-swiss-theme="dark"] .dock-capsule {
-    --paper: #f4f2ed;
-    --ink: #1e1e1e;
-    --ink-soft: #727272;
-    --rule: #1e1e1e;
-    background-color: #f4f2ed;
+    --paper: #f3e9d7;
+    --ink: #151415;
+    --ink-soft: #6f6458;
+    --rule: #151415;
+    background-color: #f3e9d7;
   }
 
   .swiss .dock-capsule {
@@ -728,8 +723,8 @@
   }
 
   .swiss ::selection {
-    background-color: #7b58e8;
-    color: #faf9f6;
+    background-color: #775aff;
+    color: #f3e9d7;
   }
 
   .swiss :focus-visible {
