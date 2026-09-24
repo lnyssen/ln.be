@@ -5,9 +5,13 @@ backend:
   base_url: https://laurentnyssen.be
   auth_endpoint: api/auth
 
-# Chemin des visuels : le CMS écrit dans public/images, le site les sert depuis /images
+# Les visuels vivent dans le dépôt, pas dans les fichiers servis : le site les
+# fait passer par le moteur d'images d'Astro, qui les redimensionne et les
+# convertit. Le chemin inscrit dans un projet est donc celui du dépôt, et non
+# une adresse — c'est aussi le seul que l'atelier sache relire pour en montrer
+# l'aperçu. Le site accepte les deux écritures.
 media_folder: "src/assets/images"
-public_folder: "/images"
+public_folder: "src/assets/images"
 
 publish_mode: simple
 locale: fr
