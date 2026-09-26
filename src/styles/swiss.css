@@ -229,9 +229,11 @@
 
   /* La teinte elle-même est animée, tout en haut : le point suit sans avoir
      sa propre transition. Lui en donner une le faisait courir après une
-     valeur qui bouge déjà, et il finissait après le reste de la page. */
+     valeur qui bouge déjà, et il finissait après le reste de la page. Il
+     prend l'encre de la teinte et non la teinte nue : c'est un signe de
+     ponctuation, il doit se voir. */
   .swiss .titre-point {
-    color: var(--accent);
+    color: var(--accent-texte);
   }
 
   /* Même raison pour les boutons cerclés de teinte : leur contour et leur
@@ -707,7 +709,7 @@
   .swiss .progres-trait {
     display: block;
     height: 100%;
-    background-color: var(--accent);
+    background-color: var(--accent-texte);
     transform-origin: left center;
     transform: scaleX(var(--progres, 0));
   }
@@ -761,7 +763,7 @@
   }
 
   .swiss :focus-visible {
-    outline: 2px solid var(--accent);
+    outline: 2px solid var(--accent-texte);
     outline-offset: 1px;
   }
 
@@ -905,7 +907,7 @@
     height: 0.2em;
     margin: 0 19px;
     border-radius: 999px;
-    background-color: var(--accent);
+    background-color: var(--accent-texte);
     font-size: clamp(1.5rem, 3.4vw, 2.75rem);
   }
 

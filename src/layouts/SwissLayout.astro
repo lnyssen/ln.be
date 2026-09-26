@@ -172,11 +172,32 @@ const ogImage = new URL('/og.png', Astro.site).href;
         const luminance = ([r, g, b]) => 0.2126 * r + 0.7152 * g + 0.0722 * b;
         const contraste = (y1, y2) => (Math.max(y1, y2) + 0.05) / (Math.min(y1, y2) + 0.05);
 
-        // Une seule valeur par teinte, partout : l'aplat du pied de page, la
-        // pastille de la barre et les liens en accent portent exactement la
-        // couleur du nuancier, sans ajustement — c'est le nuancier qui fait
-        // foi. Ce qui s'écrit dessus prend le noir mat ou l'ivoire, celui des
-        // deux qui se lit le mieux ; le point du « Let's talk » prend l'autre.
+        // La couleur du nuancier est posée telle quelle partout où elle est
+        // une surface : l'aplat du pied de page, la pastille de la barre,
+        // l'affiche du menu. Ce qui s'écrit dessus prend le noir mat ou
+        // l'ivoire, celui des deux qui s'y lit.
+        //
+        // Mais une couleur d'aplat n'est pas une couleur d'encre. Les six
+        // teintes sont claires : posées en petit texte sur le papier, elles
+        // vont de 1,31:1 pour le jaune à 3,27:1 pour le violet, là où il en
+        // faut 4,5. Les liens, les mentions en accent et les cernes de focus
+        // prennent donc `--accent-texte`, la même teinte fondue vers l'encre
+        // du thème jusqu'au premier cran lisible. Le nuancier garde la
+        // surface, la lecture garde son dû.
+        const melange = (hex, vers, t) =>
+          [0, 1, 2].map((i) => {
+            const a = parseInt(hex.slice(1 + i * 2, 3 + i * 2), 16);
+            const b = parseInt(vers.slice(1 + i * 2, 3 + i * 2), 16);
+            return Math.round(a + (b - a) * t);
+          });
+        const luminanceRgb = (rgb) =>
+          luminance(
+            rgb.map((v) => {
+              const c = v / 255;
+              return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+            }),
+          );
+
         const poserTeinte = () => {
           const root = document.documentElement;
           const proprietes = ['--accent', '--accent-texte', '--sur-accent', '--contre-accent'];
@@ -186,11 +207,30 @@ const ogImage = new URL('/og.png', Astro.site).href;
           }
           const hex = TEINTES[root.dataset.swissAccent] ?? TEINTES.violet;
           const y = luminance(versLineaire(hex));
-          const clair = contraste(y, luminance(versLineaire(PAPIER))) >= contraste(y, luminance(versLineaire(NOIR)));
+          const yNoir = luminance(versLineaire(NOIR));
+          const yPapier = luminance(versLineaire(PAPIER));
+          const clair = contraste(y, yPapier) >= contraste(y, yNoir);
           root.style.setProperty('--accent', hex);
-          root.style.setProperty('--accent-texte', hex);
           root.style.setProperty('--sur-accent', clair ? PAPIER : NOIR);
           root.style.setProperty('--contre-accent', clair ? NOIR : PAPIER);
+
+          // Sur le papier on fond vers le noir, sur l'encre vers l'ivoire.
+          const sombre = root.dataset.swissTheme === 'dark';
+          const fond = sombre ? yNoir : yPapier;
+          const vers = sombre ? PAPIER : NOIR;
+          if (contraste(y, fond) >= 4.5) {
+            root.style.setProperty('--accent-texte', hex);
+            return;
+          }
+          let bas = 0;
+          let haut = 1;
+          for (let i = 0; i < 18; i++) {
+            const mi = (bas + haut) / 2;
+            if (contraste(luminanceRgb(melange(hex, vers, mi)), fond) >= 4.5) haut = mi;
+            else bas = mi;
+          }
+          const [r, v, b] = melange(hex, vers, haut);
+          root.style.setProperty('--accent-texte', `rgb(${r} ${v} ${b})`);
         };
 
         // Safari teinte ses barres avec cette valeur, et c'est ce qui fait

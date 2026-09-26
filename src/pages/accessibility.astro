@@ -1,0 +1,142 @@
+---
+import SwissLayout from '../layouts/SwissLayout.astro';
+import SwissHeader from '../components/SwissHeader.astro';
+import SwissFooter from '../components/SwissFooter.astro';
+
+const updated = '26 September 2026';
+---
+
+<SwissLayout
+  title="Laurent Nyssen — Accessibility"
+  description="What this site does to stay usable by everyone, what it does not do yet, and how to tell me when it fails you."
+>
+  <SwissHeader />
+
+  <main id="contenu" tabindex="-1">
+    <section class="swiss-shell pt-[var(--section-space)]">
+      <h1 class="swiss-display">Accessibility<span class="text-[var(--accent-texte)]">.</span></h1>
+    </section>
+
+    <section class="swiss-shell">
+      <div class="swiss-grid gap-y-4 border-t border-[var(--rule)]">
+        <h2 class="section-label swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">
+          In short
+        </h2>
+
+        <p class="swiss-lede col-span-6 md:col-span-8">
+          This site aims at WCAG 2.2 level AA. Most of it holds. Two things
+          don't, and they are named below rather than left for you to find.
+        </p>
+      </div>
+    </section>
+
+    <section class="swiss-shell">
+      <div class="swiss-grid gap-y-4 border-t border-[var(--rule)]">
+        <h2 class="section-label swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">
+          What is in place
+        </h2>
+
+        <div class="privacy-body col-span-6 text-[17px] leading-[1.55] md:col-span-8">
+          <p>
+            Every page is built from headings, lists and landmarks, in the order
+            it reads. A skip link comes first. The whole site works from the
+            keyboard, and what holds focus says so with a two-pixel ring.
+          </p>
+          <p>
+            Text meets 4.5:1 against its background, in both themes and in all
+            six tints. The tint you pick colours the surfaces exactly as it is
+            drawn in the palette; where it becomes text, it darkens or lightens
+            until it is readable.
+          </p>
+          <p>
+            Projects open and close on click and on Enter, through the browser's
+            own disclosure element. Nothing here is a div pretending to be a
+            button.
+          </p>
+          <p>
+            If your system asks for reduced motion, it is honoured throughout:
+            the showcase stops, the reveals are cut, the cursor goes back to
+            being the one your system draws, and the falling shapes on Le
+            Polographe never fall.
+          </p>
+          <p>
+            Nothing autoplays with sound, nothing steals focus, nothing runs on
+            a timer you have to beat.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="swiss-shell">
+      <div class="swiss-grid gap-y-4 border-t border-[var(--rule)]">
+        <h2 class="section-label swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">
+          What does not hold yet
+        </h2>
+
+        <div class="privacy-body col-span-6 text-[17px] leading-[1.55] md:col-span-8">
+          <p>
+            <strong>The showcase band moves on its own.</strong> It slows under
+            the pointer, stops entirely on keyboard focus, and never starts if
+            you have asked for reduced motion — but there is no always-visible
+            pause button. WCAG asks for one, and it is the next thing I will
+            build.
+          </p>
+          <p>
+            <strong>Project images are named, not described.</strong> Their text
+            alternative is the project title. It tells you which project you are
+            in; it does not tell you what the image shows.
+          </p>
+          <p>
+            Two smaller things: the tool capsule at the bottom of the screen
+            turns to the tint on hover, which is faint for the palest tints, and
+            the decorative marks — the falling shapes, the mark beside each
+            teaser — are drawn in the tint as it is, without correction. None of
+            them carry meaning.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="swiss-shell">
+      <div class="swiss-grid gap-y-4 border-t border-[var(--rule)]">
+        <h2 class="section-label swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">
+          How this was checked
+        </h2>
+
+        <div class="privacy-body col-span-6 text-[17px] leading-[1.55] md:col-span-8">
+          <p>
+            By me, on this site, not by an outside auditor: keyboard passes on
+            every page, contrast measured on all twelve theme and tint
+            combinations, and the pages read with the browser's own tools. No
+            formal audit and no user testing with assistive technology has been
+            done. That is worth knowing when you read the claim above.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="swiss-shell">
+      <div class="swiss-grid gap-y-4 border-t border-[var(--rule)]">
+        <h2 class="section-label swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">
+          Tell me
+        </h2>
+
+        <div class="privacy-body col-span-6 text-[17px] leading-[1.55] md:col-span-8">
+          <p>
+            If something here blocks you, write to
+            <a href="mailto:hello@laurentnyssen.be?subject=Accessibility">hello@laurentnyssen.be</a>.
+            Say what you were trying to do and what got in the way. I answer
+            within a week, and I would rather hear it than not.
+          </p>
+          <p class="text-[var(--ink-soft)]">
+            This site is a personal portfolio, so the European accessibility
+            rules for public bodies do not apply to it. This statement is
+            voluntary. Last reviewed {updated}.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <SwissFooter />
+</SwissLayout>
