@@ -4,10 +4,14 @@ slug: "lab-65"
 order: 10
 tags: ["Visual Identity", "Strategy"]
 images:
-  - "/images/lab-65-1.jpg"
-  - "/images/lab-65-2.jpg"
-  - "/images/lab-65-3.jpg"
-  - "/images/lab-65-4.jpg"
+  - src: "/images/lab-65-1.jpg"
+    alt: "A Lab 65 poster pasted on a graffitied wall in Barcelona, orange and pink, with the address."
+  - src: "/images/lab-65-2.jpg"
+    alt: "A hand holding a yellow Lab 65 can: from Barcelona with love."
+  - src: "/images/lab-65-3.jpg"
+    alt: "A wooden Lab 65 sign hanging from a bracket on a street wall, in the rain."
+  - src: "/images/lab-65-4.jpg"
+    alt: "A yellow Lab 65 T-shirt on a hanger, against a chain-link fence and blue sky."
 link: ""
 ---
 

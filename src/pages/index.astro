@@ -83,7 +83,28 @@ function domainLabel(link: string) {
            964 px sur un écran de 800 — on arrivait toujours sans une image.
            Un visuel mène à sa ligne, qui s'ouvre. La bande est doublée pour
            boucler sans couture ; la copie est cachée aux lecteurs d'écran. -->
-      <div class="vitrine border-t border-[var(--rule)]" role="region" aria-label="Project preview" data-reveal data-reveal-slow data-reveal-delay="80">
+      <div class="vitrine relative border-t border-[var(--rule)]" role="region" aria-label="Project preview" data-reveal data-reveal-slow data-reveal-delay="80">
+        <!-- La bande avance seule : il faut pouvoir l'arrêter, et pas
+             seulement en la survolant ou en y entrant au clavier. La commande
+             se voit, se prend au doigt comme au clavier, et dit son état. Elle
+             se retire quand le système demande moins de mouvement : la bande
+             ne bouge alors pas, il n'y a rien à arrêter. -->
+        <button
+          type="button"
+          data-vitrine-pause
+          aria-pressed="false"
+          aria-label="Pause the showcase"
+          class="vitrine-pause strip-nav absolute right-[20px] top-[16px] z-10 flex h-[34px] w-[34px] items-center justify-center rounded-full text-[var(--paper)] md:right-[40px]"
+        >
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true" class="pause-signe">
+            <g class="signe-barres">
+              <rect x="2" y="1.5" width="3" height="9" rx="1" />
+              <rect x="7" y="1.5" width="3" height="9" rx="1" />
+            </g>
+            <path class="signe-triangle" d="M3 1.8 10.2 6 3 10.2Z" />
+          </svg>
+        </button>
+
         <div class="marquee marquee-images overflow-hidden">
           <div class="marquee-track flex w-max">
             {
@@ -594,15 +615,17 @@ function domainLabel(link: string) {
       if (!piste) return;
       const calme = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      // Quatre-vingt-dix pixels par seconde sur grand écran ; sur téléphone,
-      // où l'écran est étroit et le regard plus pressé, cent quarante.
+      // Cent cinquante pixels par seconde sur grand écran, où la bande est
+      // large et se traverse lentement ; sur téléphone, où l'écran est étroit,
+      // cent quarante suffisent à donner la même vitesse apparente.
       const telephone = matchMedia('(max-width: 767px)');
-      const allure = () => (calme ? 0 : telephone.matches ? 140 : 90);
+      const allure = () => (calme ? 0 : telephone.matches ? 140 : 150);
       let decal = 0;
       let facteur = 1;
       let cible = 1;
       let elan = 0;
       let prise = null;
+      let arret = false;
       let aGlisse = false;
       let dernier = 0;
       let visible = true;
@@ -618,7 +641,7 @@ function domainLabel(link: string) {
         const dt = Math.min(0.05, (t - (dernier || t)) / 1000);
         dernier = t;
         facteur += (cible - facteur) * (1 - Math.exp(-dt / 0.18));
-        if (!prise) {
+        if (!prise && !arret) {
           decal += (allure() * facteur + elan) * dt;
           elan *= Math.exp(-dt / 0.35);
           if (Math.abs(elan) < 2) elan = 0;
@@ -636,11 +659,26 @@ function domainLabel(link: string) {
       requestAnimationFrame(tick);
 
       bande.addEventListener('pointerenter', (e) => {
-        if (e.pointerType === 'mouse') cible = 0.2;
+        if (e.pointerType === 'mouse' && !arret) cible = 0.2;
       });
       bande.addEventListener('pointerleave', () => {
-        cible = clavier ? 0 : 1;
+        if (!arret) cible = clavier ? 0 : 1;
       });
+
+      // La commande d'arrêt. Arrêtée, la bande ne repart ni au survol, ni au
+      // défilement de la page : le visiteur l'a arrêtée, elle reste arrêtée.
+      const bouton = document.querySelector('[data-vitrine-pause]');
+      if (bouton) {
+        if (calme) bouton.hidden = true;
+        bouton.addEventListener('click', () => {
+          arret = !arret;
+          elan = 0;
+          cible = arret ? 0 : clavier ? 0 : 1;
+          if (arret) facteur = 0;
+          bouton.setAttribute('aria-pressed', String(arret));
+          bouton.setAttribute('aria-label', arret ? 'Play the showcase' : 'Pause the showcase');
+        });
+      }
 
       // Au clavier, la bande s'arrête net tant que le focus y est — un
       // contenu qui défile seul doit pouvoir s'arrêter — et elle amène
@@ -685,7 +723,7 @@ function domainLabel(link: string) {
         'scroll',
         () => {
           const t = performance.now();
-          if (calme || prise || clavier || !visible) {
+          if (calme || arret || prise || clavier || !visible) {
             dernierY = scrollY;
             dernierT = t;
             return;
@@ -694,10 +732,11 @@ function domainLabel(link: string) {
           const vitesse = ((scrollY - dernierY) / dt) * 1000;
           dernierY = scrollY;
           dernierT = t;
-          // Un tiers de la vitesse du doigt, et jamais plus de neuf cents
-          // pixels par seconde : au-delà, la bande part en trombe et l'on ne
-          // lit plus les visuels.
-          elan = Math.max(-900, Math.min(900, elan + vitesse * 0.35));
+          // Un huitième de la vitesse du doigt, et jamais plus de trois cent
+          // cinquante pixels par seconde : au-delà, la bande part en trombe et
+          // l'on ne lit plus les visuels. C'est une inclinaison, pas un
+          // entraînement.
+          elan = Math.max(-350, Math.min(350, elan + vitesse * 0.12));
         },
         { passive: true },
       );

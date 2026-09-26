@@ -24,8 +24,8 @@ const updated = '26 September 2026';
         </h2>
 
         <p class="swiss-lede col-span-6 md:col-span-8">
-          This site aims at WCAG 2.2 level AA. Most of it holds. Two things
-          don't, and they are named below rather than left for you to find.
+          This site aims at WCAG 2.2 level AA. What is known not to hold is
+          named below rather than left for you to find.
         </p>
       </div>
     </section>
@@ -54,6 +54,16 @@ const updated = '26 September 2026';
             button.
           </p>
           <p>
+            The showcase at the top of the page moves on its own, so it carries
+            a pause button, next to the images. It also slows under the pointer
+            and stops on keyboard focus.
+          </p>
+          <p>
+            Every project image is described — forty-four of them, one sentence
+            each, saying what is in the picture rather than repeating the
+            project's name.
+          </p>
+          <p>
             If your system asks for reduced motion, it is honoured throughout:
             the showcase stops, the reveals are cut, the cursor goes back to
             being the one your system draws, and the falling shapes on Le
@@ -75,23 +85,17 @@ const updated = '26 September 2026';
 
         <div class="privacy-body col-span-6 text-[17px] leading-[1.55] md:col-span-8">
           <p>
-            <strong>The showcase band moves on its own.</strong> It slows under
-            the pointer, stops entirely on keyboard focus, and never starts if
-            you have asked for reduced motion — but there is no always-visible
-            pause button. WCAG asks for one, and it is the next thing I will
-            build.
+            The tool capsule at the bottom of the screen turns to the tint on
+            hover, which is faint for the palest tints. The decorative marks —
+            the falling shapes on Le Polographe, the mark beside each teaser —
+            are drawn in the tint as it is, without correction. Neither carries
+            meaning.
           </p>
           <p>
-            <strong>Project images are named, not described.</strong> Their text
-            alternative is the project title. It tells you which project you are
-            in; it does not tell you what the image shows.
-          </p>
-          <p>
-            Two smaller things: the tool capsule at the bottom of the screen
-            turns to the tint on hover, which is faint for the palest tints, and
-            the decorative marks — the falling shapes, the mark beside each
-            teaser — are drawn in the tint as it is, without correction. None of
-            them carry meaning.
+            In the showcase at the top of the page, each image is a link to its
+            project, so its text alternative names that project rather than
+            describing the picture. Open the project and the same images are
+            described properly.
           </p>
         </div>
       </div>
@@ -107,7 +111,8 @@ const updated = '26 September 2026';
           <p>
             By me, on this site, not by an outside auditor: keyboard passes on
             every page, contrast measured on all twelve theme and tint
-            combinations, and the pages read with the browser's own tools. No
+            combinations, every image alternative written by hand, and the pages
+            read with the browser's own tools. No
             formal audit and no user testing with assistive technology has been
             done. That is worth knowing when you read the claim above.
           </p>

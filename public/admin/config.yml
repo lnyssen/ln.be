@@ -30,7 +30,13 @@ collections:
       - { label: "Identifiant", name: "slug", widget: "string", hint: "En minuscules, sans accent ni espace. Sert d'adresse et de nom de fichier." }
       - { label: "Ordre", name: "order", widget: "number", default: 99, value_type: "int", hint: "Plus le nombre est petit, plus le projet apparaît haut dans l'index." }
       - { label: "Tags", name: "tags", widget: "list", field: { label: "Tag", name: "tag", widget: "string" }, hint: "Affichés séparés par des virgules." }
-      - { label: "Visuels", name: "images", widget: "list", field: { label: "Visuel", name: "image", widget: "image" }, hint: "Quatre visuels par projet sur le site actuel." }
+      - label: "Visuels"
+        name: "images"
+        widget: "list"
+        hint: "Quatre visuels par projet sur le site actuel. Chacun porte sa description."
+        fields:
+          - { label: "Fichier", name: "src", widget: "image" }
+          - { label: "Description", name: "alt", widget: "string", hint: "Ce qu'on voit, pour qui ne le voit pas. Une phrase, sans « image de »." }
       - { label: "Lien du projet", name: "link", widget: "string", required: false, hint: "Adresse complète, ou vide s'il n'y a pas de site." }
       - { label: "Texte", name: "body", widget: "markdown", required: false, hint: "Le problème posé, ta réponse, ce que ça a produit. Deux ou trois phrases suffisent — affiché à l'ouverture du projet." }
 

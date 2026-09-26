@@ -4,10 +4,14 @@ slug: "world-cocoa-foundation"
 order: 8
 tags: ["Rebranding", "UI/UX", "Print", "Strategy"]
 images:
-  - "/images/world-cocoa-foundation-1.jpg"
-  - "/images/world-cocoa-foundation-2.jpg"
-  - "/images/world-cocoa-foundation-3.jpg"
-  - "/images/world-cocoa-foundation-4.jpg"
+  - src: "/images/world-cocoa-foundation-1.jpg"
+    alt: "A World Cocoa Foundation business card, striped orange and yellow, lying on gravel."
+  - src: "/images/world-cocoa-foundation-2.jpg"
+    alt: "The foundation's site on a phone: one sector, one voice, shared solutions, over cocoa leaves."
+  - src: "/images/world-cocoa-foundation-3.jpg"
+    alt: "A digital display in a metro station carrying the campaign: collaboration, impact, sustainability."
+  - src: "/images/world-cocoa-foundation-4.jpg"
+    alt: "A quotation from the foundation's president on a laptop, over a photograph of a hand holding a cocoa pod."
 link: "https://worldcocoafoundation.org/"
 ---
 

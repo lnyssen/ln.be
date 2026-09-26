@@ -1035,6 +1035,34 @@
       color 200ms ease;
   }
 
+  /* La commande d'arrêt de la vitrine prend la même matière que les flèches
+     de planche, et le même passage à l'accent sous le doigt. Les deux signes
+     se relaient : deux barres tant que la bande avance, un triangle une fois
+     qu'elle est arrêtée. */
+  .swiss .vitrine-pause .signe-triangle {
+    opacity: 0;
+  }
+
+  .swiss .vitrine-pause[aria-pressed='true'] .signe-barres {
+    opacity: 0;
+  }
+
+  .swiss .vitrine-pause[aria-pressed='true'] .signe-triangle {
+    opacity: 1;
+  }
+
+  .swiss .pause-signe .signe-barres,
+  .swiss .pause-signe .signe-triangle {
+    transition: opacity 180ms ease;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .swiss .pause-signe .signe-barres,
+    .swiss .pause-signe .signe-triangle {
+      transition: none;
+    }
+  }
+
   /* Elles passent à l'accent sous le doigt, comme les commandes de la barre
      du bas et les adresses des projets. */
   .swiss .strip-nav:hover {

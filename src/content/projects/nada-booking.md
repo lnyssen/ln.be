@@ -4,10 +4,14 @@ slug: "nada-booking"
 order: 2
 tags: ["Visual Identity", "UI/UX", "Print"]
 images:
-  - "/images/nada-booking-1.jpg"
-  - "/images/nada-booking-2.jpg"
-  - "/images/nada-booking-3.jpg"
-  - "/images/nada-booking-4.jpg"
+  - src: "/images/nada-booking-1.jpg"
+    alt: "Two Nada gig posters pasted on a concrete wall: Girls in Hawaii in black and white, Chassol on black, each stamped with the yellow dot of the logo."
+  - src: "/images/nada-booking-2.jpg"
+    alt: "A black Nada tote bag with yellow handles, leaning against a red vintage chair on a tiled floor."
+  - src: "/images/nada-booking-3.jpg"
+    alt: "The Nada site on a phone: the agency's presentation, a cut-out photograph of dancers and a yellow newsletter panel."
+  - src: "/images/nada-booking-4.jpg"
+    alt: "Yellow and black Nada barrier tape laid in a zigzag across grey concrete."
 link: "https://www.nadabooking.be/"
 ---
 
