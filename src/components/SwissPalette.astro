@@ -1,0 +1,212 @@
+---
+import { getCollection } from 'astro:content';
+
+// Onze projets, trois expériences, six pages : l'index se parcourt à l'œil,
+// mais on ne le parcourt plus quand on sait déjà où l'on va. La palette est
+// pour ceux-là — trois lettres et la touche entrée.
+const chemin = (entree: any) =>
+  String(entree.data.slug ?? entree.id).replace(/\.md$/, '');
+
+const projects = (await getCollection('projects')).sort(
+  (a, b) => a.data.order - b.data.order
+);
+const lab = (await getCollection('lab')).sort((a, b) => a.data.order - b.data.order);
+
+type Entree = { label: string; genre: string; href?: string; action?: string; mots?: string };
+
+const entrees: Entree[] = [
+  ...projects.map((p) => ({
+    label: p.data.title,
+    genre: 'Project',
+    href: `/#${chemin(p)}`,
+    // Les tags entrent dans la recherche sans s'afficher : on tape « print »
+    // et les projets d'impression remontent.
+    mots: (p.data.tags ?? []).join(' '),
+  })),
+  ...lab.map((e) => ({
+    label: e.data.title,
+    genre: 'Lab',
+    href: `/lab#${chemin(e)}`,
+    mots: e.data.summary,
+  })),
+  { label: 'Index', genre: 'Page', href: '/' },
+  { label: 'Creative lab', genre: 'Page', href: '/lab' },
+  { label: 'Le Polographe', genre: 'Page', href: '/lepolographe' },
+  { label: 'Colophon', genre: 'Page', href: '/colophon' },
+  { label: 'Accessibility', genre: 'Page', href: '/accessibility' },
+  { label: 'Privacy', genre: 'Page', href: '/privacy' },
+  { label: 'Get in touch', genre: 'Page', href: 'mailto:hello@laurentnyssen.be' },
+  // Les trois commandes de la capsule, à portée de clavier. Elles ne font que
+  // presser le bouton qui existe : une seule mécanique, deux entrées.
+  { label: 'Switch theme', genre: 'Action', action: '[role="switch"]', mots: 'dark light' },
+  { label: 'Change tint', genre: 'Action', action: '[data-accent-cycle]', mots: 'colour color accent' },
+  { label: 'Show the grid', genre: 'Action', action: '[data-grid-toggle]', mots: 'layout columns' },
+];
+---
+
+<!-- Ouverte par ⌘K. C'est une boîte de dialogue native : la touche
+     d'échappement la ferme, le focus ne sort pas, le reste de la page devient
+     inerte — trois comportements qu'il aurait fallu réécrire à la main, et
+     mal. -->
+<dialog class="palette" data-palette aria-label="Jump to a project, a page or a setting">
+  <div class="palette-boite">
+    <input
+      type="text"
+      class="palette-champ"
+      data-palette-champ
+      role="combobox"
+      aria-expanded="true"
+      aria-controls="palette-liste"
+      aria-autocomplete="list"
+      aria-label="Search projects, pages and settings"
+      placeholder="Type to jump…"
+      autocomplete="off"
+      spellcheck="false"
+    />
+
+    <ul class="palette-liste" id="palette-liste" role="listbox" data-palette-liste>
+      {
+        entrees.map((entree, i) => (
+          <li
+            class="palette-ligne"
+            role="option"
+            id={`palette-${i}`}
+            aria-selected={i === 0 ? 'true' : 'false'}
+            data-href={entree.href}
+            data-action={entree.action}
+            data-mots={`${entree.label} ${entree.genre} ${entree.mots ?? ''}`.toLowerCase()}
+          >
+            <span class="palette-label">{entree.label}</span>
+            <span class="palette-genre swiss-meta">{entree.genre}</span>
+          </li>
+        ))
+      }
+    </ul>
+
+    <p class="palette-vide swiss-meta" data-palette-vide hidden>Nothing matches</p>
+
+    <p class="palette-pied swiss-meta" aria-hidden="true">
+      <span>↑↓ to choose</span>
+      <span>↵ to open</span>
+      <span>esc to close</span>
+    </p>
+  </div>
+</dialog>
+
+<script is:inline data-astro-rerun>
+  (() => {
+    const boite = document.querySelector('[data-palette]');
+    if (!boite?.showModal) return;
+    const champ = boite.querySelector('[data-palette-champ]');
+    const liste = boite.querySelector('[data-palette-liste]');
+    const vide = boite.querySelector('[data-palette-vide]');
+    const lignes = [...liste.querySelectorAll('.palette-ligne')];
+
+    let visibles = lignes;
+    let choisie = 0;
+
+    const marquer = () => {
+      for (const [i, ligne] of visibles.entries()) {
+        const ici = i === choisie;
+        ligne.setAttribute('aria-selected', String(ici));
+        if (ici) {
+          champ.setAttribute('aria-activedescendant', ligne.id);
+          ligne.scrollIntoView({ block: 'nearest' });
+        }
+      }
+      for (const ligne of lignes) {
+        if (!visibles.includes(ligne)) ligne.setAttribute('aria-selected', 'false');
+      }
+    };
+
+    // Les lettres tapées se suivent : « brin » trouve « Brin d'acier » et lui
+    // seul. Une première version acceptait les lettres éparpillées, à la
+    // manière d'un éditeur de code — mais sur quinze entrées dont les tags,
+    // « brin » en remontait neuf et « print » les remontait toutes. Ici on
+    // cherche un mot, pas un fichier.
+    const filtrer = () => {
+      const q = champ.value.trim().toLowerCase();
+      visibles = [];
+      for (const ligne of lignes) {
+        const garde = !q || ligne.dataset.mots.includes(q);
+        ligne.hidden = !garde;
+        if (garde) visibles.push(ligne);
+      }
+      vide.hidden = visibles.length > 0;
+      choisie = 0;
+      marquer();
+    };
+
+    const ouvrir = () => {
+      champ.value = '';
+      filtrer();
+      boite.showModal();
+      champ.focus();
+    };
+
+    const suivre = (ligne) => {
+      if (!ligne) return;
+      boite.close();
+      const commande = ligne.dataset.action;
+      if (commande) {
+        document.querySelector(commande)?.click();
+        return;
+      }
+      const href = ligne.dataset.href;
+      if (!href) return;
+      // Une ancre sur la page où l'on est déjà ne recharge rien : on pose
+      // l'adresse, et la ligne s'ouvre comme au clic sur un visuel.
+      const [chemin, ancre] = href.split('#');
+      if (ancre && (chemin === location.pathname || chemin === '/' + location.pathname.slice(1))) {
+        location.hash = ancre;
+        window.__ouvrirProjet?.(ancre, true);
+        return;
+      }
+      location.href = href;
+    };
+
+    addEventListener('keydown', (event) => {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+        event.preventDefault();
+        if (boite.open) boite.close();
+        else ouvrir();
+      }
+    });
+
+    champ.addEventListener('input', filtrer);
+
+    champ.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+        event.preventDefault();
+        if (!visibles.length) return;
+        const pas = event.key === 'ArrowDown' ? 1 : -1;
+        choisie = (choisie + pas + visibles.length) % visibles.length;
+        marquer();
+      } else if (event.key === 'Enter') {
+        event.preventDefault();
+        suivre(visibles[choisie]);
+      }
+    });
+
+    liste.addEventListener('click', (event) => {
+      const ligne = event.target.closest('.palette-ligne');
+      if (ligne) suivre(ligne);
+    });
+
+    // Au doigt comme à la souris, survoler une ligne la choisit : la touche
+    // entrée ouvre alors celle qu'on regarde, pas celle d'avant.
+    liste.addEventListener('pointermove', (event) => {
+      const ligne = event.target.closest('.palette-ligne');
+      const i = visibles.indexOf(ligne);
+      if (i !== -1 && i !== choisie) {
+        choisie = i;
+        marquer();
+      }
+    });
+
+    // Un clic hors de la boîte la referme, comme partout ailleurs sur le site.
+    boite.addEventListener('click', (event) => {
+      if (event.target === boite) boite.close();
+    });
+  })();
+</script>

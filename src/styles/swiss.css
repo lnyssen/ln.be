@@ -87,6 +87,9 @@
      liste. On lit la structure avant de lire le texte. */
   --rule-fort: 2px;
   --rule-fin: 1px;
+  /* Entre les deux : le trait de la barre. Le filet fort l'alourdissait, le
+     fin la laissait flotter au-dessus de la page. */
+  --rule-barre: 1.5px;
   --renvoi-space: 66px;
   /* Le titre d'ouverture respire au rythme commun tant que l'écran est
      étroit : sur un téléphone, cent vingt pixels de vide avant le premier
@@ -599,11 +602,20 @@
     filter: contrast(1.12) saturate(0.82);
   }
 
+  /* La barre est tracée d'un trait à elle, entre le filet fort des sections
+     et le filet fin des lignes. Ses deux commandes suivent, et le signe du
+     menu est tracé à la même épaisseur. */
+  .swiss .header-pill,
+  .swiss .header-pill .bouton-accent,
+  .swiss [data-menu-toggle] {
+    border-width: var(--rule-barre);
+  }
+
   .swiss .header-pill {
     position: relative;
     isolation: isolate;
     background-color: var(--header-bg);
-    border: 1px solid var(--rule);
+    border: var(--rule-barre) solid var(--rule);
     -webkit-backdrop-filter: blur(52px) saturate(1.35);
     backdrop-filter: blur(52px) saturate(1.35);
   }
@@ -1818,6 +1830,113 @@
       scale 560ms cubic-bezier(0.4, 0, 0.2, 1),
       opacity 480ms cubic-bezier(0.4, 0, 0.2, 1),
       background-color 700ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* La palette : une plaque de papier posée au milieu de l'écran, tracée au
+     même trait que les sections. Rien d'arrondi — c'est une feuille, pas une
+     commande. */
+  .swiss .palette {
+    width: min(560px, calc(100vw - 40px));
+    max-height: min(560px, calc(100vh - 80px));
+    margin: auto;
+    padding: 0;
+    border: var(--rule-fort) solid var(--rule);
+    background-color: var(--paper);
+    color: var(--ink);
+    overflow: hidden;
+  }
+
+  .swiss .palette::backdrop {
+    background-color: color-mix(in srgb, #151415 55%, transparent);
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
+  }
+
+  .swiss .palette-boite {
+    display: flex;
+    max-height: inherit;
+    flex-direction: column;
+  }
+
+  /* Le champ est de la taille d'un titre de ligne : on écrit dans la page,
+     pas dans un formulaire. */
+  .swiss .palette-champ {
+    width: 100%;
+    padding: 18px 20px;
+    border: 0;
+    border-bottom: var(--rule-fin) solid var(--rule);
+    background: transparent;
+    color: var(--ink);
+    font-size: 20px;
+    letter-spacing: -0.01em;
+  }
+
+  .swiss .palette-champ::placeholder {
+    color: var(--ink-soft);
+  }
+
+  .swiss .palette-champ:focus-visible {
+    outline: none;
+  }
+
+  .swiss .palette-liste {
+    flex: 1;
+    /* Sans cette ligne, la liste refuse de se réduire sous la hauteur de son
+       contenu : la plaque débordait de l'écran et son aide-mémoire tombait
+       hors champ. */
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .swiss .palette-ligne {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 11px 20px;
+    cursor: pointer;
+  }
+
+  /* La ligne choisie prend l'aplat de la teinte, comme la pastille de la
+     barre : c'est le même signe, « vous êtes ici ». */
+  .swiss .palette-ligne[aria-selected='true'] {
+    background-color: var(--accent);
+    color: var(--sur-accent);
+  }
+
+  .swiss .palette-genre,
+  .swiss .palette-vide {
+    color: var(--ink-soft);
+  }
+
+  .swiss .palette-ligne[aria-selected='true'] .palette-genre {
+    color: var(--sur-accent);
+  }
+
+  .swiss .palette-vide {
+    margin: 0;
+    padding: 16px 20px;
+  }
+
+  .swiss .palette-pied {
+    display: flex;
+    gap: 18px;
+    margin: 0;
+    padding: 12px 20px;
+    border-top: var(--rule-fin) solid var(--rule);
+    color: var(--ink-soft);
+  }
+
+  /* Sur un écran étroit, on n'a pas de touche ⌘ : la palette ne s'ouvre pas,
+     et son aide-mémoire n'a rien à dire. */
+  @media (max-width: 767px) {
+    .swiss .palette-pied {
+      display: none;
+    }
   }
 
   /* Le curseur natif ne disparaît que si le disque est réellement actif. */
