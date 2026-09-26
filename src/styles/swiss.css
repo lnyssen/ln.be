@@ -17,7 +17,7 @@
 @property --accent {
   syntax: "<color>";
   inherits: true;
-  initial-value: #775aff;
+  initial-value: #8570ff;
 }
 
 /* Tout ce qui dérive de la teinte glisse avec elle, au même rythme : sinon
@@ -25,7 +25,7 @@
 @property --accent-texte {
   syntax: "<color>";
   inherits: true;
-  initial-value: #775aff;
+  initial-value: #8570ff;
 }
 
 @property --sur-accent {
@@ -52,12 +52,12 @@
   --ink: #151415;
   --ink-soft: #6f6458;
   --rule: #151415;
-  --accent: #775aff;
+  --accent: #8570ff;
   /* Fond de la barre : assez de papier pour que la typographie reste lisible,
      assez de vide pour qu'on devine le contenu passer dessous. */
   --header-bg: color-mix(in srgb, #f8f2e6 46%, transparent);
   /* Pied de page : la teinte du nuancier, texte ivoire ou noir mat selon
-     celui des deux qui s'y lit. Le violet par défaut — 4,10:1. */
+     celui des deux qui s'y lit. Le violet par défaut — 5,04:1. */
   /* Le pied est le seul aplat de couleur du site : il porte la teinte
      choisie, exactement. Son texte prend le papier du thème — en clair les
      accents sont soutenus et le papier est clair, en sombre ils sont
@@ -95,9 +95,9 @@
   --ouverture-space: var(--section-space);
   /* Calque de grille : couleurs prêtes à l'emploi, l'opacité ne peut pas
      s'appliquer à une variable depuis une classe utilitaire. */
-  --grid-line: color-mix(in srgb, #775aff 34%, transparent);
-  --grid-fill: color-mix(in srgb, #775aff 6%, transparent);
-  --grid-ink: color-mix(in srgb, #775aff 75%, transparent);
+  --grid-line: color-mix(in srgb, #8570ff 34%, transparent);
+  --grid-fill: color-mix(in srgb, #8570ff 6%, transparent);
+  --grid-ink: color-mix(in srgb, #8570ff 75%, transparent);
 }
 
 /* Hauteurs dépendant du format, au même niveau que les jetons : une règle
@@ -180,6 +180,13 @@
      quoi le verre dépoli couvrirait toute la largeur. */
   .swiss body > header {
     background-color: transparent;
+    /* La barre écrit avec sa propre encre. Sans cette ligne, elle n'en
+       redéfinissait que le jeton : le contour et le logo, qui le lisent,
+       suivaient, mais le trait du signe, qui hérite simplement de la
+       couleur du texte, restait celui de la page. Menu ouvert sur le thème
+       sombre, le signe restait donc ivoire quand tout le reste avait viré
+       au noir. */
+    color: var(--ink);
   }
 
   /* Une ombre portée sans flou ni décalage, d'une portée démesurée : elle
@@ -723,7 +730,7 @@
   }
 
   .swiss ::selection {
-    background-color: #775aff;
+    background-color: #8570ff;
     color: #f8f2e6;
   }
 
