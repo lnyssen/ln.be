@@ -154,14 +154,12 @@ const entrees: Entree[] = [
       }
       const href = ligne.dataset.href;
       if (!href) return;
-      // Une ancre sur la page où l'on est déjà ne recharge rien : on pose
-      // l'adresse, et la ligne s'ouvre comme au clic sur un visuel.
+      // Un projet de la page où l'on est déjà ne recharge rien et n'écrit
+      // rien dans la barre d'adresse : la ligne s'ouvre comme au clic sur un
+      // visuel, et l'on reste sur laurentnyssen.be tout court.
       const [chemin, ancre] = href.split('#');
-      if (ancre && (chemin === location.pathname || chemin === '/' + location.pathname.slice(1))) {
-        location.hash = ancre;
-        window.__ouvrirProjet?.(ancre, true);
-        return;
-      }
+      const ici = chemin === location.pathname || chemin === '/' + location.pathname.slice(1);
+      if (ancre && ici && window.__ouvrirProjet?.(ancre, true)) return;
       location.href = href;
     };
 

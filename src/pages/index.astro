@@ -458,18 +458,11 @@ function domainLabel(link: string) {
         });
       }
 
-      // Chaque projet a son adresse : laurentnyssen.be/#moires ouvre Moirés.
-      // L'adresse suit la ligne ouverte, si bien qu'il suffit de la copier
-      // pour envoyer un projet précis ; elle s'efface quand la ligne se
-      // referme. On la remplace sans l'empiler : le bouton retour ne repasse
-      // pas par chaque projet ouvert.
-      for (const ligne of document.querySelectorAll('#work details[data-slug]')) {
-        ligne.addEventListener('toggle', () => {
-          const ici = `#${ligne.dataset.slug}`;
-          if (ligne.open) history.replaceState(history.state, '', ici);
-          else if (location.hash === ici) history.replaceState(history.state, '', location.pathname + location.search);
-        });
-      }
+      // Une adresse de la forme laurentnyssen.be/#moires ouvre encore Moirés :
+      // les liens déjà partagés continuent de marcher. Mais ouvrir une ligne
+      // n'écrit plus rien dans la barre d'adresse — on lisait « #exaequo »
+      // derrière le nom du site en parcourant l'index, ce qui n'apprend rien
+      // à qui lit et salit ce qu'on copie.
 
       const depuisAdresse = (doux) => {
         const slug = decodeURIComponent(location.hash.slice(1));
