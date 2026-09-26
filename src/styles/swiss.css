@@ -723,6 +723,9 @@
     height: 100%;
     background-color: var(--accent-texte);
     transform-origin: left center;
+    /* Le filet ne fait que changer d'échelle : on le prévient, il garde sa
+       propre couche et le défilement n'a plus à le repeindre. */
+    will-change: transform;
     transform: scaleX(var(--progres, 0));
   }
 
