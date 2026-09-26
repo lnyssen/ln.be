@@ -691,6 +691,32 @@
     interpolate-size: allow-keywords;
   }
 
+  /* Le filet de progression. Il ne s'anime pas : il suit le défilement image
+     par image, et une transition le ferait courir après le doigt. */
+  .swiss .progres-filet {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 60;
+    height: 2px;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .swiss .progres-trait {
+    display: block;
+    height: 100%;
+    background-color: var(--accent);
+    transform-origin: left center;
+    transform: scaleX(var(--progres, 0));
+  }
+
+  /* L'affiche du menu recouvre la barre : le filet n'a plus rien à mesurer. */
+  .swiss.menu-rideau .progres-filet {
+    opacity: 0;
+  }
+
   /* L'en-tête est collant : l'ancre s'arrête en dessous, pas sous lui. La
      valeur suit la barre au lieu d'être recopiée — elle a changé six fois. */
   .swiss [id] {

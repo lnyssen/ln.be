@@ -35,6 +35,14 @@ const pages = [
     <div class="plate-hole"></div>
   </div>
 
+  <!-- Le filet de progression : un trait d'accent tout en haut de l'écran,
+       au-dessus de tout, qui se remplit à mesure qu'on descend. Il est fixé à
+       la fenêtre et non à la barre — c'est le bord de l'écran qu'il longe — et
+       se retire quand l'affiche du menu prend la page. -->
+  <div class="progres-filet" aria-hidden="true">
+    <span class="progres-trait"></span>
+  </div>
+
   <div class="header-pill flex items-center justify-between gap-4 rounded-full py-[15px] pl-[20px] pr-[12px] md:pl-[26px] md:pr-[14px]">
     {
       accueil ? (

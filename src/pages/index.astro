@@ -674,6 +674,34 @@ function domainLabel(link: string) {
         cible = 1;
       });
 
+      // La bande suit la main. Le défilement de la page lui donne une
+      // impulsion dans le sens du geste, qu'elle perd ensuite comme après un
+      // glissement — c'est le même élan, nourri autrement. Elle ne suit rien
+      // pendant une prise, au clavier, hors de l'écran, ni quand on demande
+      // moins de mouvement.
+      let dernierY = scrollY;
+      let dernierT = performance.now();
+      addEventListener(
+        'scroll',
+        () => {
+          const t = performance.now();
+          if (calme || prise || clavier || !visible) {
+            dernierY = scrollY;
+            dernierT = t;
+            return;
+          }
+          const dt = Math.max(16, t - dernierT);
+          const vitesse = ((scrollY - dernierY) / dt) * 1000;
+          dernierY = scrollY;
+          dernierT = t;
+          // Un tiers de la vitesse du doigt, et jamais plus de neuf cents
+          // pixels par seconde : au-delà, la bande part en trombe et l'on ne
+          // lit plus les visuels.
+          elan = Math.max(-900, Math.min(900, elan + vitesse * 0.35));
+        },
+        { passive: true },
+      );
+
       // Pavé tactile et molette horizontale : la bande suit le geste.
       bande.addEventListener(
         'wheel',
