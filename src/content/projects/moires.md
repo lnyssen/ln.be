@@ -9,7 +9,7 @@ images:
   - src: "/images/moires-2.jpg"
     alt: "A purple gift box patterned with pink dashes and dots, a pink business card resting on its lid."
   - src: "/images/moires-3.jpg"
-    alt: "The Moirés home page on a laptop: white type on a full purple screen, with photographs of the shop cropped into overlapping circles."
+    alt: "The Moirés home page on a laptop: the wordmark in white on violet beside a moiré pattern, over a pink band repeating prints and things."
   - src: "/images/moires-4.jpg"
     alt: "A purple tote bag with pink handles, the Moirés wordmark printed across it in cream."
 link: "https://www.moires.be/"
