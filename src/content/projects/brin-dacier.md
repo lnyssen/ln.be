@@ -7,7 +7,7 @@ images:
   - src: "/images/brin-dacier-1.jpg"
     alt: "Someone leaving the bookshop with an orange Brin d'acier paper bag, the wordmark printed in blue."
   - src: "/images/brin-dacier-2.jpg"
-    alt: "A blue and orange leaflet beside a cup of coffee, seen from above."
+    alt: "The Brin d'acier site on a phone lying on an orange surface: a neighbourhood bookshop in Schaerbeek, with the shopfront cropped into a half circle."
   - src: "/images/brin-dacier-3.jpg"
     alt: "A hand holding out four gift vouchers, orange and blue."
   - src: "/images/brin-dacier-4.jpg"
