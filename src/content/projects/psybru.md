@@ -1,7 +1,7 @@
 ---
 title: "Psybru"
 slug: "psybru"
-order: 5
+order: 6
 tags: ["Visual Identity", "UI/UX", "Print", "Strategy"]
 images:
   - src: "/images/psybru-1.jpg"
@@ -15,8 +15,8 @@ images:
 link: "https://psybru.be/"
 ---
 
-Identity and website for a directory of psychological care in the Brussels
-region: more than a thousand practitioners, filtered by age, by speciality and
-by the language you would rather be heard in. Everything went into clarity
-rather than character, because people arrive here in a bad week and need to
-find the right person in a few clicks.
+Design and user experience for a public mental health directory servicing
+the Brussels region. Indexing over 1,000 licensed practitioners filtered
+by location, specialty, and preferred language, the platform prioritizes
+radical clarity over unnecessary ornament—ensuring users in vulnerable
+situations find the right support effortlessly.

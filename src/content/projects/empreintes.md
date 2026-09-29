@@ -1,7 +1,7 @@
 ---
 title: "EmpreinteS"
 slug: "empreintes"
-order: 7
+order: 8
 tags: ["Visual Identity", "UI/UX", "Strategy"]
 images:
   - src: "/images/empreintes-1.jpg"
@@ -15,8 +15,8 @@ images:
 link: "https://www.empreintes.cool/"
 ---
 
-Identity for a travelling cinema that takes films to the people who cannot go
-to them: prisons, nursing homes, reception centres, hospital wards. The capital
-S at the end of the name is the whole idea, a trace is never the only one, and
-the mark redraws that S as a fingerprint whorl, a single circle that holds up
-on a sticker, a badge or the side of a van.
+Identity for a mobile cinema initiative bringing screenings to isolated
+communities—prisons, care homes, and reception centers. The capitalized
+final S highlights the plurality of human connection (“traces”).
+Reimagined as a single fingerprint whorl, the mark functions seamlessly
+whether stamped on small promotional badges or scaled up on event vans.

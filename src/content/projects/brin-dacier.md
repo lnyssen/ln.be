@@ -1,8 +1,8 @@
 ---
 title: "Brin d’acier"
 slug: "brin-dacier"
-order: 4
-tags: ["Visual Identity", "UI/UX", "Strategy", "Naming"]
+order: 5
+tags: ["Naming", "Visual Identity", "UI/UX", "Strategy"]
 images:
   - src: "/images/brin-dacier-1.jpg"
     alt: "Someone leaving the bookshop with an orange Brin d'acier paper bag, the wordmark printed in blue."
@@ -15,8 +15,8 @@ images:
 link: "https://www.librairiebrindacier.be/"
 ---
 
-Naming, identity and online shop for a neighbourhood bookshop in
-Schaerbeek. The name puts something slender next to something hard, and the
-identity keeps that tension: orange against electric blue, a geometric sans,
-and a row of dots and half circles that reads as punctuation rather than
-ornament.
+Naming, brand identity, and e-commerce platform for a neighborhood
+bookstore in Schaerbeek. The name pairs delicate lightness with structural
+strength (“steel strand”). The visual execution echoes this contrast
+through high-voltage electric blue and warm orange palette choices,
+geometric typography, and playful punctuation-inspired graphic elements.

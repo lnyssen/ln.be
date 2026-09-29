@@ -1,7 +1,7 @@
 ---
 title: "Nada Booking"
 slug: "nada-booking"
-order: 2
+order: 3
 tags: ["Visual Identity", "UI/UX", "Print"]
 images:
   - src: "/images/nada-booking-1.jpg"
@@ -15,7 +15,9 @@ images:
 link: "https://www.nadabooking.be/"
 ---
 
-Identity for a booking, management and production agency working out of
-Brussels, with a roster that runs from Girls in Hawaii to Horse Lords. An agency of that kind signs a poster, it does not occupy it: a small
-wordmark and a yellow dot at the top, then the photograph takes the whole
-sheet.
+Visual system for a Brussels-based booking and production agency
+representing artists from Girls in Hawaii to Horse Lords. Rather than
+competing with the talent, the agency’s identity acts as a subtle mark of
+quality: a compact wordmark and an iconic yellow dot anchored at the top
+of the canvas, leaving full visual dominance to performance photography
+and event poster artwork.

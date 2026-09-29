@@ -1,7 +1,7 @@
 ---
 title: "LAB 65"
 slug: "lab-65"
-order: 10
+order: 11
 tags: ["Visual Identity", "Strategy"]
 images:
   - src: "/images/lab-65-1.jpg"
@@ -15,7 +15,7 @@ images:
 link: ""
 ---
 
-An identity for a Barcelona record shop and cultural association that took
-its street number for a name. The mark folds the L, the B and the
-number into a single black block, sized to be fly posted on a wall and still
-read from the other side of the road.
+Brand system for a record shop and cultural hub in Barcelona, named after
+its street address. The high-contrast logo condenses the letters and
+numbers into a solid, bold graphic block—engineered to cut through street
+visual noise and read clearly on gig posters across the city.

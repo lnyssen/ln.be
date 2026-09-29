@@ -1,7 +1,7 @@
 ---
-title: "A Films Ouverts"
+title: "À Films Ouverts"
 slug: "a-films-ouverts"
-order: 3
+order: 4
 tags: ["Visual Identity", "UI/UX", "Strategy", "AI"]
 images:
   - src: "/images/a-films-ouverts-1.jpg"
@@ -15,8 +15,9 @@ images:
 link: "https://afilmsouverts.be/"
 ---
 
-Identity and website for the festival run by Média Animation, a short film
-competition against racism screened around 21 March in some fifty venues across
-French speaking Belgium, each screening followed by a debate. The logotype sits
-on two strips of white paper laid over the image, a device any partner venue
-can reuse, so every edition changes its photography and stays recognisable.
+Brand identity and digital platform for Média Animation’s annual
+anti-racism short film festival, hosted across 50+ venues in
+French-speaking Belgium. The flexible logo concept features overlapping
+white tape strips positioned across imagery—a modular framework easily
+adaptable by partner venues that keeps every edition fresh, recognizable,
+and deeply tied to debate.

@@ -15,8 +15,9 @@ images:
 link: "https://www.moires.be/"
 ---
 
-Identity for a Brussels shop selling prints, stationery and handmade
-objects. The name comes from the optical effect that appears when
-two similar patterns overlap, so the wordmark is set against its own
-reflection, two purples slightly out of register, and the shimmer does the
-rest.
+Identity for a Brussels boutique dedicated to art prints, stationery, and
+handcrafted goods. Taking inspiration from the optical interference
+pattern that shares its name, the wordmark plays with overlapping shapes
+and shifted registers. Rendered in layered, offset purple tones, the
+subtle visual vibration gives the identity a quiet, tactile shimmer across
+physical packaging, print collateral, and digital touchpoints.

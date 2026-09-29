@@ -1,7 +1,7 @@
 ---
 title: "Silicones Europe"
 slug: "silicones-europe"
-order: 9
+order: 10
 tags: ["Rebranding", "Print"]
 images:
   - src: "/images/silicones-europe-1.jpg"
@@ -15,8 +15,8 @@ images:
 link: "https://www.silicones.eu/"
 ---
 
-A rebrand for the Cefic sector group that speaks for Europe's silicone and
-silane producers, carried through to signage and event material. The S is drawn
-as one looping strand, a nod to the polymer chain, and the line it sits under
-moves the conversation off the chemistry and onto what the chemistry makes
-possible.
+Visual refresh for the Cefic sector group representing European silicone
+and silane producers. The logotype’s continuous looping S references
+complex polymer chains, while the overarching graphic system reframes
+technical chemical manufacturing into tangible real-world solutions and
+future applications.

@@ -1,8 +1,8 @@
 ---
 title: "Music Stuff"
 slug: "music-stuff"
-order: 11
-tags: ["Music", "Music", "Music"]
+order: 12
+tags: ["Art Direction", "Music & Packaging"]
 images:
   - src: "/images/music-stuff-1.jpg"
     alt: "The Julien Hucq Woods album: yellow digipak, angular black motif, and the disc beside it."
@@ -15,6 +15,8 @@ images:
 link: ""
 ---
 
-Sleeves, covers and record artwork made over the years for musicians, labels
-and friends. No brief, no client, no strategy deck: this section exists because
-it is where a good share of the ideas start.
+A curated archive of album art, vinyl sleeves, and merchandise designed
+for record labels, musicians, and independent collaborators over the
+years. Unbound by corporate client briefs or strategy decks, this space
+serves as an exploratory testing ground where core graphic ideas
+originate.
