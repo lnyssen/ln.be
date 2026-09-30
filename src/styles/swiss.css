@@ -705,28 +705,32 @@
     interpolate-size: allow-keywords;
   }
 
-  /* Le filet de progression. Il ne s'anime pas : il suit le défilement image
-     par image, et une transition le ferait courir après le doigt. */
+  /* Le filet de progression est une ligne de points : un point de 4 px
+     tous les 10 px, qui s'allument de gauche à droite à mesure qu'on descend.
+     Il ne s'anime pas — il suit le défilement image par image, et une
+     transition le ferait courir après le doigt. */
   .swiss .progres-filet {
     position: fixed;
-    top: 0;
+    top: 5px;
     left: 0;
     right: 0;
     z-index: 60;
-    height: 2px;
-    overflow: hidden;
+    height: 4px;
     pointer-events: none;
   }
 
+  /* La ligne entière est dessinée une fois, puis découverte par un rognage.
+     Changer son échelle, comme pour un trait plein, aurait écrasé les points
+     en ovales ; le rognage les laisse ronds, et ne coûte aucune mise en page. */
   .swiss .progres-trait {
     display: block;
     height: 100%;
-    background-color: var(--accent-texte);
-    transform-origin: left center;
-    /* Le filet ne fait que changer d'échelle : on le prévient, il garde sa
-       propre couche et le défilement n'a plus à le repeindre. */
-    will-change: transform;
-    transform: scaleX(var(--progres, 0));
+    background-image: radial-gradient(circle closest-side, var(--accent-texte) 96%, transparent);
+    background-size: 10px 4px;
+    background-repeat: repeat-x;
+    background-position: 3px 0;
+    clip-path: inset(0 calc((1 - var(--progres, 0)) * 100%) 0 0);
+    will-change: clip-path;
   }
 
   /* L'affiche du menu recouvre la barre : le filet n'a plus rien à mesurer. */
@@ -772,9 +776,11 @@
     letter-spacing: -0.035em;
   }
 
+  /* La sélection prend la teinte du moment, et son texte la couleur qui se
+     lit dessus — la même paire que le pied de page. */
   .swiss ::selection {
-    background-color: #8570ff;
-    color: #f8f2e6;
+    background-color: var(--accent);
+    color: var(--sur-accent);
   }
 
   .swiss :focus-visible {

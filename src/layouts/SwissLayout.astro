@@ -313,7 +313,15 @@ const ogImage = new URL('/og.png', Astro.site).href;
         addEventListener('resize', mesurerCourse);
         addEventListener('load', mesurerCourse);
         document.addEventListener('astro:after-swap', mesurerCourse);
-        if (window.ResizeObserver) new ResizeObserver(mesurerCourse).observe(document.body);
+        // Ce script tourne dans l'en-tête, avant que le corps n'existe : on
+        // attend qu'il soit là pour le surveiller. L'observer trop tôt levait
+        // une erreur qui arrêtait tout le script — et, avec lui, l'écoute du
+        // changement de teinte posée juste après.
+        const surveillerCorps = () => {
+          if (window.ResizeObserver && document.body) new ResizeObserver(mesurerCourse).observe(document.body);
+        };
+        if (document.body) surveillerCorps();
+        else document.addEventListener('DOMContentLoaded', surveillerCorps, { once: true });
         mesurerCourse();
 
         // Le thème peut changer sans passer par ici — l'interrupteur du bas,
