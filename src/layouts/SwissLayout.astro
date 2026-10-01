@@ -277,53 +277,6 @@ const ogImage = new URL('/og.png', Astro.site).href;
         if (document.readyState === 'complete') armerDefilement();
         else addEventListener('load', armerDefilement, { once: true });
 
-        // Le filet de progression. La valeur est posée sur la racine, à une
-        // image près : le défilement peut se déclencher des dizaines de fois
-        // par seconde, l'écriture n'a lieu qu'une fois par rafraîchissement.
-        //
-        // La course — ce qu'il reste à parcourir — est mesurée à part et
-        // gardée. La lire à chaque image forçait le navigateur à recalculer
-        // la mise en page autant de fois, et le filet sautillait sur les
-        // premiers pixels, quand les visuels arrivent encore et que le reste
-        // de la page s'anime. Elle se remesure quand la fenêtre change, quand
-        // tout est chargé, et quand le corps grandit — une ligne de projet
-        // qu'on ouvre, par exemple.
-        let attente = false;
-        let course = 0;
-        const racine = document.documentElement;
-
-        const poserProgres = () => {
-          attente = false;
-          const part = course > 4 ? Math.min(1, Math.max(0, scrollY / course)) : 0;
-          racine.style.setProperty('--progres', part.toFixed(4));
-        };
-        const suivreProgres = () => {
-          if (attente) return;
-          attente = true;
-          requestAnimationFrame(poserProgres);
-        };
-        // Une page qui tient dans l'écran n'a rien à mesurer : le filet y
-        // reste vide.
-        const mesurerCourse = () => {
-          course = racine.scrollHeight - innerHeight;
-          poserProgres();
-        };
-
-        addEventListener('scroll', suivreProgres, { passive: true });
-        addEventListener('resize', mesurerCourse);
-        addEventListener('load', mesurerCourse);
-        document.addEventListener('astro:after-swap', mesurerCourse);
-        // Ce script tourne dans l'en-tête, avant que le corps n'existe : on
-        // attend qu'il soit là pour le surveiller. L'observer trop tôt levait
-        // une erreur qui arrêtait tout le script — et, avec lui, l'écoute du
-        // changement de teinte posée juste après.
-        const surveillerCorps = () => {
-          if (window.ResizeObserver && document.body) new ResizeObserver(mesurerCourse).observe(document.body);
-        };
-        if (document.body) surveillerCorps();
-        else document.addEventListener('DOMContentLoaded', surveillerCorps, { once: true });
-        mesurerCourse();
-
         // Le thème peut changer sans passer par ici — l'interrupteur du bas,
         // la touche du mode encre. On suit l'attribut plutôt que celui qui le
         // pose.
