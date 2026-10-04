@@ -1744,7 +1744,7 @@
     transition:
       scale 560ms cubic-bezier(0.4, 0, 0.2, 1),
       opacity 480ms cubic-bezier(0.4, 0, 0.2, 1),
-      background-color 700ms cubic-bezier(0.22, 1, 0.36, 1);
+      background-color 160ms ease;
   }
 
   /* L'étiquette est une pilule : elle paraît et disparaît en changeant
@@ -1760,11 +1760,17 @@
     align-items: center;
     justify-content: center;
     height: 34px;
-    padding: 0 18px;
+    /* La marge est un jeton : le script la lit pour mesurer la pilule. Lire
+       la marge calculée ne marchait pas — en revenant d'un miroir, elle était
+       encore en train de glisser de 0 à 18 px. */
+    --etiquette-marge: 18px;
+    padding: 0 var(--etiquette-marge);
     border-radius: 9999px;
-    background-color: color-mix(in srgb, var(--ink) 70%, transparent);
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
+    /* Assez couvrant pour que le mot se lise sur n'importe quel visuel :
+       à 70 %, le logo d'une affiche passait au travers des lettres. */
+    background-color: color-mix(in srgb, var(--ink) 90%, transparent);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
     white-space: nowrap;
     /* La largeur suit le mot : passer d'un verbe à l'autre sans elle faisait
        sauter la pilule d'une taille à la suivante. */
@@ -1775,7 +1781,7 @@
       padding 520ms cubic-bezier(0.4, 0, 0.2, 1),
       scale 560ms cubic-bezier(0.4, 0, 0.2, 1),
       opacity 480ms cubic-bezier(0.4, 0, 0.2, 1),
-      background-color 700ms cubic-bezier(0.22, 1, 0.36, 1);
+      background-color 160ms ease;
   }
 
   /* Celle qui cède la place se retire vers le centre. Le point s'efface plus
@@ -1796,7 +1802,7 @@
      papier voilé : il faut bien qu'elle se détache de ce qu'elle survole,
      sans quoi elle ne serait plus un curseur mais un calque. */
   .swiss-cursor .curseur-etiquette.is-mirror {
-    background-color: color-mix(in srgb, var(--paper) 78%, transparent);
+    background-color: color-mix(in srgb, var(--paper) 90%, transparent);
     /* Le miroir double un bouton : sa boîte se cale d'un coup sur la sienne.
        La laisser glisser comme celle des verbes la montrait une demi-seconde
        durant à une largeur qui n'était pas celle du bouton, et le décalage
@@ -1805,7 +1811,7 @@
     transition:
       scale 560ms cubic-bezier(0.4, 0, 0.2, 1),
       opacity 480ms cubic-bezier(0.4, 0, 0.2, 1),
-      background-color 700ms cubic-bezier(0.22, 1, 0.36, 1);
+      background-color 160ms ease;
   }
 
   /* La palette : une plaque de papier posée au milieu de l'écran, tracée au

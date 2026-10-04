@@ -209,6 +209,10 @@ export default function SwissCursor() {
   const lettres = miroir ? label.lettres : undefined;
   const taille = miroir ? label.taille : 13;
   const dessin = miroir ? label.dessin : null;
+  // Une étiquette peut n'avoir aucun mot : le miroir d'une flèche ne porte
+  // que son dessin. C'est la présence de l'étiquette qui compte, pas celle
+  // du mot — s'y fier laissait ces boutons-là sans largeur.
+  const actif = Boolean(label);
 
   // Le disque respire quand il prend ou quitte une étiquette : il part d'un
   // rien plus petit et se pose sur sa taille sans jamais la dépasser. D'une
@@ -223,11 +227,11 @@ export default function SwissCursor() {
   useEffect(() => {
     const disque = ref.current;
     const avait = etiquette.current;
-    etiquette.current = Boolean(mot);
+    etiquette.current = actif;
     if (!disque?.animate) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const douceur = 'cubic-bezier(0.4, 0, 0.2, 1)';
-    if (avait !== Boolean(mot)) {
+    if (avait !== actif) {
       disque.animate([{ scale: 0.96 }, { scale: 1 }], { duration: 620, easing: douceur });
     }
     // Sans mot — le disque nu —, il n'y a rien à faire monter.
@@ -237,7 +241,7 @@ export default function SwissCursor() {
         easing: douceur,
       });
     }
-  }, [mot, signe, miroir]);
+  }, [actif, mot, signe, miroir, dessin]);
 
   // La largeur de la pilule est mesurée puis posée en pixels. Laissée à
   // `auto`, elle ne s'anime pas : passer d'un verbe à l'autre ne change pas
@@ -247,7 +251,7 @@ export default function SwissCursor() {
     const plaquette = plaque.current;
     const contenu = mots.current;
     if (!plaquette || !contenu) return;
-    if (!mot) {
+    if (!actif) {
       // Repliée, elle n'a pas de largeur à tenir : la relâcher évite qu'elle
       // reparaisse à la taille de l'étiquette précédente.
       plaquette.style.width = '';
@@ -258,14 +262,14 @@ export default function SwissCursor() {
       plaquette.style.width = cadre.width;
       return;
     }
-    const style = getComputedStyle(plaquette);
-    const bords =
-      parseFloat(style.paddingLeft) +
-      parseFloat(style.paddingRight) +
-      parseFloat(style.borderLeftWidth) +
-      parseFloat(style.borderRightWidth);
-    plaquette.style.width = `${Math.ceil(contenu.getBoundingClientRect().width + bords)}px`;
-  }, [mot, signe, miroir, cadre?.width]);
+    // La marge d'un verbe est lue sur son jeton, pas sur la marge calculée,
+    // qui peut être en pleine transition au moment de la mesure.
+    const marge = parseFloat(getComputedStyle(plaquette).getPropertyValue('--etiquette-marge')) || 18;
+    const bords = marge * 2;
+    // offsetWidth et non getBoundingClientRect : la pilule apparaît en
+    // changeant d'échelle, et la boîte à l'écran était mesurée réduite.
+    plaquette.style.width = `${Math.ceil(contenu.offsetWidth + bords)}px`;
+  }, [actif, mot, signe, miroir, dessin, cadre?.width]);
 
   return (
     // Le point et l'étiquette sont deux formes distinctes, posées au même
