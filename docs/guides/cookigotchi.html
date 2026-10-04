@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>COOKIGOTCHI — Player's guide</title>
+<!-- Source of public/guides/cookigotchi.pdf. Regenerate from the repo root:
+  "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless=new \
+    --no-pdf-header-footer --virtual-time-budget=10000 \
+    --print-to-pdf=public/guides/cookigotchi.pdf docs/guides/cookigotchi.html
+  Images come from the public demo. Never name the private player here. -->
+<base href="https://cookigotchi-demo.vercel.app/">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root { --ink: #1d1b22; --paper: #f7f2fb; --lilac: #e4d8f4; --lilac2: #cbb7ec; --frog: #7cc35b; --pink: #f08aa6; --gold: #f2c14e; --soft: #6b6478; }
+  html, body { background: var(--paper); }
+  body { font-family: 'JetBrains Mono', Menlo, monospace; color: var(--ink); font-size: 9.6pt; line-height: 1.6;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .page { width: 210mm; height: 297mm; padding: 20mm 18mm 16mm; position: relative; overflow: hidden;
+    page-break-after: always; display: flex; flex-direction: column; background: var(--paper); }
+  .page:last-child { page-break-after: auto; }
+  .kicker { font-size: 7.5pt; font-weight: 800; letter-spacing: .34em; text-transform: uppercase; color: var(--soft); }
+  h1 { font-size: 20pt; font-weight: 800; margin: 3mm 0 4mm; letter-spacing: -.01em; }
+  h2 { font-size: 10pt; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; margin: 6mm 0 3mm; }
+  .lead { color: var(--soft); font-size: 10.2pt; margin-bottom: 5mm; }
+  b { font-weight: 800; }
+  .fr { color: var(--soft); font-weight: 400; }
+  .note { background: #fff; border: 2px solid var(--ink); border-radius: 4mm; padding: 4mm 5mm; margin: 4mm 0;
+    box-shadow: 0 1.2mm 0 var(--ink); }
+  .note .t { display: block; font-size: 8pt; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 1mm; }
+  .note.pink { background: #fde4ec; } .note.gold { background: #fdf1cf; } .note.green { background: #e6f4dc; }
+  ol.steps { list-style: none; counter-reset: s; }
+  ol.steps li { counter-increment: s; position: relative; padding-left: 14mm; margin-bottom: 4mm; }
+  ol.steps li::before { content: counter(s); position: absolute; left: 0; top: 0; width: 9mm; height: 9mm;
+    border-radius: 50%; background: var(--frog); border: 2px solid var(--ink); font-weight: 800;
+    display: flex; align-items: center; justify-content: center; font-size: 10pt; }
+  ol.steps li > b:first-child { display: block; }
+  table.kv { width: 100%; border-collapse: collapse; }
+  table.kv td { vertical-align: top; padding: 2mm 0; border-bottom: 1.5px dashed var(--lilac2); }
+  table.kv tr:last-child td { border-bottom: 0; }
+  table.kv td:first-child { width: 44mm; font-weight: 800; padding-right: 4mm; }
+  table.kv.wide td:first-child { width: 60mm; }
+  .bar { display: inline-block; width: 14mm; height: 2.4mm; border-radius: 2mm; border: 1.5px solid var(--ink); vertical-align: 0; margin-right: 2mm; }
+  .stages { display: grid; grid-template-columns: repeat(4, 1fr); align-items: end; gap: 3mm; margin: 4mm 0 2mm; text-align: center; }
+  .stages img { display: block; margin: 0 auto 2mm; }
+  .stages b { display: block; } .stages span { font-size: 8pt; color: var(--soft); }
+  .foot { margin-top: auto; border-top: 2px solid var(--ink); padding-top: 3mm; display: flex; justify-content: space-between;
+    font-size: 7pt; font-weight: 700; letter-spacing: .26em; text-transform: uppercase; color: var(--soft); }
+  .foot b { color: var(--ink); }
+
+  .cover { background: var(--lilac); padding: 20mm 18mm 18mm; }
+  .cover .frog { position: absolute; left: 50%; top: 50mm; width: 120mm; transform: translateX(-50%); }
+  .cover .pad { position: absolute; left: 50%; top: 150mm; width: 150mm; height: 26mm; transform: translateX(-50%);
+    background: var(--frog); border: 2.5px solid var(--ink); border-radius: 50%; }
+  .cover h1 { font-size: 48pt; margin-top: auto; line-height: 1; letter-spacing: -.02em; }
+  .cover .lead { color: var(--ink); font-size: 11pt; max-width: 140mm; margin: 5mm 0 0; }
+  .cover .by { margin-top: 9mm; font-size: 7.5pt; font-weight: 800; letter-spacing: .34em; text-transform: uppercase; }
+</style>
+</head>
+<body>
+
+<section class="page cover">
+  <div class="kicker" style="color:var(--ink)">Player's guide</div>
+  <div class="pad"></div>
+  <img class="frog" src="assets/sprites/grenouille_content.png" alt="">
+  <h1>COOKIGOTCHI</h1>
+  <p class="lead">A pocket frog that lives on your phone. Hatch it, name it, feed it, play with it — and watch it grow, day after day.</p>
+  <div class="by">Laurent Nyssen · Experiment</div>
+</section>
+
+<section class="page">
+  <div class="kicker">Get started</div>
+  <h1>An egg on a lily pad</h1>
+  <p class="lead">Cookigotchi is a virtual pet in the spirit of the nineties classics, rebuilt as a web app. It lives in real time: your frog gets hungry, sleepy and lonely even while the phone is in your pocket.</p>
+  <div class="note"><span class="t">A note on labels</span>The game speaks French. Its words are kept here exactly as they appear on screen, with a translation alongside.</div>
+  <h2>Put it on your phone</h2>
+  <ol class="steps">
+    <li><b>Open the demo</b>cookigotchi-demo.vercel.app, in Chrome on Android or Safari on iPhone.</li>
+    <li><b>Add it to the home screen</b>Chrome: the three dots, then <b>Ajouter à l'écran d'accueil</b> <span class="fr">(add to home screen)</span>. Safari: Share, then Add to Home Screen.</li>
+    <li><b>Launch it from the icon</b>It opens full-screen, like an app, and keeps working without a connection.</li>
+  </ol>
+  <h2>The first minutes</h2>
+  <ol class="steps">
+    <li><b>Say who you are</b>The game asks your first name — it will greet you by it.</li>
+    <li><b>Tap the egg</b>The more you tap, the sooner it hatches.</li>
+    <li><b>Name your tadpole</b>Type a name, or tap <b>Autre idée</b> <span class="fr">(another idea)</span> for a suggestion.</li>
+  </ol>
+  <div class="foot"><span>Cookigotchi — Player's guide</span><span><b>01</b> · Start</span></div>
+</section>
+
+<section class="page">
+  <div class="kicker">Take care of it</div>
+  <h1>Four gauges, six buttons</h1>
+  <p class="lead">At the top of the screen, four gauges tell you how your frog feels. The fuller they are, the happier it is. When it needs something, a bubble appears above its head with the matching icon.</p>
+  <table class="kv wide">
+    <tr><td><span class="bar" style="background:var(--pink)"></span>Amour <span class="fr">· love</span></td><td>It wants cuddles.</td></tr>
+    <tr><td><span class="bar" style="background:var(--gold)"></span>Faim <span class="fr">· hunger</span></td><td>Its tummy rumbles.</td></tr>
+    <tr><td><span class="bar" style="background:#9b8af0"></span>Énergie <span class="fr">· energy</span></td><td>Full of beans, or worn out.</td></tr>
+    <tr><td><span class="bar" style="background:#5ab4e5"></span>Propreté <span class="fr">· clean</span></td><td>Spotless — or time for a bath.</td></tr>
+  </table>
+  <h2>The buttons along the bottom</h2>
+  <table class="kv">
+    <tr><td>Câlin <span class="fr">· cuddle</span></td><td>Fills the love gauge. You can also tap the frog itself.</td></tr>
+    <tr><td>Miam <span class="fr">· yum</span></td><td>A cookie. If it isn't hungry, it says no.</td></tr>
+    <tr><td>Jeu <span class="fr">· play</span></td><td>Pick a mini-game. Playing makes it happy… and a little tired.</td></tr>
+    <tr><td>Dodo <span class="fr">· nap</span></td><td>A nap when it's sleepy. Tap again to wake it.</td></tr>
+    <tr><td>Bain <span class="fr">· bath</span></td><td>Splash — clean again.</td></tr>
+    <tr><td>Nounou <span class="fr">· babysitter</span></td><td>Pauses everything while you're away: off to school or to a friend's, time stops at the pond. Tap any button when you're back.</td></tr>
+  </table>
+  <div class="foot"><span>Cookigotchi — Player's guide</span><span><b>02</b> · Care</span></div>
+</section>
+
+<section class="page">
+  <div class="kicker">Its days and yours</div>
+  <h1>It lives on your clock</h1>
+  <table class="kv">
+    <tr><td>Night</td><td>From 8 pm it falls asleep under the stars, and wakes at 7 am. At night its gauges drop much more slowly.</td></tr>
+    <tr><td>School</td><td>On school days the pond pauses itself during class hours. No school today? Tap Ombeline and choose <b>Pas d'école aujourd'hui</b>. For the holidays, turn off <b>École auto</b> in the settings (the gear).</td></tr>
+    <tr><td>Weather</td><td>The sky over the pond follows the real weather: sun, clouds, rain, snow, fog.</td></tr>
+  </table>
+  <h2>It grows up</h2>
+  <p>For real, day after day. The little green bar at the top shows when it will change.</p>
+  <div class="stages">
+    <div><img src="assets/sprites/tetard_content.png" style="width:15mm" alt=""><b>Baby</b><span>first 6 hours</span></div>
+    <div><img src="assets/sprites/grenouillette_content.png" style="width:18mm" alt=""><b>Child</b><span>until day 4</span></div>
+    <div><img src="assets/sprites/grenouille_content.png" style="width:21mm" alt=""><b>Teen</b><span>days 5 to 10</span></div>
+    <div><img src="assets/sprites/grenouille_content.png" style="width:26mm" alt=""><b>Adult</b><span>from day 11</span></div>
+  </div>
+  <div class="note pink"><span class="t">Love and family</span>Once it's an adult and happy, another frog comes to visit one day, a heart above its head. Tap it: love at first sight. Later an egg appears on the pond. Tap it when you're ready — the parents move to the <b>Grande Mare</b> <span class="fr">(the big pond)</span>, and you raise their baby, a mix of both their colours. The button with two hearts opens the family album.</div>
+  <div class="note gold"><span class="t">The golden frog</span>Take very good care of an adult frog for two weeks and it may turn… golden, with a tiny crown. Shh, it's a secret.</div>
+  <div class="foot"><span>Cookigotchi — Player's guide</span><span><b>03</b> · Grow</span></div>
+</section>
+
+<section class="page">
+  <div class="kicker">Play and collect</div>
+  <h1>Games, coins and Ombeline</h1>
+  <h2>Three mini-games</h2>
+  <table class="kv">
+    <tr><td>Gobe-mouches <span class="fr">· fly-catcher</span></td><td>Tap an insect and the frog flicks its tongue. Fly +1, firefly +3, dragonfly +5; chain catches for combos ×2, ×3, ×4. Watch out for the wasps: −3 and a dizzy head.</td></tr>
+    <tr><td>Chanson des bulles <span class="fr">· bubble song</span></td><td>Bubbles light up to music. Remember the order and play it back; every round adds a note.</td></tr>
+    <tr><td>Cache-cache <span class="fr">· hide and seek</span></td><td>A tadpole hides under a leaf, then the leaves shuffle. Follow it with your eyes.</td></tr>
+  </table>
+  <p style="margin-top:2mm">Every game keeps your best score.</p>
+  <h2>Coins, shop and spellbook</h2>
+  <p>Coins come from the games, the daily quests, the achievements — and from simply visiting your frog every day. Tap your coins to open <b>Ombeline's shop</b>: hats for the frog, decorations for the pond. The purple book next to it is your <b>grimoire</b>: quests, achievements and family.</p>
+  <div class="note"><span class="t">Ombeline</span>On the bank sits Ombeline, keeper of the pond. She never smiles. Well — almost never. With every cuddle, cookie and game, your frog smiles a little more, and so does she. The pond warms up, the roses blush, the sun breaks through… and go all the way, and a rainbow may appear.</div>
+  <div class="note green"><span class="t">A secret code to try</span>Gear, then <b>Code secret</b>, then type <b>DEMO</b>: a small treasure to try out the shop.</div>
+  <div class="note"><span class="t">And if I forget?</span>Don't panic: <b>your frog never dies</b>. Forgotten for a while, it sulks or turns dry and grey. A few cuddles, a bath and a cookie, and it's itself again.</div>
+  <div class="foot"><span>Cookigotchi — Player's guide</span><span><b>04</b> · Play</span></div>
+</section>
+
+</body>
+</html>
