@@ -1065,9 +1065,18 @@
      entre le titre d'ouverture et le chapô : assez grande pour qu'on s'y
      arrête, en bas de casse pour qu'elle se lise comme une phrase et non
      comme un slogan. Elle respire deux fois plus que les autres sections. */
-  .swiss .section-manifeste > div {
+  /* Le même vide au-dessus et au-dessous de la phrase, d'un filet à l'autre :
+     deux fois l'espace commun, porté tout entier par la phrase — la section
+     perd sa marge propre, qui ne valait pas l'espace commun. La règle est
+     plus précise que celle qui donne leur marge aux sections, sans
+     quoi le haut retombait à l'espace commun et le bas en avait le double. */
+  .swiss main section.section-manifeste {
+    padding-bottom: 0;
+  }
+
+  .swiss main section.section-manifeste > div {
     padding-top: calc(var(--section-space) * 2);
-    padding-bottom: calc(var(--section-space) * 1);
+    padding-bottom: calc(var(--section-space) * 2);
   }
 
   .swiss .manifeste {
