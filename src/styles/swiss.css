@@ -1043,6 +1043,24 @@
     vertical-align: 0;
   }
 
+  /* L'icône de téléchargement descend vers son plateau au survol, comme les
+     autres flèches du site partent dans leur sens : même durée, même courbe.
+     Le plateau, lui, ne bouge pas. */
+  .swiss .telecharge-fleche {
+    transition: translate 260ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .swiss .bouton-lab:hover .telecharge-fleche,
+  .swiss .bouton-lab:focus-visible .telecharge-fleche {
+    translate: 0 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .swiss .telecharge-fleche {
+      transition: none;
+    }
+  }
+
   /* La commande d'arrêt de la vitrine prend la même matière que les flèches
      de planche, et le même passage à l'accent sous le doigt. Les deux signes
      se relaient : deux barres tant que la bande avance, un triangle une fois

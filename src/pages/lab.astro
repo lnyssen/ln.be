@@ -78,6 +78,9 @@ const entries = (await getCollection('lab')).sort(
                     href={entry.data.demo}
                     target="_blank"
                     rel="noopener noreferrer"
+                    data-cursor-mirror="Try it"
+                    data-cursor-sign="VISIT"
+                    data-cursor-ink="var(--accent-texte)"
                     class="bouton-lab rounded-full border border-[var(--accent)] bg-[var(--accent)] text-[var(--sur-accent)]"
                   >
                     <span class="bouton-lab-mot">Try it</span> <SwissArrow size={15} />
@@ -88,14 +91,19 @@ const entries = (await getCollection('lab')).sort(
                     href={entry.data.doc}
                     target="_blank"
                     rel="noopener noreferrer"
+                    data-cursor-mirror="Instructions"
+                    data-cursor-sign="DOWNLOAD"
+                    data-cursor-ink="var(--ink)"
                     class="bouton-lab rounded-full border border-[var(--rule)] hover:border-[var(--accent-texte)] hover:text-[var(--accent-texte)]"
                   >
                     <span class="bouton-lab-mot">Instructions</span>
                     <!-- Le guide est un PDF : le signe dit qu'on le récupère,
                          pas qu'on change de page. Même trait que les flèches. -->
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="butt" aria-hidden="true" class="shrink-0">
-                      <path d="M12 3.5v11.5" />
-                      <path d="M6.5 9.5 12 15l5.5-5.5" />
+                      <g class="telecharge-fleche">
+                        <path d="M12 2.5v11" />
+                        <path d="M6.5 8 12 13.5 17.5 8" />
+                      </g>
                       <path d="M4 20.5h16" />
                     </svg>
                   </a>

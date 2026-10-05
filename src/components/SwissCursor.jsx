@@ -117,6 +117,8 @@ const GLYPHS = {
   // courbes la distinguent de l'astérisque droit du Polographe.
   EXPLORE: 'M12 2.5c0 5.25 4.25 9.5 9.5 9.5-5.25 0-9.5 4.25-9.5 9.5 0-5.25-4.25-9.5-9.5-9.5 5.25 0 9.5-4.25 9.5-9.5Z',
   VISIT: 'M7 17 17 7M9 7h8v8',
+  // Une flèche qui descend sur son plateau : on récupère un fichier.
+  DOWNLOAD: 'M12 2.5v11M6.5 8 12 13.5 17.5 8M4 20.5h16',
   OPEN: 'M4 12h15M13 6l6 6-6 6',
   JUMP: 'M12 4.5v14M6 13l6 6 6-6',
   MAIL: 'M3.5 6.5h17v11h-17z M3.5 7l8.5 6 8.5-6',
