@@ -1061,6 +1061,31 @@
     }
   }
 
+  /* La phrase entre le travail et « And also ». Elle est dite à mi-chemin
+     entre le titre d'ouverture et le chapô : assez grande pour qu'on s'y
+     arrête, en bas de casse pour qu'elle se lise comme une phrase et non
+     comme un slogan. Elle respire deux fois plus que les autres sections. */
+  .swiss .section-manifeste > div {
+    padding-top: calc(var(--section-space) * 2);
+    padding-bottom: calc(var(--section-space) * 1);
+  }
+
+  .swiss .manifeste {
+    max-width: 24ch;
+    font-size: clamp(2rem, 5.6vw, 5rem);
+    line-height: 1.02;
+    letter-spacing: -0.045em;
+    font-weight: 600;
+    text-wrap: balance;
+    text-box: trim-both cap alphabetic;
+  }
+
+  /* La seconde phrase repart à la ligne : coupée au milieu, « Driven » restait
+     accroché à la première et se lisait comme sa fin. */
+  .swiss .manifeste-suite {
+    display: block;
+  }
+
   /* La commande d'arrêt de la vitrine prend la même matière que les flèches
      de planche, et le même passage à l'accent sous le doigt. Les deux signes
      se relaient : deux barres tant que la bande avance, un triangle une fois
