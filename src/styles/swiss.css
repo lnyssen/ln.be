@@ -1023,6 +1023,26 @@
       color 200ms ease;
   }
 
+  /* Les boutons du Lab : une boîte de hauteur fixe dont le contenu est
+     centré, et un mot rogné à ses capitales. Laissé avec ses jambages, le mot
+     en capitales flottait au-dessus du milieu, et la flèche ne tombait pas
+     sur la même ligne que lui. */
+  .swiss .bouton-lab {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    height: 44px;
+    padding: 0 20px;
+  }
+
+  .swiss .bouton-lab-mot {
+    text-box: trim-both cap alphabetic;
+  }
+
+  .swiss .bouton-lab .swiss-arrow {
+    vertical-align: 0;
+  }
+
   /* La commande d'arrêt de la vitrine prend la même matière que les flèches
      de planche, et le même passage à l'accent sous le doigt. Les deux signes
      se relaient : deux barres tant que la bande avance, un triangle une fois
