@@ -1474,33 +1474,6 @@
     padding-bottom: var(--renvoi-space);
   }
 
-  /* Les deux renvois partagent un filet : sur téléphone, le second en tire
-     un à lui, avec le même blanc dessus et dessous. */
-  .swiss .teaser-second {
-    margin-top: var(--renvoi-space);
-    padding-top: var(--renvoi-space);
-    border-top: var(--rule-fin) solid var(--rule);
-  }
-
-  @media (min-width: 768px) {
-    .swiss .teaser-second {
-      margin-top: 0;
-      padding-top: 0;
-      border-top: 0;
-    }
-
-    /* Le dessin du Lab ne colle pas au texte du Polographe : un vrai blanc
-       entre les deux renvois, plus large que la gouttière. */
-    .swiss .teaser:not(.teaser-second) {
-      padding-right: var(--section-space);
-    }
-  }
-
-  .swiss .lab-teaser-title {
-    text-wrap: balance;
-    text-box: trim-end cap alphabetic;
-  }
-
   /* Les listes collent à leurs bords : leur première et leur dernière ligne
      n'ajoutent pas leur propre marge à celle de la section. */
   .swiss #work details:first-child > summary,
