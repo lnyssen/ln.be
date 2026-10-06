@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>TYPE-O — User guide</title>
+<!-- Source de public/guides/type-o.pdf. Régénérer depuis la racine du projet :
+  "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless=new \
+    --no-pdf-header-footer --virtual-time-budget=8000 \
+    --print-to-pdf=public/guides/type-o.pdf docs/guides/type-o.html -->
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #14140f; }
+  body {
+    font-family: Satoshi, 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #f3f1ea;
+    font-size: 9.6pt; line-height: 1.55;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .page { width: 210mm; height: 297mm; padding: 18mm 18mm 16mm; position: relative;
+    overflow: hidden; page-break-after: always; display: flex; flex-direction: column; background: #14140f; }
+  .page:last-child { page-break-after: auto; }
+  .kicker { font-size: 7.5pt; font-weight: 700; letter-spacing: .26em; text-transform: uppercase; color: #8f8c80; }
+  .kicker .n { color: #f3f1ea; margin-right: 3mm; }
+  h1 { font-size: 26pt; font-weight: 700; letter-spacing: -.03em; line-height: 1.02; margin: 4mm 0 5mm; }
+  h1 em, .serif { font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-style: italic; letter-spacing: -.01em; }
+  h2 { font-size: 7.5pt; font-weight: 700; letter-spacing: .26em; text-transform: uppercase;
+    border-top: 1.5px solid #f3f1ea; padding-top: 3mm; margin: 7mm 0 4mm; }
+  .lead { color: #c9c6ba; font-size: 10.6pt; line-height: 1.5; max-width: 150mm; }
+  p + p { margin-top: 2.5mm; }
+  b { font-weight: 700; color: #fff; }
+  .muted { color: #8f8c80; }
+  .ui { font-weight: 700; font-size: 7.6pt; letter-spacing: .14em; text-transform: uppercase;
+    border: 1px solid #f3f1ea; padding: .2mm 1.6mm; border-radius: .6mm; white-space: nowrap; }
+
+  ol.steps { list-style: none; counter-reset: s; }
+  ol.steps li { counter-increment: s; position: relative; padding: 4mm 0 4mm 16mm; border-top: 1px solid #3a3a32; }
+  ol.steps li:last-child { border-bottom: 1px solid #3a3a32; }
+  ol.steps li::before { content: '0' counter(s); position: absolute; left: 0; top: 3.4mm;
+    font-weight: 900; font-size: 15pt; letter-spacing: -.03em; }
+  ol.steps b { display: block; font-size: 10.6pt; margin-bottom: .8mm; }
+
+  .note { border: 1px solid #f3f1ea; padding: 4mm 5mm; margin-top: 6mm; }
+  .note .t { display: block; font-size: 7.5pt; font-weight: 700; letter-spacing: .26em; text-transform: uppercase; margin-bottom: 1.5mm; }
+
+  .ops { display: grid; grid-template-columns: 1fr 1fr; column-gap: 8mm; }
+  .op { border-top: 1px solid #3a3a32; padding: 3mm 0 3.2mm; break-inside: avoid; }
+  .op .nm { font-weight: 900; font-size: 11pt; letter-spacing: -.01em; }
+  .op .nm span { font-weight: 700; font-size: 7pt; letter-spacing: .2em; color: #8f8c80; margin-left: 2mm; text-transform: uppercase; }
+  .op p { color: #c9c6ba; margin-top: .8mm; font-size: 9pt; line-height: 1.45; }
+  .op .k { margin-top: 1.2mm; font-size: 7.4pt; letter-spacing: .08em; text-transform: uppercase; color: #8f8c80; }
+
+  table.kv { width: 100%; border-collapse: collapse; }
+  table.kv td { vertical-align: top; padding: 2.2mm 0; border-top: 1px solid #3a3a32; }
+  table.kv td:first-child { width: 40mm; font-weight: 700; padding-right: 4mm; }
+  table.kv td:last-child { color: #c9c6ba; }
+
+  .foot { margin-top: auto; border-top: 1px solid #3a3a32; padding-top: 3mm; display: flex;
+    justify-content: space-between; font-size: 7pt; letter-spacing: .26em; text-transform: uppercase; color: #8f8c80; }
+  .foot b { color: #f3f1ea; }
+
+  .cover { background: #000; padding: 18mm; }
+  .cover .plate { width: 174mm; height: 174mm; margin: 10mm 0 0; background: url('../../src/assets/images/lab/type-o.png') center / cover no-repeat; }
+  .cover .title { margin-top: auto; display: flex; align-items: flex-end; justify-content: space-between; gap: 8mm; }
+  .cover h1 { font-size: 64pt; font-weight: 900; letter-spacing: -.04em; line-height: .9; margin: 0; }
+  .cover .tag { font-family: 'Instrument Serif', Georgia, serif; font-style: italic; font-size: 20pt; color: #c9c6ba; line-height: 1; padding-bottom: 1.5mm; }
+  .cover .by { margin-top: 6mm; border-top: 1.5px solid #f3f1ea; padding-top: 3mm; display: flex; justify-content: space-between;
+    font-size: 7.5pt; font-weight: 700; letter-spacing: .26em; text-transform: uppercase; }
+</style>
+</head>
+<body>
+
+<section class="page cover">
+  <div class="kicker"><span class="n">User guide</span>Generative typography</div>
+  <div class="plate" role="img" aria-label="An alphabet generated with Type-O"></div>
+  <div class="title">
+    <h1>TYPE-O</h1>
+    <div class="tag">A typo, on purpose.</div>
+  </div>
+  <div class="by"><span>Laurent Nyssen · Experiment</span><span>type-o-lab.vercel.app</span></div>
+</section>
+
+<section class="page">
+  <div class="kicker"><span class="n">00</span>Start</div>
+  <h1>Take a real typeface. <em>Break it on purpose.</em></h1>
+  <p class="lead">Type-O starts from a real variable font and runs its outlines through a stack of operators: it cuts, slides, inflates, melts or redraws every letter. What comes out is not an image. It is a working font, ready to install, that you can type with.</p>
+
+  <h2>Your first font in four steps</h2>
+  <ol class="steps">
+    <li><b>Pick a source</b>Under <span class="ui">01 Source</span>, press <span class="ui">Change</span> and browse 36 families, sorted by kind: grotesk, serif, didone, slab, script and more. Its axes, such as weight or optical size, appear as sliders under the name.</li>
+    <li><b>Build a stack</b>Under <span class="ui">02 Stack</span>, add operators with the <span class="ui">+</span> buttons. They apply from top to bottom, each one working on the result of the one above it. Open an operator to tune its settings.</li>
+    <li><b>Or let chance start it</b>Under <span class="ui">03 Random</span>, <span class="ui">Roll a typeface</span> deals a whole stack at once. Keep what you like, then refine it by hand.</li>
+    <li><b>Export it</b>Open the <span class="ui">Export</span> tab, name your font, choose a format and press <span class="ui">Generate &amp; download</span>.</li>
+  </ol>
+
+  <h2>Managing the stack</h2>
+  <table class="kv">
+    <tr><td>◉ Mute</td><td>Switches an operator off without losing its settings. A quick way to see what it really does.</td></tr>
+    <tr><td>↑ ↓ Move</td><td>Changes the order. Order matters: an outline followed by a halftone is not a halftone followed by an outline.</td></tr>
+    <tr><td>✕ Remove</td><td>Takes the operator out of the stack.</td></tr>
+    <tr><td>Same twice</td><td>Any operator can be added more than once, with different settings each time.</td></tr>
+  </table>
+
+  <div class="note"><span class="t">Three ways to look</span><b>Word</b> shows a sample word, large. <b>Alphabet</b> lays out every glyph in a grid, the best view to judge a whole font. <b>Source</b> shows the starting typeface, so you can compare.</div>
+  <div class="foot"><span>Type-O — User guide</span><span><b>00</b> · Start</span></div>
+</section>
+
+<section class="page">
+  <div class="kicker"><span class="n">01</span>The operators</div>
+  <h1>Fourteen ways <em>to bend a letter.</em></h1>
+  <div class="ops">
+    <div class="op"><div class="nm">Fracture</div><p>Slices the letter into bands and slides each one sideways.</p><div class="k">Bands · Shift · Angle · Drift</div></div>
+    <div class="op"><div class="nm">Shatter</div><p>Breaks the letter on a grid and nudges every shard off its place.</p><div class="k">Grid · Shift · Turn · Spread</div></div>
+    <div class="op"><div class="nm">Stencil</div><p>Cuts stripes out of the letter. Wide gaps break it into fragments.</p><div class="k">Bar · Cut · Angle · Offset</div></div>
+    <div class="op"><div class="nm">Invert</div><p>Knocks the letter out of a solid block. Reads best as the last step.</p><div class="k">Padding · Rounding</div></div>
+    <div class="op"><div class="nm">Swell</div><p>Inflates the letter until its counters close, or starves it to a thread.</p><div class="k">Amount · Corners round or sharp</div></div>
+    <div class="op"><div class="nm">Outline</div><p>Keeps only the rim: an outline or an inline face.</p><div class="k">Weight · Position</div></div>
+    <div class="op"><div class="nm">Echo</div><p>Repeats the letter in one direction: extrusion, shadow or smear.</p><div class="k">Copies · Step X · Step Y · Shrink · Merge</div></div>
+    <div class="op"><div class="nm">Halftone</div><p>Rebuilds the letter from a grid of circles, squares or diamonds.</p><div class="k">Cell · Threshold · Shape · Size · Size by</div></div>
+    <div class="op"><div class="nm">Mirror</div><p>Folds the letter onto its own reflection. Symmetry where there was none.</p><div class="k">Axis · Mode · Tilt</div></div>
+    <div class="op"><div class="nm">Rings</div><p>Redraws the letter as contour lines, like a map of its own thickness.</p><div class="k">Spacing · Weight · Rings · From edge or centre</div></div>
+    <div class="op"><div class="nm">Twist</div><p>Turns the letter around itself, more the higher you go.</p><div class="k">Angle · Pivot</div></div>
+    <div class="op"><div class="nm">Bulge</div><p>Pushes the middle out, or sucks it in: a lens held over the letter.</p><div class="k">Amount · Height · Reach</div></div>
+    <div class="op"><div class="nm">Jitter</div><p>Pushes every point through a noise field. Low frequency warps, high frequency frays.</p><div class="k">Amount · Scale</div></div>
+    <div class="op"><div class="nm">Melt</div><p>Lets the letter sag: the closer to the baseline, the further it drips.</p><div class="k">Amount · Width · Anchor</div></div>
+  </div>
+  <div class="foot"><span>Type-O — User guide</span><span><b>01</b> · Operators</span></div>
+</section>
+
+<section class="page">
+  <div class="kicker"><span class="n">02</span>Chance &amp; export</div>
+  <h1>From a roll of the dice <em>to a real font file.</em></h1>
+
+  <h2>Random</h2>
+  <p><span class="ui">Roll a typeface</span> picks a stack and its settings from a <b>seed</b>, a simple number. The same seed always gives the same result, so a typeface you like can be found again. <span class="ui">Next</span> moves to the following seed. The <b>legibility</b> score beside it gives a rough idea of how readable the letters remain.</p>
+
+  <h2>Export</h2>
+  <table class="kv">
+    <tr><td>01 Name</td><td>The family name your font will carry once installed.</td></tr>
+    <tr><td>02 Format</td><td><b>TTF</b> or <b>OTF</b> to install on macOS or Windows, for Adobe apps and Figma. <b>WOFF</b> and <b>WOFF2</b> for the web.</td></tr>
+    <tr><td>03 Build</td><td><span class="ui">Generate &amp; download</span> builds the file. <span class="ui">Test it here</span> tries it right in the page.</td></tr>
+    <tr><td>04 Also</td><td>A <b>specimen sheet</b> in SVG, fully vector, and an <b>animation</b> in WebM that plays the stack from nothing to its full setting.</td></tr>
+  </table>
+
+  <h2>Save &amp; reopen</h2>
+  <p><span class="ui">Save</span> (⌘S) writes a <b>.typeo</b> project file: the source, the stack, every setting and the seed. <span class="ui">Open</span> (⌘O) brings it back, so the exact same font can be rebuilt later.</p>
+
+  <div class="note"><span class="t">The license travels with the font</span>Every export is a modified version of an open-source family and stays under the <b>SIL Open Font License 1.1</b>. The license and the original copyright are embedded in the file. You can use it anywhere, including print, web, apps, logos and commercial work. You can share it and bundle it with software. The one thing you can't do is sell the font file on its own.</div>
+  <div class="foot"><span>Type-O — User guide</span><span><b>02</b> · Chance &amp; export</span></div>
+</section>
+
+</body>
+</html>
