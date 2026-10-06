@@ -449,11 +449,12 @@
     color: var(--accent-texte);
   }
 
-  /* Sur téléphone, l'intitulé est seul sur sa ligne : il se décolle du filet
-     davantage que sur grand écran, où il partage la sienne avec le texte. */
+  /* Sur téléphone, les blocs s'empilent : le dernier se rogne à sa ligne
+     de base, pour que le blanc qui le sépare du filet suivant soit celui
+     qui sépare le filet de l'intitulé. */
   @media (max-width: 767px) {
-    .swiss .section-label {
-      margin-top: -6px;
+    :where(.swiss main section > [class*="border-t"] > :last-child) {
+      text-box: trim-end cap alphabetic;
     }
   }
 
@@ -899,6 +900,12 @@
     font-size: clamp(1.5rem, 3.4vw, 2.75rem);
   }
 
+  /* Les mots de la bande se rognent comme les titres : capitale en haut,
+     ligne de base en bas, pour que le blanc autour soit celui des autres. */
+  .swiss .marquee-track > span > span:first-child {
+    text-box: trim-both cap alphabetic;
+  }
+
   .swiss .marquee-track {
     animation: marquee 10s linear infinite;
   }
@@ -1087,6 +1094,9 @@
     font-weight: 600;
     text-wrap: balance;
     text-box: trim-both cap alphabetic;
+    /* La hauteur de capitale que déclare la fonte dépasse un peu celle du
+       dessin : à ce corps, l'écart se voit. On le reprend. */
+    margin-top: -0.05em;
   }
 
   /* La seconde phrase repart à la ligne : coupée au milieu, « Driven » restait
@@ -1722,6 +1732,12 @@
 
   .swiss .privacy-body > * + * {
     margin-top: 1.1em;
+  }
+
+  /* La dernière ligne s'arrête à sa ligne de base : sous elle, jusqu'au
+     filet suivant, le même blanc qu'au-dessus de la capitale. */
+  .swiss .privacy-body > :last-child {
+    text-box: trim-end cap alphabetic;
   }
 
   .swiss .privacy-body a {
