@@ -98,7 +98,7 @@ function labelFor(node) {
   // Les trois terrains personnels n'ouvrent pas une page comme une autre :
   // l'un propose, l'autre n'attend rien qu'un regard, le dernier se lit.
   if (href === '/lab') return 'EXPLORE';
-  if (href === '/lepolographe') return 'ENJOY';
+  if (href === '/shapes') return 'ENJOY';
   if (href === '/notes' || href.startsWith('/notes/')) return 'READ';
   if (href.startsWith('mailto:')) return 'MAIL';
   if (href.startsWith('tel:')) return 'CALL';

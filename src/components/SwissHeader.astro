@@ -17,7 +17,7 @@ const accueil = Astro.url.pathname === '/';
 const pages = [
   { href: '/', label: 'Index', key: 'index' },
   { href: '/lab', label: 'Lab', key: 'lab' },
-  { href: '/lepolographe', label: 'Shapes', key: 'polographe' },
+  { href: '/shapes', label: 'Shapes', key: 'polographe' },
   { href: '/notes', label: 'Notes', key: 'notes' },
 ];
 ---
@@ -283,7 +283,7 @@ const pages = [
 
     const cle = () => {
       const p = location.pathname;
-      return p.startsWith('/lepolographe') ? 'polographe' : p.startsWith('/lab') ? 'lab' : p.startsWith('/notes') ? 'notes' : 'index';
+      return p.startsWith('/shapes') ? 'polographe' : p.startsWith('/lab') ? 'lab' : p.startsWith('/notes') ? 'notes' : 'index';
     };
 
     // La couleur suit la pastille, pas la page : le mot qu'elle recouvre
