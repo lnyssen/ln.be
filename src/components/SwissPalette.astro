@@ -11,6 +11,7 @@ const projects = (await getCollection('projects')).sort(
   (a, b) => a.data.order - b.data.order
 );
 const lab = (await getCollection('lab')).sort((a, b) => a.data.order - b.data.order);
+const notes = (await getCollection('notes')).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
 type Entree = { label: string; genre: string; href?: string; action?: string; mots?: string };
 
@@ -29,9 +30,16 @@ const entrees: Entree[] = [
     href: `/lab#${chemin(e)}`,
     mots: e.data.summary,
   })),
+  ...notes.map((n) => ({
+    label: n.data.title,
+    genre: 'Note',
+    href: `/notes/${n.slug}`,
+    mots: n.data.topics.join(' '),
+  })),
   { label: 'Index', genre: 'Page', href: '/' },
   { label: 'Creative lab', genre: 'Page', href: '/lab' },
   { label: 'Le Polographe', genre: 'Page', href: '/lepolographe' },
+  { label: 'Notes', genre: 'Page', href: '/notes', mots: 'writing articles essays' },
   { label: 'Colophon', genre: 'Page', href: '/colophon' },
   { label: 'Accessibility', genre: 'Page', href: '/accessibility' },
   { label: 'Privacy', genre: 'Page', href: '/privacy' },

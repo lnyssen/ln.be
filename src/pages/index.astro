@@ -316,33 +316,13 @@ function domainLabel(link: string) {
         </ul>
       </div>
     </section>
-    <!-- Les deux terrains personnels, l'un sous l'autre. Côte à côte, l'un
-         tenait sur une ligne et l'autre sur deux : la paire boitait. Chacun
-         prend donc toute la largeur et suit le rythme des autres sections —
-         aucune marge propre, sans quoi il respirerait plus large que le
-         reste. À sa droite, un dessin au trait qui dit son sujet. -->
+    <!-- Les trois terrains personnels — Lab, Polographe, Notes —, en triptyque sous un même filet :
+         le dessin d'abord, qui dit le sujet, puis l'intitulé et la phrase
+         qui mène à la page. Sur téléphone, ils s'empilent, un filet entre
+         chacun. Les trois dessins tiennent le même cadre, au point près. -->
     <section class="swiss-shell section-renvoi">
-      <div class="swiss-grid border-t border-[var(--rule)]" data-reveal>
-        <!-- L'intitulé nomme la section, il n'est pas le lien : seule la
-             phrase en dessous répond au pointeur. -->
-        <div class="teaser col-span-6 flex items-center justify-between gap-5 md:col-span-12">
-          <span class="block min-w-0">
-            <h2 class="section-label swiss-meta text-[var(--ink-soft)]">Creative lab</h2>
-            <a href="/lab" class="lab-teaser-title mt-[16px] block text-[clamp(1.375rem,2.6vw,2rem)] font-medium leading-[1.1] tracking-[-0.035em] transition-colors duration-200 hover:text-[var(--accent-texte)] focus-visible:text-[var(--accent-texte)]">
-              Experiments where AI, design and code collide <SwissArrow direction="right" size={24} />
-            </a>
-          </span>
-
-          <!-- Une courbe tracée à la main, puis continuée par la machine.
-               À gauche, une Bézier nue : le geste, rien d'autre. À droite, la
-               suite du même trait — mais cette fois son appareillage est
-               visible, ancres carrées, tangentes et points de contrôle. C'est
-               ce que fait une machine à qui l'on donne un début : elle
-               poursuit, et elle montre ses coordonnées là où la main ne
-               montrait qu'un mouvement. Le dessin se trace dans cet ordre —
-               la main d'abord, l'appareil ensuite, la prédiction en dernier.
-               Même cadre que le Polographe au point près, pour que les deux
-               renvois pèsent pareil. -->
+      <div class="swiss-grid gap-y-0 border-t border-[var(--rule)]" data-reveal>
+        <div class="renvoi-carte col-span-6 md:col-span-2 min-[901px]:col-span-4">
           <svg
             class="teaser-mark h-[54px] w-auto shrink-0 text-[var(--accent)] sm:h-[76px]"
             viewBox="0 0 150 76"
@@ -362,28 +342,13 @@ function domainLabel(link: string) {
               <path pathLength="100" d="M136 20h8v8h-8Z" />
             </g>
           </svg>
+          <h2 class="section-label swiss-meta text-[var(--ink-soft)]">Creative lab</h2>
+          <a href="/lab" class="lab-teaser-title mt-[16px] block text-[clamp(1.375rem,2.2vw,1.875rem)] font-medium leading-[1.1] tracking-[-0.035em] transition-colors duration-200 hover:text-[var(--accent-texte)] focus-visible:text-[var(--accent-texte)]">
+            Experiments where AI, design and code collide <SwissArrow direction="right" size={22} />
+          </a>
         </div>
-      </div>
-    </section>
 
-    <section class="swiss-shell section-renvoi">
-      <div class="swiss-grid border-t border-[var(--rule)]" data-reveal>
-        <!-- L'intitulé nomme la section, il n'est pas le lien : seule la
-             phrase en dessous répond au pointeur. -->
-        <div class="teaser col-span-6 flex items-center justify-between gap-5 md:col-span-12">
-          <span class="block min-w-0">
-            <h2 class="section-label swiss-meta text-[var(--ink-soft)]">Le Polographe</h2>
-            <a href="/lepolographe" class="lab-teaser-title mt-[16px] block text-[clamp(1.375rem,2.6vw,2rem)] font-medium leading-[1.1] tracking-[-0.035em] transition-colors duration-200 hover:text-[var(--accent-texte)] focus-visible:text-[var(--accent-texte)]">
-              A few shapes on a grid, piled up into chaos <SwissArrow direction="right" size={24} />
-            </a>
-          </span>
-
-          <!-- Huit cases, huit formes : quarts de cercle, cercle, demi-cercle
-               triangle et carré, tous tirés du même petit jeu, seule
-               l'orientation change. C'est la règle des affiches. Les carrés sont posés au
-               centre de leur case plutôt que sur ses bords, sans quoi ils se
-               confondraient avec la grille. Même cadre que le dessin du Lab,
-               au point près, pour que les deux renvois pèsent pareil. -->
+        <div class="renvoi-carte renvoi-suite col-span-6 md:col-span-2 min-[901px]:col-span-4">
           <svg
             class="teaser-mark h-[54px] w-auto shrink-0 text-[var(--accent)] sm:h-[76px]"
             viewBox="0 0 150 76"
@@ -405,6 +370,33 @@ function domainLabel(link: string) {
               <path pathLength="100" d="M112 38A37 37 0 0 1 149 75" />
             </g>
           </svg>
+          <h2 class="section-label swiss-meta text-[var(--ink-soft)]">Le Polographe</h2>
+          <a href="/lepolographe" class="lab-teaser-title mt-[16px] block text-[clamp(1.375rem,2.2vw,1.875rem)] font-medium leading-[1.1] tracking-[-0.035em] transition-colors duration-200 hover:text-[var(--accent-texte)] focus-visible:text-[var(--accent-texte)]">
+            A few shapes on a grid, piled up into chaos <SwissArrow direction="right" size={22} />
+          </a>
+        </div>
+
+        <div class="renvoi-carte renvoi-suite col-span-6 md:col-span-2 min-[901px]:col-span-4">
+          <svg
+            class="teaser-mark h-[54px] w-auto shrink-0 text-[var(--accent)] sm:h-[76px]"
+            viewBox="0 0 150 76"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1"
+            aria-hidden="true"
+          >
+            <g class="mark-formes">
+              <path pathLength="100" d="M1 8h148" />
+              <path pathLength="100" d="M1 26h132" />
+              <path pathLength="100" d="M1 44h148" />
+              <path pathLength="100" d="M1 62h86" />
+              <path pathLength="100" d="M96 54v16" />
+            </g>
+          </svg>
+          <h2 class="section-label swiss-meta text-[var(--ink-soft)]">Notes</h2>
+          <a href="/notes" class="lab-teaser-title mt-[16px] block text-[clamp(1.375rem,2.2vw,1.875rem)] font-medium leading-[1.1] tracking-[-0.035em] transition-colors duration-200 hover:text-[var(--accent-texte)] focus-visible:text-[var(--accent-texte)]">
+            Longer thoughts on design, accessibility and AI <SwissArrow direction="right" size={22} />
+          </a>
         </div>
       </div>
     </section>

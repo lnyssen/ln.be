@@ -95,10 +95,11 @@ function labelFor(node) {
   const href = link.getAttribute('href') || '';
   const petit = link.closest('.swiss-meta');
   if (petit && !href.startsWith('mailto:') && !href.startsWith('tel:')) return null;
-  // Les deux terrains personnels n'ouvrent pas une page comme une autre :
-  // l'un propose, l'autre n'attend rien qu'un regard.
+  // Les trois terrains personnels n'ouvrent pas une page comme une autre :
+  // l'un propose, l'autre n'attend rien qu'un regard, le dernier se lit.
   if (href === '/lab') return 'EXPLORE';
   if (href === '/lepolographe') return 'ENJOY';
+  if (href === '/notes' || href.startsWith('/notes/')) return 'READ';
   if (href.startsWith('mailto:')) return 'MAIL';
   if (href.startsWith('tel:')) return 'CALL';
   if (link.target === '_blank' || /^https?:/.test(href)) return 'VISIT';

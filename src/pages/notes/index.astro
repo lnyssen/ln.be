@@ -1,0 +1,85 @@
+---
+import SwissLayout from '../../layouts/SwissLayout.astro';
+import SwissHeader from '../../components/SwissHeader.astro';
+import SwissFooter from '../../components/SwissFooter.astro';
+import SwissArrow from '../../components/SwissArrow.astro';
+import { getNotes, noteDate, readingTime } from '../../lib/notes';
+
+const notes = await getNotes();
+---
+
+<SwissLayout
+  title="Laurent Nyssen — Notes"
+  description="Longer thoughts on design, accessibility and AI."
+>
+  <SwissHeader current="notes" />
+
+  <main id="contenu" tabindex="-1">
+    <section class="swiss-shell pt-[var(--section-space)]">
+      <h1 class="swiss-display" data-reveal data-reveal-slow>
+        Notes<span class="text-[var(--accent-texte)]">.</span>
+      </h1>
+    </section>
+
+    <section class="swiss-shell">
+      <div class="swiss-grid gap-y-6 border-t border-[var(--rule)]" data-reveal data-reveal-slow data-reveal-delay="140">
+        <h2 class="section-label swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">
+          In short
+        </h2>
+
+        <p class="swiss-lede col-span-6 md:col-span-8">
+          Longer thoughts on design, accessibility and AI: what the work
+          teaches, written down so it stays. First published on LinkedIn,
+          kept here in full.
+        </p>
+
+        <p class="swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2 md:justify-self-end">
+          {notes.length} {notes.length === 1 ? 'note' : 'notes'}
+        </p>
+      </div>
+    </section>
+
+    <!-- Même grammaire que l'index des projets : une ligne par note, la date
+         dans la colonne des intitulés, le titre au centre, la flèche au bout. -->
+    <section class="swiss-shell">
+      <div class="swiss-grid gap-y-4 border-t border-[var(--rule)]" data-reveal>
+        <h2 class="section-label swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">
+          All notes
+        </h2>
+
+        <ul class="notes-list col-span-6 md:col-span-10">
+          {
+            notes.map((note) => (
+              <li class="border-b border-[var(--rule)] last:border-b-0">
+                <a href={`/notes/${note.slug}`} class="note-ligne">
+                  <span class="swiss-meta note-ligne-date text-[var(--ink-soft)]">
+                    <time datetime={note.data.date.toISOString().slice(0, 10)}>
+                      {noteDate(note.data.date, 'short')}
+                    </time>
+                  </span>
+
+                  <span class="note-ligne-texte">
+                    <span class="note-ligne-titre">{note.data.title}</span>
+                    <span class="note-ligne-dek">{note.data.dek}</span>
+                  </span>
+
+                  <span class="swiss-meta note-ligne-meta text-[var(--ink-soft)]">
+                    {note.data.topics.join(', ')}
+                    <br />
+                    {readingTime(note.body)}
+                  </span>
+
+                  <span class="note-ligne-fleche text-[var(--ink-soft)]">
+                    <SwissArrow direction="right" size={20} />
+                  </span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <SwissFooter />
+</SwissLayout>

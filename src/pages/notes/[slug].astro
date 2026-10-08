@@ -1,0 +1,99 @@
+---
+import SwissLayout from '../../layouts/SwissLayout.astro';
+import SwissHeader from '../../components/SwissHeader.astro';
+import SwissFooter from '../../components/SwissFooter.astro';
+import SwissArrow from '../../components/SwissArrow.astro';
+import { getNotes, noteDate, readingTime, type Note } from '../../lib/notes';
+
+export async function getStaticPaths() {
+  const notes = await getNotes();
+  // La note suivante est la plus ancienne d'après ; la dernière renvoie à la
+  // plus récente, pour qu'il y ait toujours une porte en bas de page.
+  return notes.map((note, i) => ({
+    params: { slug: note.slug },
+    props: { note, next: notes.length > 1 ? notes[(i + 1) % notes.length] : undefined },
+  }));
+}
+
+interface Props {
+  note: Note;
+  next?: Note;
+}
+
+const { note, next } = Astro.props;
+const { Content } = await note.render();
+---
+
+<SwissLayout title={`${note.data.title} — Laurent Nyssen`} description={note.data.dek}>
+  <SwissHeader current="notes" />
+
+  <main id="contenu" tabindex="-1">
+    <article>
+      <header class="swiss-shell pt-[var(--section-space)]">
+        <a href="/notes" class="swiss-meta note-retour text-[var(--ink-soft)] hover:text-[var(--accent-texte)]">
+          <SwissArrow direction="left" size={12} /> Notes
+        </a>
+
+        <h1 class="note-titre" data-reveal data-reveal-slow>
+          {note.data.title}
+        </h1>
+
+        <p class="swiss-lede note-dek text-[var(--ink-soft)]" data-reveal data-reveal-slow data-reveal-delay="80">
+          {note.data.dek}
+        </p>
+      </header>
+
+      <section class="swiss-shell">
+        <div class="swiss-grid gap-y-8 border-t border-[var(--rule)]" data-reveal data-reveal-delay="140">
+          <!-- La colonne des intitulés porte la fiche de la note ; sur grand
+               écran, elle reste à portée pendant la lecture. -->
+          <dl class="note-fiche swiss-meta col-span-6 md:col-span-2">
+            <div>
+              <dt class="text-[var(--ink-soft)]">Published</dt>
+              <dd><time datetime={note.data.date.toISOString().slice(0, 10)}>{noteDate(note.data.date)}</time></dd>
+            </div>
+            <div>
+              <dt class="text-[var(--ink-soft)]">Reading</dt>
+              <dd>{readingTime(note.body)}</dd>
+            </div>
+            {note.data.topics.length > 0 && (
+              <div>
+                <dt class="text-[var(--ink-soft)]">Topics</dt>
+                <dd>{note.data.topics.join(', ')}</dd>
+              </div>
+            )}
+            {note.data.original && (
+              <div>
+                <dt class="text-[var(--ink-soft)]">First on</dt>
+                <dd>
+                  <a href={note.data.original} target="_blank" rel="noopener noreferrer" class="note-original">
+                    LinkedIn <SwissArrow size={10} />
+                  </a>
+                </dd>
+              </div>
+            )}
+          </dl>
+
+          <div class="note-corps col-span-6 md:col-start-3 md:col-span-7">
+            <Content />
+          </div>
+        </div>
+      </section>
+    </article>
+
+    {next && (
+      <section class="swiss-shell section-renvoi">
+        <div class="swiss-grid border-t border-[var(--rule)]" data-reveal>
+          <div class="col-span-6 md:col-span-12">
+            <h2 class="section-label swiss-meta text-[var(--ink-soft)]">Next note</h2>
+            <a href={`/notes/${next.slug}`} class="lab-teaser-title mt-[16px] block text-[clamp(1.375rem,2.6vw,2rem)] font-medium leading-[1.1] tracking-[-0.035em] transition-colors duration-200 hover:text-[var(--accent-texte)] focus-visible:text-[var(--accent-texte)]">
+              {next.data.title} <SwissArrow direction="right" size={24} />
+            </a>
+          </div>
+        </div>
+      </section>
+    )}
+  </main>
+
+  <SwissFooter />
+</SwissLayout>

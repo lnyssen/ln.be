@@ -2278,3 +2278,180 @@
     overflow: visible !important;
   }
 }
+
+/* ── Notes ─────────────────────────────────────────────────────────────── */
+
+/* Une ligne par note. Sur téléphone : la date, puis le titre et son chapeau,
+   puis les sujets. Dès la tablette, quatre colonnes : date, texte, sujets,
+   flèche — la même lecture que l'index des projets. */
+.swiss .note-ligne {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px 20px;
+  padding: 28px 0;
+  transition: color 200ms;
+}
+
+.swiss .note-ligne-date { grid-column: 1; }
+.swiss .note-ligne-texte { grid-column: 1; display: flex; flex-direction: column; gap: 10px; }
+.swiss .note-ligne-meta { grid-column: 1; }
+.swiss .note-ligne-fleche { grid-column: 2; grid-row: 1 / span 3; align-self: center; }
+
+.swiss .note-ligne-titre {
+  font-size: clamp(1.375rem, 2.6vw, 2.25rem);
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+  font-weight: 500;
+  text-wrap: balance;
+  max-width: 26ch;
+}
+
+.swiss .note-ligne-dek {
+  color: var(--ink-soft);
+  font-size: 16px;
+  line-height: 1.45;
+  max-width: 52ch;
+}
+
+.swiss .note-ligne:hover .note-ligne-titre,
+.swiss .note-ligne:focus-visible .note-ligne-titre {
+  color: var(--accent-texte);
+}
+
+@media (min-width: 768px) {
+  .swiss .note-ligne {
+    grid-template-columns: 7rem minmax(0, 1fr) 14rem auto;
+    align-items: start;
+  }
+
+  .swiss .note-ligne-date,
+  .swiss .note-ligne-texte,
+  .swiss .note-ligne-meta,
+  .swiss .note-ligne-fleche {
+    grid-row: 1;
+  }
+
+  .swiss .note-ligne-date { grid-column: 1; padding-top: 0.55em; }
+  .swiss .note-ligne-texte { grid-column: 2; }
+  .swiss .note-ligne-meta { grid-column: 3; padding-top: 0.55em; line-height: 1.6; }
+  .swiss .note-ligne-fleche { grid-column: 4; align-self: start; padding-top: 0.35em; }
+}
+
+/* La liste colle à ses bords, comme les autres. */
+.swiss .notes-list > li:first-child > .note-ligne { padding-top: 0; }
+.swiss .notes-list > li:last-child > .note-ligne { padding-bottom: 0; }
+
+/* Page d'une note. */
+.swiss .note-retour {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 200ms;
+}
+
+.swiss .note-titre {
+  margin-top: calc(var(--section-space) * 1.2);
+  max-width: 18ch;
+  font-size: clamp(2.25rem, 6vw, 5.5rem);
+  line-height: 0.98;
+  letter-spacing: -0.045em;
+  font-weight: 600;
+  text-wrap: balance;
+  text-box: trim-both cap alphabetic;
+}
+
+.swiss .note-dek {
+  margin-top: 28px;
+  margin-bottom: var(--section-space);
+  max-width: 36ch;
+}
+
+.swiss .note-fiche {
+  display: grid;
+  gap: 18px;
+  align-content: start;
+}
+
+.swiss .note-fiche dd { margin-top: 5px; }
+
+.swiss .note-original {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--accent-texte);
+}
+
+@media (min-width: 768px) {
+  .swiss .note-fiche {
+    position: sticky;
+    top: 120px;
+    align-self: start;
+  }
+}
+
+/* Le corps : un texte qui se lit long. Soixante-cinq signes environ par
+   ligne, un interlignage large, des intertitres qui coupent sans crier. */
+.swiss .note-corps {
+  max-width: 40rem;
+  font-size: clamp(1.0625rem, 1.25vw, 1.1875rem);
+  line-height: 1.62;
+}
+
+.swiss .note-corps > * + * { margin-top: 1.05em; }
+
+.swiss .note-corps h2 {
+  margin-top: 2.4em;
+  font-size: clamp(1.375rem, 2vw, 1.75rem);
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  font-weight: 600;
+  text-wrap: balance;
+}
+
+.swiss .note-corps h2 + * { margin-top: 0.7em; }
+
+.swiss .note-corps > :first-child {
+  font-size: 1.18em;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  text-box: trim-start cap alphabetic;
+}
+
+.swiss .note-corps > :last-child {
+  text-box: trim-end cap alphabetic;
+}
+
+.swiss .note-corps a {
+  color: var(--accent-texte);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Accueil : les trois renvois en triptyque. */
+.swiss .renvoi-carte .teaser-mark {
+  display: block;
+  margin-bottom: 28px;
+}
+
+.swiss .renvoi-suite {
+  margin-top: var(--renvoi-space);
+  padding-top: var(--renvoi-space);
+  border-top: var(--rule-fin) solid var(--rule);
+}
+
+@media (min-width: 768px) {
+  .swiss .renvoi-suite {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  .swiss .renvoi-carte {
+    padding-right: 20px;
+  }
+}
+
+.swiss .renvoi-carte .lab-teaser-title {
+  text-wrap: balance;
+  text-box: trim-end cap alphabetic;
+}

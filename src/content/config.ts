@@ -29,4 +29,17 @@ const lab = defineCollection({
   }),
 });
 
-export const collections = { projects, lab };
+// Les notes : des textes longs, d'abord publiés sur LinkedIn, repris ici en
+// entier. `original` renvoie à la première publication.
+const notes = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    dek: z.string(),
+    date: z.coerce.date(),
+    topics: z.array(z.string()).default([]),
+    original: z.string().url().optional(),
+  }),
+});
+
+export const collections = { projects, lab, notes };
