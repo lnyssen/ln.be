@@ -2455,3 +2455,12 @@
   text-wrap: balance;
   text-box: trim-end cap alphabetic;
 }
+
+/* Le titre d'accueil passe sur trois lignes tant que « Human interfaces »
+   ne tient pas sur une seule : à 11vw, il ne tient qu'une fois le corps
+   plafonné, à partir de 1360 px environ. */
+.swiss .titre-coupe { display: none; }
+
+@media (max-width: 1359px) {
+  .swiss .titre-coupe { display: inline; }
+}

@@ -561,7 +561,11 @@ const ogImage = new URL('/og.png', Astro.site).href;
         nouvelle();
         for (const node of [...h1.childNodes]) {
           if (node.nodeName === 'BR') {
+            // Un retour à la ligne masqué à cette largeur (celui qui ne coupe
+            // le titre que sur téléphone) ne commence pas de nouvelle ligne.
+            const masque = getComputedStyle(node).display === 'none';
             node.remove();
+            if (masque) continue;
             h1.appendChild(courante);
             nouvelle();
           } else {
