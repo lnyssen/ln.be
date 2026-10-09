@@ -77,6 +77,7 @@ function labelFor(node) {
   const open = node.closest('details[open]');
   if (open && !node.closest('a, button')) return 'CLOSE';
 
+  if (node.closest('[data-back-top]')) return { mot: 'Back to top', signe: 'TOP' };
   if (node.closest('[data-accent-cycle]')) return 'TINT';
   if (node.closest('[data-grid-toggle]')) return 'GRID';
   if (node.closest('[role="switch"]')) return 'THEME';

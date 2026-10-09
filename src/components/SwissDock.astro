@@ -53,14 +53,12 @@ import SwissThemeToggle from './SwissThemeToggle.jsx';
 
 <!-- Retour en haut : en bas à droite, dans la même capsule que les outils.
      Il n'apparaît qu'une fois la page bien entamée. -->
-<div class="dock-haut dock-capsule fixed z-[46] rounded-full p-[7px]" data-dock-haut hidden>
+<div class="dock-haut dock-capsule fixed z-[46] rounded-full" data-dock-haut hidden>
   <button
     type="button"
     aria-label="Back to top"
-    data-cursor-mirror="Back to top"
-    data-cursor-sign="TOP"
-    data-cursor-ink="var(--ink)"
-    class="swiss-meta flex h-[38px] w-[38px] items-center justify-center rounded-full border border-[var(--rule)] transition-colors duration-200 hover:border-[var(--accent)] hover:bg-[var(--accent)] hover:text-[var(--sur-accent)]"
+    data-back-top
+    class="swiss-meta flex h-[52px] w-[52px] items-center justify-center rounded-full border border-[var(--rule)] transition-colors duration-200 hover:border-[var(--accent)] hover:bg-[var(--accent)] hover:text-[var(--sur-accent)]"
   >
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="butt" aria-hidden="true">
       <path d="M12 21V4.5M5.5 11 12 4.5 18.5 11" />

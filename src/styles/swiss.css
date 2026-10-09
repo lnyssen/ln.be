@@ -2498,6 +2498,9 @@
 
 .swiss .dock-haut[hidden] { display: none; }
 
+/* Moins de mouvement demandé : la capsule ne glisse plus, elle s'éteint. */
 @media (prefers-reduced-motion: reduce) {
-  .swiss .swiss-dock { transition: none; }
+  .swiss .swiss-dock { transition: opacity 240ms; }
+  .swiss .swiss-dock.dock-cache:not(:focus-within) { translate: none; }
+  .swiss .dock-haut { transition: none; }
 }
