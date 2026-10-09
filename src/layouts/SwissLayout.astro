@@ -457,21 +457,26 @@ const ogImage = new URL('/og.png?v=3', Astro.site).href;
 
         // Filet de sécurité : au bas de la page, plus rien ne peut franchir la
         // ligne de déclenchement. Ce qui reste caché est montré.
-        addEventListener(
-          'scroll',
-          () => {
-            const bottom =
-              innerHeight + scrollY >= document.documentElement.scrollHeight - 4;
-            if (!bottom) return;
-            for (const el of targets) {
-              if (!el.classList.contains('is-in')) {
-                el.classList.add('is-in');
-                observer.unobserve(el);
-              }
+        // La hauteur de la page se lit quand elle change, pas à chaque
+        // défilement : la relire à chaque image forçait un calcul de mise en
+        // page entier. L'écouteur se retire une fois tout montré.
+        let hauteur = document.documentElement.scrollHeight;
+        const mesure = new ResizeObserver(() => {
+          hauteur = document.documentElement.scrollHeight;
+        });
+        mesure.observe(document.body);
+        const auBas = () => {
+          if (innerHeight + scrollY < hauteur - 4) return;
+          for (const el of targets) {
+            if (!el.classList.contains('is-in')) {
+              el.classList.add('is-in');
+              observer.unobserve(el);
             }
-          },
-          { passive: true }
-        );
+          }
+          removeEventListener('scroll', auBas);
+          mesure.disconnect();
+        };
+        addEventListener('scroll', auBas, { passive: true });
 
         for (const el of targets) observer.observe(el);
       })();

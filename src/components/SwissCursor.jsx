@@ -184,8 +184,17 @@ export default function SwissCursor() {
     // traîne perceptible sans que l'écart devienne gênant au clic, puisque
     // c'est le pointeur réel, invisible, qui atteint la cible.
     const tick = () => {
-      current.x += (target.x - current.x) * 0.13;
-      current.y += (target.y - current.y) * 0.13;
+      const dx = target.x - current.x;
+      const dy = target.y - current.y;
+      // Arrivé au pointeur, le disque ne réécrit plus sa position : la
+      // retoucher à chaque image, même immobile, recalculait son calque
+      // pendant tout le défilement.
+      if (Math.abs(dx) < 0.1 && Math.abs(dy) < 0.1) {
+        frame = requestAnimationFrame(tick);
+        return;
+      }
+      current.x += dx * 0.13;
+      current.y += dy * 0.13;
       if (ref.current) {
         ref.current.style.transform = `translate3d(${current.x}px, ${current.y}px, 0) translate(-50%, -50%)`;
       }
