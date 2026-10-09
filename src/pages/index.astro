@@ -441,7 +441,7 @@ function domainLabel(link: string) {
 
         requestAnimationFrame(() => {
           racine.classList.remove('sans-filer');
-          scrollTo({ top: Math.max(0, y), behavior: doux ? 'smooth' : 'instant' });
+          window.__defiler ? window.__defiler(Math.max(0, y), doux) : scrollTo({ top: Math.max(0, y), behavior: doux ? 'smooth' : 'instant' });
         });
         return true;
       };

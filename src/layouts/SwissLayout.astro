@@ -330,6 +330,9 @@ const ogImage = new URL('/og.png?v=2', Astro.site).href;
 
     <slot />
     <SwissDock />
+    <script>
+      import '../scripts/defilement';
+    </script>
     <SwissPalette />
     <SwissLab />
     <SwissJeux />
@@ -385,7 +388,7 @@ const ogImage = new URL('/og.png?v=2', Astro.site).href;
           const bas = document.documentElement.scrollHeight - innerHeight;
           if (scrollY >= bas - 2) return;
           const calme = matchMedia('(prefers-reduced-motion: reduce)').matches;
-          scrollTo({ top: bas, behavior: calme ? 'instant' : 'smooth' });
+          window.__defiler ? window.__defiler(bas, !calme) : scrollTo({ top: bas, behavior: calme ? 'instant' : 'smooth' });
         });
       })();
     </script>

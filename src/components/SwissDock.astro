@@ -138,7 +138,7 @@ import SwissThemeToggle from './SwissThemeToggle.jsx';
 
     haut.querySelector('button').addEventListener('click', () => {
       const doux = !matchMedia('(prefers-reduced-motion: reduce)').matches;
-      scrollTo({ top: 0, behavior: doux ? 'smooth' : 'auto' });
+      window.__defiler ? window.__defiler(0, doux) : scrollTo({ top: 0, behavior: doux ? 'smooth' : 'auto' });
       // Le focus suit : au clavier, on repart du début de la page.
       document.querySelector('#contenu')?.focus({ preventScroll: true });
     });
