@@ -131,6 +131,8 @@ const GLYPHS = {
   CLICK: 'M6 3.5l12.5 8.2-5.4 1.2 2.6 5.6-2.4 1.1-2.6-5.6-3.7 4V3.5Z',
   // Un astérisque à six branches : rien à faire, seulement à regarder.
   ENJOY: 'M12 3.5v17M4.6 7.75l14.8 8.5M19.4 7.75l-14.8 8.5',
+  // Un livre ouvert, deux pages autour d'un pli : une note se lit.
+  READ: 'M12 6.5C9.8 5 7 4.5 3.5 4.5v14c3.5 0 6.3.5 8.5 2 2.2-1.5 5-2 8.5-2v-14c-3.5 0-6.3.5-8.5 2Z M12 6.5v14',
   // Deux coins qui s'écartent : le visuel prend toute la place.
   ZOOM: 'M4.5 10V4.5H10M19.5 14v5.5H14M4.5 4.5l6 6M19.5 19.5l-6-6',
   // Une goutte : le geste change l'encre du site.
