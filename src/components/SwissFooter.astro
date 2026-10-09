@@ -95,14 +95,31 @@ const site = [
     const arret = new AbortController();
     window.__appelStop = () => arret.abort();
     appel.dataset.apparition = '';
+    // Les hauteurs se mesurent à part, quand la page change de taille, et
+    // non à chaque défilement : les relire à chaque image forçait un calcul
+    // de mise en page entier et rendait le défilement saccadé.
+    const footer = appel.closest('.swiss-footer');
+    let pied = 0;
+    let seuil = 0;
+    let la = false;
+    const mesurer = () => {
+      pied = footer.offsetHeight;
+      seuil = document.documentElement.scrollHeight - pied;
+      regarder();
+    };
     const regarder = () => {
-      const pied = appel.closest('.swiss-footer').offsetHeight;
-      const decouvert = scrollY + innerHeight - (document.documentElement.scrollHeight - pied);
-      if (decouvert > pied * 0.35) appel.classList.add('est-la');
-      else if (decouvert <= 0) appel.classList.remove('est-la');
+      const decouvert = scrollY + innerHeight - seuil;
+      const suivant = decouvert > pied * 0.35 ? true : decouvert <= 0 ? false : la;
+      if (suivant !== la) {
+        la = suivant;
+        appel.classList.toggle('est-la', la);
+      }
     };
     addEventListener('scroll', regarder, { passive: true, signal: arret.signal });
-    addEventListener('resize', regarder, { signal: arret.signal });
-    requestAnimationFrame(regarder);
+    addEventListener('resize', mesurer, { signal: arret.signal });
+    const observateur = new ResizeObserver(mesurer);
+    observateur.observe(document.body);
+    arret.signal.addEventListener('abort', () => observateur.disconnect());
+    requestAnimationFrame(mesurer);
   })();
 </script>

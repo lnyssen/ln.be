@@ -87,22 +87,37 @@ import SwissThemeToggle from './SwissThemeToggle.jsx';
     });
   })();
 
-  // La capsule s'efface quand on descend — elle couvrait le texte qu'on lit —
-  // et revient dès qu'on remonte, en haut de page, ou quand le clavier y
-  // entre. Le retour en haut paraît passé un écran et demi de lecture.
+  // La capsule et la barre du haut s'effacent quand on descend — elles
+  // couvraient le texte qu'on lit — et reviennent dès qu'on remonte, en haut
+  // de page, ou quand le clavier y entre. Le retour en haut paraît passé un écran et demi de lecture.
   (() => {
     const dock = document.querySelector('.swiss-dock');
     const haut = document.querySelector('[data-dock-haut]');
+    const barre = document.querySelector('[data-swiss-header]');
     if (!dock || !haut) return;
 
+    // On n'écrit dans le DOM que si l'état change : retoucher une classe ou
+    // un attribut à chaque image relançait le style de la page entière.
     let dernier = scrollY;
+    let cache = false;
+    let visible = !haut.hidden;
     const mettreAJour = () => {
       const y = scrollY;
       const delta = y - dernier;
-      if (y < 80 || delta < -4) dock.classList.remove('dock-cache');
-      else if (delta > 4) dock.classList.add('dock-cache');
-      if (Math.abs(delta) > 4 || y < 80) dernier = y;
-      haut.hidden = y < innerHeight * 1.5;
+      let suivant = cache;
+      if (y < 80 || delta < -6) suivant = false;
+      else if (delta > 6) suivant = true;
+      if (Math.abs(delta) > 6 || y < 80) dernier = y;
+      if (suivant !== cache) {
+        cache = suivant;
+        dock.classList.toggle('dock-cache', cache);
+        barre?.classList.toggle('header-cache', cache);
+      }
+      const montrer = y > innerHeight * 1.5;
+      if (montrer !== visible) {
+        visible = montrer;
+        haut.hidden = !montrer;
+      }
     };
 
     let attente = false;
