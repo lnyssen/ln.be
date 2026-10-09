@@ -51,6 +51,23 @@ import SwissThemeToggle from './SwissThemeToggle.jsx';
   </div>
 </div>
 
+<!-- Retour en haut : en bas à droite, dans la même capsule que les outils.
+     Il n'apparaît qu'une fois la page bien entamée. -->
+<div class="dock-haut dock-capsule fixed z-[46] rounded-full p-[7px]" data-dock-haut hidden>
+  <button
+    type="button"
+    aria-label="Back to top"
+    data-cursor-mirror="Back to top"
+    data-cursor-sign="TOP"
+    data-cursor-ink="var(--ink)"
+    class="swiss-meta flex h-[38px] w-[38px] items-center justify-center rounded-full border border-[var(--rule)] transition-colors duration-200 hover:border-[var(--accent)] hover:bg-[var(--accent)] hover:text-[var(--sur-accent)]"
+  >
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="butt" aria-hidden="true">
+      <path d="M12 21V4.5M5.5 11 12 4.5 18.5 11" />
+    </svg>
+  </button>
+</div>
+
 <script is:inline data-astro-rerun>
   // La teinte tourne sur une petite gamme arrêtée, et le site garde le choix
   // sur l'appareil du visiteur.
@@ -69,6 +86,48 @@ import SwissThemeToggle from './SwissThemeToggle.jsx';
         if (suivante) localStorage.setItem('swiss-accent', suivante);
         else localStorage.removeItem('swiss-accent');
       } catch {}
+    });
+  })();
+
+  // La capsule s'efface quand on descend — elle couvrait le texte qu'on lit —
+  // et revient dès qu'on remonte, en haut de page, ou quand le clavier y
+  // entre. Le retour en haut paraît passé un écran et demi de lecture.
+  (() => {
+    const dock = document.querySelector('.swiss-dock');
+    const haut = document.querySelector('[data-dock-haut]');
+    if (!dock || !haut) return;
+
+    let dernier = scrollY;
+    const mettreAJour = () => {
+      const y = scrollY;
+      const delta = y - dernier;
+      if (y < 80 || delta < -4) dock.classList.remove('dock-cache');
+      else if (delta > 4) dock.classList.add('dock-cache');
+      if (Math.abs(delta) > 4 || y < 80) dernier = y;
+      haut.hidden = y < innerHeight * 1.5;
+    };
+
+    let attente = false;
+    const surDefilement = () => {
+      if (attente) return;
+      attente = true;
+      requestAnimationFrame(() => {
+        attente = false;
+        mettreAJour();
+      });
+    };
+
+    // Les transitions de page relancent ce script : un seul écouteur à la fois.
+    window.__dockDefilement && removeEventListener('scroll', window.__dockDefilement);
+    window.__dockDefilement = surDefilement;
+    addEventListener('scroll', surDefilement, { passive: true });
+    mettreAJour();
+
+    haut.querySelector('button').addEventListener('click', () => {
+      const doux = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+      scrollTo({ top: 0, behavior: doux ? 'smooth' : 'auto' });
+      // Le focus suit : au clavier, on repart du début de la page.
+      document.querySelector('#contenu')?.focus({ preventScroll: true });
     });
   })();
 </script>

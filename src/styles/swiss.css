@@ -2464,3 +2464,40 @@
 @media (max-width: 1359px) {
   .swiss .titre-coupe { display: inline; }
 }
+
+/* La capsule des outils glisse hors de l'écran pendant la lecture. */
+.swiss .swiss-dock {
+  transition: translate 320ms cubic-bezier(0.2, 0.7, 0.2, 1), opacity 320ms;
+}
+
+.swiss .swiss-dock.dock-cache:not(:focus-within) {
+  translate: 0 calc(100% + 28px);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Retour en haut : aligné sur la marge de la page, au ras de la capsule.
+   Sur téléphone, la capsule occupe le bas : il se pose au-dessus d'elle. */
+.swiss .dock-haut {
+  right: max(20px, env(safe-area-inset-right));
+  bottom: calc(20px + env(safe-area-inset-bottom) + 64px);
+  transition: bottom 320ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* Capsule effacée : le bouton descend prendre sa place. */
+.swiss .swiss-dock.dock-cache:not(:focus-within) ~ .dock-haut {
+  bottom: calc(20px + env(safe-area-inset-bottom));
+}
+
+@media (min-width: 640px) {
+  .swiss .dock-haut {
+    right: max(40px, env(safe-area-inset-right));
+    bottom: calc(20px + env(safe-area-inset-bottom));
+  }
+}
+
+.swiss .dock-haut[hidden] { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .swiss .swiss-dock { transition: none; }
+}
