@@ -170,7 +170,7 @@ function domainLabel(link: string) {
           Skills
         </h2>
 
-        <div class="marquee col-start-1 col-span-6 row-start-2 overflow-hidden md:col-span-12">
+        <div class="marquee col-start-1 col-span-6 row-start-2 overflow-x-clip overflow-y-visible md:col-span-12">
           <div class="marquee-track flex w-max">
             {
               [...skills, ...skills].map((skill) => (
