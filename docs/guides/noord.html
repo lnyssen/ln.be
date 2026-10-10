@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>NOORD — User guide</title>
+<!-- Source de public/guides/noord.pdf. Régénérer depuis la racine du projet :
+  "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless=new \
+    --no-pdf-header-footer --virtual-time-budget=8000 \
+    --print-to-pdf=public/guides/noord.pdf docs/guides/noord.html -->
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root { --paper: #f1eee6; --ink: #16140f; --soft: #5f5a50; --red: #e8332a; --rule: #16140f; --fine: #cfc9bc; }
+  html, body { background: var(--paper); }
+  body { font-family: 'Inter Tight', 'Helvetica Neue', Arial, sans-serif; color: var(--ink);
+    font-size: 9.8pt; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .page { width: 210mm; height: 297mm; padding: 16mm 16mm 14mm; position: relative; overflow: hidden;
+    page-break-after: always; display: flex; flex-direction: column; background: var(--paper); }
+  .page:last-child { page-break-after: auto; }
+  .mono { font-family: 'JetBrains Mono', Menlo, monospace; }
+  .kicker { font-family: 'JetBrains Mono', monospace; font-size: 7.4pt; font-weight: 500; letter-spacing: .08em;
+    text-transform: uppercase; display: flex; justify-content: space-between; border-top: 2px solid var(--rule); padding-top: 2.4mm; }
+  .kicker b { color: var(--red); font-weight: 700; }
+  h1 { font-size: 30pt; font-weight: 700; letter-spacing: -.035em; line-height: .98; margin: 7mm 0 5mm; }
+  h1 span { color: var(--red); }
+  h2 { font-family: 'JetBrains Mono', monospace; font-size: 7.6pt; font-weight: 700; letter-spacing: .08em;
+    text-transform: uppercase; border-top: 1px solid var(--rule); padding-top: 2.2mm; margin: 6mm 0 3mm;
+    display: flex; justify-content: space-between; }
+  h2 i { font-style: normal; color: var(--soft); font-weight: 500; }
+  .lead { font-size: 12pt; line-height: 1.38; letter-spacing: -.01em; max-width: 150mm; }
+  p + p { margin-top: 2.2mm; }
+  b { font-weight: 700; }
+  .ui { font-family: 'JetBrains Mono', monospace; font-size: 8pt; font-weight: 700; background: var(--ink);
+    color: var(--paper); padding: .2mm 1.5mm; white-space: nowrap; }
+  .key { font-family: 'JetBrains Mono', monospace; font-size: 8pt; font-weight: 700; border: 1px solid var(--ink);
+    padding: 0 1.4mm; white-space: nowrap; }
+
+  ol.steps { list-style: none; counter-reset: s; display: grid; grid-template-columns: 1fr 1fr; gap: 0 8mm; }
+  ol.steps li { counter-increment: s; border-top: 1px solid var(--fine); padding: 3mm 0 3.5mm; }
+  ol.steps li::before { content: '0' counter(s); display: block; font-family: 'JetBrains Mono', monospace;
+    font-weight: 700; color: var(--red); font-size: 8pt; margin-bottom: 1mm; }
+  ol.steps b { display: block; font-size: 11pt; letter-spacing: -.01em; margin-bottom: .6mm; }
+
+  table.kv { width: 100%; border-collapse: collapse; }
+  table.kv td { vertical-align: top; padding: 1.6mm 0; border-top: 1px solid var(--fine); }
+  table.kv td:first-child { width: 36mm; font-family: 'JetBrains Mono', monospace; font-size: 8pt; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .04em; padding-right: 4mm; }
+  table.kv td:last-child { color: var(--ink); }
+
+  .cols2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 8mm; }
+  ul.data { list-style: none; }
+  ul.data li { border-top: 1px solid var(--fine); padding: 1mm 0; display: flex; justify-content: space-between; gap: 4mm; }
+  ul.data li span { font-family: 'JetBrains Mono', monospace; font-size: 7.4pt; color: var(--soft); text-align: right; }
+
+  .note { background: var(--ink); color: var(--paper); padding: 4mm 5mm; margin-top: 5mm; }
+  .note .t { display: block; font-family: 'JetBrains Mono', monospace; font-size: 7.4pt; font-weight: 700;
+    letter-spacing: .08em; text-transform: uppercase; color: var(--red); margin-bottom: 1.2mm; }
+  .grids { width: 100%; margin: 2mm 0 1mm; display: block; }
+
+  .foot { margin-top: auto; border-top: 1px solid var(--rule); padding-top: 2.2mm; display: flex; justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace; font-size: 7pt; letter-spacing: .06em; text-transform: uppercase; color: var(--soft); }
+  .foot b { color: var(--ink); }
+
+  .cover { padding: 16mm; }
+  .cover .poster { height: 186mm; width: auto; align-self: flex-start; margin-top: 7mm; box-shadow: 0 0 0 .3mm var(--fine); }
+  .cover .bas { margin-top: auto; display: flex; align-items: flex-end; justify-content: space-between; gap: 8mm; }
+  .cover .nom { font-size: 74pt; font-weight: 800; letter-spacing: -.05em; line-height: .82; }
+  .cover .nom span { color: var(--red); }
+  .cover .tag { font-size: 12pt; line-height: 1.3; max-width: 70mm; text-align: right; letter-spacing: -.01em; padding-bottom: 1mm; }
+</style>
+</head>
+<body>
+
+<section class="page cover">
+  <div class="kicker"><span>User guide</span><span>Generative posters · Brussels open data</span></div>
+  <img class="poster" src="noord/cover.png" alt="An A3 poster generated by NOORD from Brussels air-quality data">
+  <div class="bas">
+    <div class="nom">NOORD<span>.</span></div>
+    <div class="tag">The city's numbers, set on a Swiss grid and printed in two inks.</div>
+  </div>
+  <div class="foot" style="margin-top:6mm"><span>Laurent Nyssen · Experiment</span><span><b>noord-bxl.vercel.app</b></span></div>
+</section>
+
+<section class="page">
+  <div class="kicker"><span><b>00</b> Start</span><span>NOORD — User guide</span></div>
+  <h1>Brussels, in numbers<span>.</span><br>Then in ink.</h1>
+  <p class="lead">NOORD turns the city's open data — rain, sunshine, bike counters, air quality, trees, transit stops — into A3 posters. Each poster sits on a 6 × 8 grid, uses two inks on a paper tone, and is ready to print or to frame. You choose the data and the grid; the seed decides the rest.</p>
+
+  <h2>Your first poster <i>four steps</i></h2>
+  <ol class="steps">
+    <li><b>Pick the data</b>Open <span class="ui">Data</span> and choose a dataset. The poster redraws at once, with the grid that suits it best.</li>
+    <li><b>Try another grid</b><span class="ui">Grid</span> changes the drawing: matrix, rings, ridge lines, spiral… Every grid works with every dataset.</li>
+    <li><b>Dress it</b><span class="ui">Colors</span> sets the paper and the two inks, <span class="ui">Type</span> the font pair. <span class="ui">Tints</span> and <span class="ui">Contrast</span> tune how the values read.</li>
+    <li><b>Roll and export</b>Press <span class="ui">Reroll</span> — or <span class="key">R</span> — until it clicks, then <span class="ui">Export SVG</span> or <span class="ui">Export PNG</span>.</li>
+  </ol>
+
+  <h2>Nine grids <i>same data · weather</i></h2>
+  <img class="grids" src="noord/grids.png" alt="The same rain data drawn with six of the nine grids">
+  <p>Modular matrix · Field (hour × day) · Polar rings · Recursive split · Isometric · Bands (ridge lines) · Dot matrix · Spiral split · Broken grid.</p>
+
+  <div class="note"><span class="t">The link is the poster</span>Every setting is written into the page address as you go. Copy the URL and you can reopen, share or bookmark that exact poster — data, grid, colours, seed and all.</div>
+  <div class="foot"><span>NOORD — User guide</span><span><b>00</b> · Start</span></div>
+</section>
+
+<section class="page">
+  <div class="kicker"><span><b>01</b> Data &amp; settings</span><span>NOORD — User guide</span></div>
+  <h1 style="margin-bottom:3mm">Eighteen datasets<span>.</span></h1>
+
+  <div class="cols2">
+    <div>
+      <h2 style="margin-top:0">Time <i>charts</i></h2>
+      <ul class="data">
+        <li>Weather: rain and heat <span>Open-Meteo</span></li>
+        <li>Weather: sunshine <span>Open-Meteo</span></li>
+        <li>Bikes: a week by the hour <span>Brussels Mobility</span></li>
+        <li>Overlay: rain × bikes <span>Open-Meteo + counters</span></li>
+        <li>Air: NO2 by station <span>IRCELINE</span></li>
+        <li>Air: ozone <span>IRCELINE</span></li>
+        <li>Air: fine particles PM2.5 <span>IRCELINE</span></li>
+        <li>People: age by year, 1992–2025 <span>Statbel</span></li>
+        <li>Cycle lanes: built per year <span>Bruxelles Mobilité</span></li>
+        <li>Permits: building applications <span>Brussels Region</span></li>
+        <li>Trees: species by district <span>City of Brussels</span></li>
+        <li>Villo: bike docks <span>snapshot</span></li>
+        <li>Visitors: brussels.be by country <span>City of Brussels</span></li>
+      </ul>
+    </div>
+    <div>
+      <h2 style="margin-top:0">Maps <i>dot grids</i></h2>
+      <ul class="data">
+        <li>Map: shops</li>
+        <li>Map: transit stops</li>
+        <li>Map: EV charging</li>
+        <li>Map: cycle lanes</li>
+        <li>Map: street trees</li>
+      </ul>
+      <p style="margin-top:3mm;color:var(--soft)">The maps redraw the city as a field of dots: where things are dense, the ink is too.</p>
+    </div>
+  </div>
+
+  <h2>Settings</h2>
+  <table class="kv">
+    <tr><td>Colors</td><td>Fifteen paper-and-two-ink palettes, or <b>Custom</b>: pick paper, ink 1 and ink 2 yourself. On light papers the two inks overprint, as on a real press.</td></tr>
+    <tr><td>Type</td><td>Ten display + mono font pairs, embedded in the export.</td></tr>
+    <tr><td>Tints</td><td><b>Smooth</b> for continuous shades, or <b>5</b> / <b>3 screens</b> for flat steps, like a screen print.</td></tr>
+    <tr><td>Text</td><td><b>Minimal</b> (title and key figure), <b>None</b> (art only) or <b>Full</b> (axes and legend).</td></tr>
+    <tr><td>Contrast</td><td>Stretches or flattens the values, from 40 to 260 %.</td></tr>
+    <tr><td>Seed</td><td>A number from 1 to 99 999. Same seed, same poster.</td></tr>
+  </table>
+
+  <h2>Options</h2>
+  <table class="kv">
+    <tr><td>Rotate axes</td><td>Swaps rows and columns of the data.</td></tr>
+    <tr><td>Fuse cells</td><td>Closes the gaps: the cells touch.</td></tr>
+    <tr><td>Type as data</td><td>Row labels grow with their values.</td></tr>
+    <tr><td>Page grid</td><td>Shows the 6 × 8 grid the poster is built on.</td></tr>
+  </table>
+  <div class="foot"><span>NOORD — User guide</span><span><b>01</b> · Data &amp; settings</span></div>
+</section>
+
+<section class="page">
+  <div class="kicker"><span><b>02</b> Export &amp; print</span><span>NOORD — User guide</span></div>
+  <h1>Ready for<br>the press<span>.</span></h1>
+
+  <h2>Export</h2>
+  <table class="kv">
+    <tr><td>SVG</td><td>A3 at true size, 297 × 420 mm, fully vector. Open it in Illustrator, InDesign or Figma and keep editing.</td></tr>
+    <tr><td>PNG</td><td><b>300 dpi</b> for print (3508 × 4961 px) or <b>150 dpi</b> for screens and sharing. On a phone, 150 dpi is chosen for you.</td></tr>
+    <tr><td>Bleed</td><td>Tick <b>Bleed 3 mm + crop marks</b> before exporting a file for a printer.</td></tr>
+    <tr><td>File name</td><td>Each file is named after its data, grid and seed — <span class="mono">noord-weather-rings-7</span> — so you always know how to remake it.</td></tr>
+  </table>
+
+  <h2>Moving around</h2>
+  <table class="kv">
+    <tr><td>Zoom</td><td>Trackpad or wheel, pinch, double-click, or the <span class="key">+</span> <span class="key">−</span> <span class="key">0</span> keys. <b>Fit</b> brings the whole poster back.</td></tr>
+    <tr><td>Pan</td><td>Drag the poster.</td></tr>
+    <tr><td>Reroll</td><td><span class="key">R</span>, the <b>Reroll</b> button, or the round ↻ button on a phone.</td></tr>
+  </table>
+
+  <h2>Make it yours</h2>
+  <table class="kv">
+    <tr><td>Interface</td><td>Eight themes for the app itself — Paper, Night, Klein blue, Acid, Blush, Terminal, Concrete, Tomato — or Auto, which follows your system.</td></tr>
+    <tr><td>Logo</td><td>Click the NOORD logo to cycle through its typefaces. Both choices stay in this browser.</td></tr>
+  </table>
+
+  <div class="note"><span class="t">Printing tips</span>Ask for an uncoated paper, 120 g or heavier: the overprinted inks look closest to a real two-colour print. Export with bleed and crop marks, and leave the 300 dpi PNG or the SVG as is — both are already at A3.</div>
+  <div class="foot"><span>NOORD — User guide</span><span><b>02</b> · Export &amp; print</span></div>
+</section>
+
+</body>
+</html>
