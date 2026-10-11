@@ -133,3 +133,449 @@ const agrandis = await Promise.all(
     )
   }
 </div>
+
+<script>
+  // Les planches défilent aux flèches, à la molette et au clavier, et chaque
+  // visuel s'ouvre en grand dans la loupe. Le code vit avec la planche plutôt
+  // que dans la page d'accueil : toute page qui en pose une — l'index comme
+  // Shapes — en hérite. Script groupé : il n'est inclus qu'une fois par page,
+  // quel que soit le nombre de planches.
+      // Un pas = la largeur d'un visuel plus la gouttière. On vise toujours un
+      // cran entier, calculé depuis la position arrondie : Chrome, avec une
+      // accroche obligatoire, ramenait sur la même image un défilement relatif
+      // lancé pendant qu'un autre n'était pas fini.
+      const pas = (strip) => {
+        const figure = strip.querySelector('figure');
+        return figure ? figure.getBoundingClientRect().width + 10 : strip.clientWidth;
+      };
+
+      const aller = (strip, sens) => {
+        const p = pas(strip);
+        const rang = Math.round(strip.scrollLeft / p) + sens;
+        const max = strip.scrollWidth - strip.clientWidth;
+        strip.scrollTo({ left: Math.max(0, Math.min(max, rang * p)), behavior: 'smooth' });
+      };
+
+  (window as any).__filmstripAller = aller;
+
+  // Chaque page apporte ses propres bandes : on les branche à chaque arrivée.
+  const brancher = () => {
+      for (const wrap of document.querySelectorAll('.filmstrip-wrap')) {
+        if (wrap.dataset.branchee) continue;
+        wrap.dataset.branchee = '';
+        const strip = wrap.querySelector('.filmstrip');
+        const prev = wrap.querySelector('[data-strip-prev]');
+        const next = wrap.querySelector('[data-strip-next]');
+        if (!strip || !prev || !next) continue;
+
+        const sync = () => {
+          const max = strip.scrollWidth - strip.clientWidth;
+          // Ligne fermée : la planche ne mesure rien. On n'éteint pas les
+          // flèches sur une mesure nulle, on attend qu'elle ait une largeur.
+          if (strip.clientWidth === 0) return;
+          prev.disabled = strip.scrollLeft <= 1;
+          next.disabled = strip.scrollLeft >= max - 1;
+        };
+
+        prev.addEventListener('click', () => aller(strip, -1));
+        next.addEventListener('click', () => aller(strip, 1));
+        strip.addEventListener('scroll', sync, { passive: true });
+        // La largeur arrive à l'ouverture de la ligne et au chargement des
+        // visuels, pas au chargement de la page : on se recale à chaque fois.
+        new ResizeObserver(sync).observe(strip);
+        strip.closest('details')?.addEventListener('toggle', () => requestAnimationFrame(sync));
+        for (const img of strip.querySelectorAll('img')) img.addEventListener('load', sync);
+        sync();
+      }
+
+      // La molette verticale fait avancer la planche, un visuel par geste. On
+      // cumule le geste et on avance d'un cran entier quand il est franc :
+      // poser scrollLeft par petits bouts se battait avec l'accroche sous
+      // Chrome, et la planche restait sur place.
+      for (const strip of document.querySelectorAll('.filmstrip')) {
+        if (strip.dataset.molette) continue;
+        strip.dataset.molette = '';
+        let cumul = 0;
+        let repos = null;
+        let bloque = false;
+        strip.addEventListener(
+          'wheel',
+          (event) => {
+            // Le geste latéral du pavé tactile reste natif : il est fluide et
+            // l'accroche s'en occupe très bien.
+            if (Math.abs(event.deltaX) >= Math.abs(event.deltaY)) return;
+            const d = event.deltaY;
+            const max = strip.scrollWidth - strip.clientWidth;
+            // Au bout de la planche, on rend la main à la page.
+            if ((d < 0 && strip.scrollLeft <= 1) || (d > 0 && strip.scrollLeft >= max - 1)) return;
+            event.preventDefault();
+            clearTimeout(repos);
+            repos = setTimeout(() => {
+              cumul = 0;
+              bloque = false;
+            }, 180);
+            if (bloque) return;
+            cumul += d;
+            if (Math.abs(cumul) > 40) {
+              aller(strip, cumul > 0 ? 1 : -1);
+              cumul = 0;
+              bloque = true;
+            }
+          },
+          { passive: false }
+        );
+      }
+
+  };
+  document.addEventListener('astro:page-load', brancher);
+
+  // La loupe s'écoute sur le document, qui survit aux transitions de page :
+  // elle ne se branche qu'une fois.
+      // Loupe : un visuel de planche s'ouvre en grand par-dessus la page. Il
+      // ne s'agrandit pas au-delà de sa taille réelle — une image tirée plus
+      // grand qu'elle n'est ne montre rien de plus, elle montre juste ses
+      // pixels.
+      // Le disque ne relit ce qu'il survole qu'au mouvement de la souris. En
+      // ouvrant la loupe sans bouger le doigt, il gardait donc son ZOOM alors
+      // qu'il n'y avait plus rien à agrandir. On lui renvoie un mouvement à la
+      // position réelle du pointeur, à l'ouverture comme à la fermeture : il
+      // relit, et dit CLOSE.
+      let sourisX = 0;
+      let sourisY = 0;
+      addEventListener(
+        'pointermove',
+        (event) => {
+          sourisX = event.clientX;
+          sourisY = event.clientY;
+        },
+        { passive: true },
+      );
+
+      const relireLeCurseur = () => {
+        const sous = document.elementFromPoint(sourisX, sourisY);
+        sous?.dispatchEvent(
+          new PointerEvent('pointermove', {
+            clientX: sourisX,
+            clientY: sourisY,
+            bubbles: true,
+          }),
+        );
+      };
+
+      const loupe = (img) => {
+        const bande = img.closest('.filmstrip');
+        const visuels = bande ? Array.from(bande.querySelectorAll('img')) : [img];
+        let rang = Math.max(0, visuels.indexOf(img));
+
+        const cadre = document.createElement('div');
+        cadre.className = 'loupe';
+        cadre.dataset.loupe = '';
+        // Au clavier, la loupe est une fenêtre à part entière : elle prend le
+        // focus à l'ouverture, le garde tant qu'elle est ouverte, et le rend
+        // à la vignette qui l'a ouverte. Le focus restait dans la page,
+        // derrière elle, et la tabulation parcourait des liens invisibles.
+        const retour = document.activeElement;
+        cadre.setAttribute('role', 'dialog');
+        cadre.setAttribute('aria-modal', 'true');
+        cadre.setAttribute('aria-label', 'Enlarged image — Escape to close, arrow keys to navigate');
+        cadre.tabIndex = -1;
+
+        // La scène épouse le visuel : les flèches se posent sur ses bords à
+        // lui, et non sur ceux de la fenêtre, où elles flottaient loin de
+        // l'image dès qu'elle n'en remplissait pas toute la largeur.
+        const scene = document.createElement('div');
+        scene.className = 'loupe-scene';
+
+        // On reprend le jeu de tailles de la planche en annonçant une tout
+        // autre largeur d'affichage : le navigateur va donc chercher le grand
+        // tirage, là où la bande se contentait d'une vignette.
+        const grand = document.createElement('img');
+
+        // `contain` laisse du vide autour du visuel dès que son format ne
+        // suit pas celui de la fenêtre. Les flèches doivent se poser sur ses
+        // bords à lui : on calcule donc la boîte réellement occupée à partir
+        // de ses proportions naturelles.
+        const caler = () => {
+          if (!grand.naturalWidth) return;
+          const boite = scene.getBoundingClientRect();
+          const rapport = grand.naturalWidth / grand.naturalHeight;
+          let large = boite.width;
+          let haut = large / rapport;
+          if (haut > boite.height) {
+            haut = boite.height;
+            large = haut * rapport;
+          }
+          const bord = Math.round((boite.width - large) / 2) + 14;
+          for (const fleche of scene.querySelectorAll('[data-loupe-nav]')) {
+            fleche.style[fleche.classList.contains('loupe-nav-prev') ? 'left' : 'right'] =
+              `${bord}px`;
+          }
+        };
+
+        // Chaque agrandi est chargé et décodé hors de l'écran avant d'être
+        // montré : l'image ne change qu'une fois prête, d'un coup, sans passer
+        // par la vignette floue ni par un cadre vide. Les voisines sont
+        // préparées dès qu'une image est posée, si bien que le passage à la
+        // suivante est presque toujours immédiat.
+        const prets = new Map();
+        const charger = (i) => {
+          const k = (i + visuels.length) % visuels.length;
+          if (prets.has(k)) return prets.get(k);
+          const source = visuels[k];
+          const tirage = new Image();
+          tirage.decoding = 'async';
+          tirage.sizes = '92vw';
+          if (source.dataset.agrandi) tirage.srcset = source.dataset.agrandi;
+          tirage.src = source.dataset.agrandiSrc || source.currentSrc || source.src;
+          const pret = tirage
+            .decode()
+            .catch(() => {})
+            .then(() => tirage);
+          prets.set(k, pret);
+          return pret;
+        };
+
+        const montrer = (tirage, source) => {
+          grand.sizes = tirage.sizes;
+          grand.srcset = tirage.srcset;
+          grand.src = tirage.src;
+          grand.alt = source.alt;
+          caler();
+        };
+
+        const poser = async (i) => {
+          rang = (i + visuels.length) % visuels.length;
+          const k = rang;
+          const tirage = await charger(k);
+          if (k !== rang) return;
+          montrer(tirage, visuels[k]);
+          charger(k + 1);
+          charger(k - 1);
+        };
+
+        // Le visuel ne se remplace pas sur place : il sort par le bord vers
+        // lequel on l'a poussé et le suivant entre par l'autre. Le geste va
+        // jusqu'au bout au lieu de s'arrêter net, et le même passage sert au
+        // doigt, aux flèches, au clavier et à la molette — d'où qu'on vienne,
+        // on voit la même chose.
+        let enVol = false;
+        const glisser = (px) => scene.style.setProperty('--glisse', `${px}px`);
+        const voiler = (v) => scene.style.setProperty('--voile', v);
+
+        const filer = (sens) => {
+          if (enVol) return;
+          enVol = true;
+          const ecart = Math.min(scene.getBoundingClientRect().width * 0.22, 180);
+          grand.classList.remove('sans-transition');
+          grand.classList.add('file');
+          glisser(-sens * ecart);
+          voiler(0);
+          // La sortie et le chargement courent ensemble ; l'entrée attend les
+          // deux. Une image pas encore prête ne s'affiche jamais à moitié.
+          const suivant = (rang + sens + visuels.length) % visuels.length;
+          const sortie = new Promise((fin) => setTimeout(fin, 170));
+          Promise.all([charger(suivant), sortie]).then(([tirage]) => {
+            rang = suivant;
+            montrer(tirage, visuels[suivant]);
+            charger(suivant + 1);
+            charger(suivant - 1);
+            grand.classList.add('sans-transition');
+            grand.classList.remove('file');
+            glisser(sens * ecart);
+            // Deux images d'attente : la première pose la position sans
+            // transition, la seconde la relâche. En une seule, le navigateur
+            // regroupe les deux écritures et rien ne glisse.
+            requestAnimationFrame(() => {
+              requestAnimationFrame(() => {
+                grand.classList.remove('sans-transition');
+                glisser(0);
+                voiler(1);
+                enVol = false;
+              });
+            });
+          });
+        };
+
+        grand.addEventListener('load', caler);
+
+        // À l'ouverture, la vignette déjà chargée s'affiche aussitôt, pour que
+        // le geste réponde ; l'agrandi la remplace dès qu'il est décodé — une
+        // mise au point, sans saut de cadrage.
+        grand.src = img.currentSrc || img.src;
+        grand.alt = img.alt;
+        poser(rang);
+        scene.append(grand);
+        cadre.append(scene);
+
+        // Les flèches ne paraissent qu'à partir de deux visuels, et portent la
+        // matière de celles de la planche. Elles arrêtent le clic : lui, il
+        // referme.
+        if (visuels.length > 1) {
+          for (const sens of [-1, 1]) {
+            const bouton = document.createElement('button');
+            bouton.type = 'button';
+            bouton.className = `strip-nav loupe-nav loupe-nav-${sens < 0 ? 'prev' : 'next'}`;
+            bouton.dataset.loupeNav = '';
+            bouton.dataset.cursorMirror = '';
+            bouton.dataset.cursorInk = 'var(--accent)';
+            bouton.setAttribute('aria-label', sens < 0 ? 'Previous image' : 'Next image');
+            bouton.innerHTML =
+              '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+              (sens < 0 ? '<path d="M15 5l-7 7 7 7"/>' : '<path d="M9 5l7 7-7 7"/>') +
+              '</svg>';
+            bouton.addEventListener('click', (event) => {
+              event.stopPropagation();
+              filer(sens);
+            });
+            scene.append(bouton);
+          }
+        }
+
+        // Le visuel se feuillette aussi à la main : un glissement horizontal au
+        // doigt, ou deux doigts sur le pavé tactile. L'image suit le geste —
+        // sans lui, on ne sait pas si le glissement est pris — puis passe au
+        // suivant si le geste est franc, et revient si on se ravise.
+        let aGlisse = false;
+
+        let roulis = 0;
+        let repos = null;
+        const surRoulette = (event) => {
+          // Le glissement vertical appartient encore à la page : on ne prend
+          // que ce qui est franchement horizontal.
+          if (Math.abs(event.deltaX) <= Math.abs(event.deltaY)) return;
+          event.preventDefault();
+          clearTimeout(repos);
+          repos = setTimeout(() => {
+            roulis = 0;
+          }, 220);
+          if (Math.abs(roulis) > 90) return;
+          roulis += event.deltaX;
+          if (Math.abs(roulis) > 90) {
+            filer(roulis > 0 ? 1 : -1);
+            aGlisse = true;
+            setTimeout(() => {
+              aGlisse = false;
+            }, 0);
+          }
+        };
+
+        if (visuels.length > 1) {
+          let depart = null;
+          let tenu = false;
+
+          scene.addEventListener('pointerdown', (event) => {
+            if (event.button !== 0 || event.target.closest('[data-loupe-nav]')) return;
+            depart = { x: event.clientX, y: event.clientY, id: event.pointerId };
+            tenu = false;
+            aGlisse = false;
+          });
+
+          scene.addEventListener('pointermove', (event) => {
+            if (!depart || event.pointerId !== depart.id) return;
+            const dx = event.clientX - depart.x;
+            const dy = event.clientY - depart.y;
+            if (!tenu) {
+              // Tant que la direction n'est pas tranchée, on ne prend rien.
+              if (Math.abs(dx) < 8 || Math.abs(dx) <= Math.abs(dy)) return;
+              tenu = true;
+              grand.classList.add('sans-transition');
+              // La capture n'est qu'un confort : si le pointeur a déjà quitté
+              // la scène, le geste continue quand même.
+              try {
+                scene.setPointerCapture(event.pointerId);
+              } catch {}
+            }
+            // Le visuel suit le doigt d'un peu moins loin : il indique le
+            // geste sans promettre qu'il se décollera.
+            glisser(dx * 0.7);
+          });
+
+          const fin = (event) => {
+            if (!depart || event.pointerId !== depart.id) return;
+            const dx = event.clientX - depart.x;
+            depart = null;
+            if (!tenu) return;
+            tenu = false;
+            aGlisse = true;
+            if (Math.abs(dx) > 56) {
+              filer(dx < 0 ? 1 : -1);
+            } else {
+              // On s'est ravisé : le visuel revient à sa place.
+              grand.classList.remove('sans-transition');
+              glisser(0);
+            }
+          };
+
+          scene.addEventListener('pointerup', fin);
+          scene.addEventListener('pointercancel', fin);
+          cadre.addEventListener('wheel', surRoulette, { passive: false });
+        }
+
+        document.body.append(cadre);
+        cadre.focus({ preventScroll: true });
+        requestAnimationFrame(() => {
+          cadre.classList.add('is-open');
+          caler();
+          relireLeCurseur();
+        });
+        addEventListener('resize', caler);
+
+        const fermer = () => {
+          cadre.classList.remove('is-open');
+          cadre.addEventListener(
+            'transitionend',
+            () => {
+              cadre.remove();
+              relireLeCurseur();
+            },
+            { once: true },
+          );
+          document.removeEventListener('keydown', surTouche);
+          if (retour?.isConnected) retour.focus({ preventScroll: true });
+          removeEventListener('resize', caler);
+          cadre.removeEventListener('wheel', surRoulette);
+          clearTimeout(repos);
+        };
+
+        const surTouche = (event) => {
+          // Tab tourne entre les commandes de la loupe, sans en sortir.
+          if (event.key === 'Tab') {
+            const commandes = [cadre, ...cadre.querySelectorAll('button')];
+            const i = commandes.indexOf(document.activeElement);
+            const j = (i + (event.shiftKey ? -1 : 1) + commandes.length) % commandes.length;
+            commandes[j].focus();
+            event.preventDefault();
+            return;
+          }
+          if (event.key === 'Escape') fermer();
+          else if (event.key === 'ArrowLeft') filer(-1);
+          else if (event.key === 'ArrowRight') filer(1);
+          else return;
+          event.preventDefault();
+        };
+
+        // Un glissement n'est pas un clic : il ne referme pas.
+        cadre.addEventListener('click', () => {
+          if (aGlisse) {
+            aGlisse = false;
+            return;
+          }
+          fermer();
+        });
+        document.addEventListener('keydown', surTouche);
+      };
+
+      document.addEventListener('click', (event) => {
+        const img = event.target.closest('.filmstrip img');
+        if (img) loupe(img);
+      });
+
+      // Entrée ou espace sur une vignette : elle s'agrandit, comme au clic.
+      document.addEventListener('keydown', (event) => {
+        if (event.key !== 'Enter' && event.key !== ' ') return;
+        const img = event.target.closest?.('.filmstrip img');
+        if (!img) return;
+        event.preventDefault();
+        loupe(img);
+      });
+</script>
