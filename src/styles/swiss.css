@@ -2523,3 +2523,43 @@
   .swiss header[data-swiss-header] { transition: opacity 240ms; }
   .swiss:not(.menu-open) header[data-swiss-header].header-cache:not(:focus-within) { translate: none; }
 }
+
+/* Manifeste : les mots s'allument au défilement. Le script de l'accueil
+   les enveloppe et donne à chacun son rang (--k, de 0 à 1) ; le défilement
+   lui-même pilote l'opacité. Sans cette prise en charge, le script prend le
+   relais. */
+.swiss .manifeste .mot,
+.swiss .manifeste .titre-point {
+  transition: opacity 140ms linear;
+}
+
+@supports (animation-timeline: view()) {
+  .swiss .manifeste[data-decoupe] {
+    view-timeline-name: --manifeste;
+  }
+
+  .swiss .manifeste[data-decoupe] .mot,
+  .swiss .manifeste[data-decoupe] .titre-point {
+    transition: none;
+    animation: mot-allume linear both;
+    animation-timeline: --manifeste;
+    /* La phrase s'allume entre son entrée par le bas de l'écran et le
+       moment où elle en occupe le milieu ; chaque mot prend sa part. */
+    animation-range:
+      cover calc(18% + var(--k, 0) * 30%)
+      cover calc(24% + var(--k, 0) * 30%);
+  }
+}
+
+@keyframes mot-allume {
+  from { opacity: 0.16; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .swiss .manifeste .mot,
+  .swiss .manifeste .titre-point {
+    animation: none !important;
+    opacity: 1 !important;
+  }
+}
