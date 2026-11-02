@@ -12,8 +12,6 @@ const projects = (await getCollection('projects')).sort(
   (a, b) => a.data.order - b.data.order
 );
 
-// Le corps markdown est optionnel : on ne rend le composant que s'il y a du
-// texte, sinon la planche reste seule.
 const rendered = projects.map((project) => {
   const slug = String(project.data.slug ?? (project as any).slug ?? project.id).replace(/\.md$/, '');
   // La carte montre le deuxième visuel : le premier est déjà dans la vitrine.
