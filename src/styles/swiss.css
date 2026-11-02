@@ -2577,3 +2577,68 @@
     opacity: 1 !important;
   }
 }
+
+/* Deux bandes de couleur cassent la longueur de l'accueil. Le fond déborde
+   jusqu'aux bords de l'écran sans toucher à la grille : une ombre pleine,
+   rognée en hauteur, prolonge la couleur de part et d'autre du bloc. */
+.swiss .bande {
+  --bande: var(--paper);
+  background-color: var(--bande);
+  box-shadow: 0 0 0 100vmax var(--bande);
+  clip-path: inset(0 -100vmax);
+  border-top-color: transparent;
+}
+
+.swiss main section > .bande {
+  padding-bottom: var(--section-space);
+}
+
+/* Le fond fait le séparateur : plus de filet à son bord, ni au-dessus, ni
+   au-dessous, et le bloc suivant ne garde pas de marge en trop. */
+.swiss[data-reveal-ready] [data-reveal].bande::before,
+.swiss[data-reveal-ready] section:has(> .bande) + section > [data-reveal][class*="border-t"]::before {
+  display: none;
+}
+
+.swiss main section:has(> .bande) {
+  padding-bottom: 0;
+}
+
+.swiss main section:has(> .bande) + section > [class*="border-t"] {
+  border-top-color: transparent;
+}
+
+/* Profil : la page s'inverse, ivoire sur le noir, noir sur l'ivoire. */
+.swiss .bande-profil {
+  --bande: var(--ink);
+  --paper: #151415;
+  --ink: #f8f2e6;
+  --ink-soft: #cfc6b4;
+  --rule: #f8f2e6;
+  --accent-texte: #f8f2e6;
+  color: var(--ink);
+}
+
+.swiss[data-swiss-theme="dark"] .bande-profil {
+  --bande: #f8f2e6;
+  --paper: #f8f2e6;
+  --ink: #151415;
+  --ink-soft: #5c5448;
+  --rule: #151415;
+  --accent-texte: #151415;
+}
+
+.swiss:not([data-swiss-theme="dark"]) .bande-profil {
+  --bande: #151415;
+}
+
+/* Manifeste : à plein dans la teinte choisie. */
+.swiss .bande-accent {
+  --bande: var(--accent);
+  --rule: var(--sur-accent);
+  color: var(--sur-accent);
+}
+
+.swiss .bande-accent .titre-point {
+  color: var(--sur-accent);
+}
