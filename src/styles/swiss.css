@@ -2642,3 +2642,14 @@
 .swiss .bande-accent .titre-point {
   color: var(--sur-accent);
 }
+
+/* Le curseur porte l'encre de la bande qu'il survole, pas celle de la page. */
+.swiss[data-swiss-theme="dark"] .swiss-cursor[data-sur-bande] {
+  --ink: #151415;
+  --paper: #f8f2e6;
+}
+
+.swiss:not([data-swiss-theme="dark"]) .swiss-cursor[data-sur-bande] {
+  --ink: #f8f2e6;
+  --paper: #151415;
+}

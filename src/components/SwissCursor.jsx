@@ -172,6 +172,17 @@ export default function SwissCursor() {
       }
       setVisible(true);
       setLabel(labelFor(event.target));
+      lireLeFond(event.target);
+    };
+
+    // Sur une bande inversée, l'encre du curseur serait celle de son fond : il
+    // disparaîtrait. Il y prend l'encre de la bande. Le défilement peut aussi
+    // amener la bande sous un pointeur immobile : on relit donc à son arrêt.
+    const lireLeFond = (node) => {
+      ref.current?.toggleAttribute('data-sur-bande', Boolean(node?.closest?.('.bande-profil')));
+    };
+    const onScrollEnd = () => {
+      if (started) lireLeFond(document.elementFromPoint(target.x, target.y));
     };
 
     const onLeave = () => setVisible(false);
@@ -204,12 +215,14 @@ export default function SwissCursor() {
     };
 
     window.addEventListener('pointermove', onMove);
+    window.addEventListener('scrollend', onScrollEnd, { passive: true });
     document.addEventListener('pointerleave', onLeave);
     document.addEventListener('toggle', onToggle, true);
     frame = requestAnimationFrame(tick);
 
     return () => {
       window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('scrollend', onScrollEnd);
       document.removeEventListener('pointerleave', onLeave);
       document.removeEventListener('toggle', onToggle, true);
       cancelAnimationFrame(frame);
