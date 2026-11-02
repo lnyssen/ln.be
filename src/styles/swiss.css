@@ -871,23 +871,6 @@
     outline: none;
   }
 
-  /* Les lignes de l'index sont des <details> : ouverture sans JavaScript.
-     Le curseur « main » ne vaut que sans le disque, qui remplace la flèche. */
-  .swiss:not([data-swiss-cursor]) summary {
-    cursor: pointer;
-    list-style: none;
-  }
-
-  .swiss summary::-webkit-details-marker {
-    display: none;
-  }
-
-  /* Le contenu d'une ligne ouverte se referme au clic : le pointeur y affiche
-     CLOSE, sauf sur les liens qui gardent leur propre étiquette. */
-  .swiss:not([data-swiss-cursor]) details[open] > div {
-    cursor: pointer;
-  }
-
   /* Bande défilante : le contenu est doublé, la piste recule d'exactement la
      moitié — la boucle est donc invisible. */
   /* Le rond sépare deux intitulés sans se lire comme une ponctuation : il
@@ -1478,14 +1461,10 @@
 
   /* Les listes collent à leurs bords : leur première et leur dernière ligne
      n'ajoutent pas leur propre marge à celle de la section. */
-  .swiss #work details:first-child > summary,
   .swiss .also-list > li:first-child > a {
     padding-top: 0;
   }
 
-  /* Une fois la dernière ligne ouverte, son texte a de nouveau besoin de sa
-     respiration : sans cela le corps viendrait se coller sous le titre. */
-  .swiss #work details:last-child:not([open]) > summary,
   .swiss .also-list > li:last-child > a {
     padding-bottom: 0;
   }
@@ -1758,63 +1737,6 @@
     text-underline-offset: 3px;
   }
 
-  /* La ligne ouverte reste sous l'en-tête pendant qu'on parcourt ses visuels.
-     Elle ne peut se garer que là : l'en-tête étant collant en haut, tout autre
-     point d'arrêt donnerait un bandeau flottant en plein écran. */
-  /* Une adresse comme /#moires mène à la ligne : le saut du navigateur
-     s'arrête là où l'intitulé ouvert se colle, sous la barre. */
-  .swiss #work details {
-    scroll-margin-top: calc(var(--header-h) + env(safe-area-inset-top));
-  }
-
-  .swiss details[open] > summary {
-    position: sticky;
-    top: calc(var(--header-h) + env(safe-area-inset-top));
-    z-index: 20;
-    /* Le bandeau doit masquer ce qui défile derrière lui sans se voir quand
-       rien ne passe : le papier plein, ni verre ni transparence. */
-    background-color: var(--paper);
-    isolation: isolate;
-    transition: top 320ms cubic-bezier(0.2, 0.7, 0.2, 1);
-  }
-
-  /* La barre se retire pendant la lecture : l'intitulé ouvert monte prendre
-     sa place, au même rythme. Sans cela, il restait collé sous une barre
-     absente, et le texte défilait dans le vide au-dessus de lui. */
-  .swiss:not(.menu-open):has(header[data-swiss-header].header-cache:not(:focus-within)) details[open] > summary {
-    top: env(safe-area-inset-top);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .swiss details[open] > summary {
-      transition: none;
-    }
-  }
-
-  /* Ouverture filée : le contenu passe de 0 à sa hauteur réelle. Sur un
-     navigateur qui ignore ::details-content, l'ouverture reste sèche. */
-  .swiss details::details-content {
-    block-size: 0;
-    overflow: hidden;
-    opacity: 0;
-    transition:
-      block-size 420ms cubic-bezier(0.22, 1, 0.36, 1),
-      opacity 300ms ease,
-      content-visibility 420ms;
-    transition-behavior: allow-discrete;
-  }
-
-  .swiss details[open]::details-content {
-    block-size: auto;
-    opacity: 1;
-  }
-
-  /* Le temps d'une mesure, tout est posé dans son état final. */
-  .swiss.sans-filer details::details-content,
-  .swiss.sans-filer [data-reveal] {
-    transition: none !important;
-  }
-
   /* Le disque prend l'encre du thème : sombre sur le papier, ivoire sur le
      noir. Il était en fusion « difference », qui inversait ce qu'il couvre —
      lisible partout sans rien savoir du thème, mais l'inverse d'une couleur
@@ -2083,11 +2005,6 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .swiss details::details-content,
-    .swiss details[open]::details-content {
-      transition: none;
-    }
-
     .swiss[data-reveal-ready] [data-reveal] {
       opacity: 1;
       transform: none;
@@ -2214,23 +2131,6 @@
     transform: none !important;
   }
 
-  /* Chaque projet livre son texte, pas seulement son titre. */
-  .swiss details::details-content {
-    content-visibility: visible !important;
-    block-size: auto !important;
-    overflow: visible !important;
-  }
-
-  .swiss details > summary {
-    position: static !important;
-    background: none !important;
-  }
-
-  .swiss details > summary::marker,
-  .swiss details > summary::-webkit-details-marker {
-    display: none;
-  }
-
   /* La planche contact devient une double page au lieu d'une bande qui file
      hors du papier. Deux visuels par projet suffisent à un document. */
   .swiss .filmstrip {
@@ -2260,9 +2160,8 @@
     word-break: break-all;
   }
 
-  /* Une ligne de projet ne se coupe pas entre deux pages. */
+  /* Un bloc ne se coupe pas entre deux pages. */
   .swiss main section,
-  .swiss details,
   .swiss .also-list > li,
   .swiss .filmstrip > figure {
     break-inside: avoid;
@@ -2652,4 +2551,50 @@
 .swiss:not([data-swiss-theme="dark"]) .swiss-cursor[data-sur-bande] {
   --ink: #f8f2e6;
   --paper: #151415;
+}
+
+/* L'index en cartes, sur deux colonnes dès la tablette. */
+.swiss .work-grille {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 36px 20px;
+}
+
+@media (min-width: 768px) {
+  .swiss .work-grille {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.swiss .work-carte {
+  display: block;
+}
+
+.swiss .work-legende {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 16px;
+  color: var(--ink);
+  transition: color 200ms;
+}
+
+.swiss .work-carte:hover .work-legende,
+.swiss .work-carte:focus-visible .work-legende {
+  color: var(--accent-texte);
+}
+
+/* Page projet : les visuels en grand, les uns sous les autres. */
+.swiss .filmstrip.filmstrip-pile {
+  display: grid;
+  gap: 20px;
+  overflow: visible;
+  scroll-snap-type: none;
+}
+
+.swiss .work-voisin {
+  font-size: clamp(1.375rem, 2.6vw, 2rem);
+  line-height: 1.1;
+  letter-spacing: -0.035em;
 }

@@ -11,7 +11,8 @@ interface Props {
   // Les planches de projet sont des photographies, cadrées en 3:2. Une affiche
   // ne se recadre pas : la variante « poster » fixe la hauteur et laisse
   // chaque feuille prendre la largeur de son propre format.
-  variant?: 'landscape' | 'poster';
+  // La variante « pile » pose les visuels en grand, les uns sous les autres.
+  variant?: 'landscape' | 'poster' | 'pile';
   // Une planche posée dans une colonne ne déborde pas jusqu'aux marges, et
   // n'a pas besoin de flèches : elle se parcourt au doigt ou à la molette.
   bleed?: boolean;
@@ -30,6 +31,7 @@ const {
   zoom = false,
 } = Astro.props;
 const poster = variant === 'poster';
+const pile = variant === 'pile';
 
 // Chaque visuel porte sa description quand on la lui a donnée. À défaut, on
 // se rabat sur le titre et le rang : ce n'est pas une description, mais c'est
@@ -72,8 +74,8 @@ const agrandis = await Promise.all(
 <div class="filmstrip-wrap relative">
   <div
     class:list={[
-      'filmstrip flex snap-x snap-mandatory gap-[10px] overflow-x-auto',
-      bleed && '-mx-[20px] px-[20px] md:-mx-[40px] md:px-[40px]',
+      pile ? 'filmstrip filmstrip-pile' : 'filmstrip flex snap-x snap-mandatory gap-[10px] overflow-x-auto',
+      bleed && !pile && '-mx-[20px] px-[20px] md:-mx-[40px] md:px-[40px]',
     ]}
     role="group"
     aria-label={`${title} — ${resolved.length} images`}
@@ -83,17 +85,17 @@ const agrandis = await Promise.all(
       resolved.map((entry, i) => (
         <figure
           class:list={[
-            'm-0 shrink-0 snap-start',
-            poster ? 'h-[64vw] max-h-[460px] md:h-[460px]' : 'w-[78vw] md:w-[440px]',
+            pile ? 'm-0' : 'm-0 shrink-0 snap-start',
+            !pile && (poster ? 'h-[64vw] max-h-[460px] md:h-[460px]' : 'w-[78vw] md:w-[440px]'),
           ]}
         >
           <Picture
             src={entry.asset!}
             alt={entry.alt ?? `${title} — image ${i + 1} of ${resolved.length}`}
             formats={['avif']}
-            widths={poster ? [340, 520, 700] : [440, 660, 880]}
-            sizes={poster ? '(min-width: 768px) 330px, 46vw' : '(min-width: 768px) 440px, 78vw'}
-            quality={poster ? 68 : 62}
+            widths={pile ? [800, 1200, 1600] : poster ? [340, 520, 700] : [440, 660, 880]}
+            sizes={pile ? '(min-width: 1440px) 1360px, 94vw' : poster ? '(min-width: 768px) 330px, 46vw' : '(min-width: 768px) 440px, 78vw'}
+            quality={pile ? 72 : poster ? 68 : 62}
             loading="lazy"
             decoding="async"
             data-agrandi={agrandis[i]?.srcset}
@@ -102,7 +104,7 @@ const agrandis = await Promise.all(
             role={zoom ? 'button' : undefined}
             aria-label={zoom ? `Enlarge — ${entry.alt ?? `${title}, image ${i + 1} of ${resolved.length}`}` : undefined}
             pictureAttributes={{ class: poster ? 'block h-full' : 'block' }}
-            class:list={[poster ? 'h-full w-auto object-contain' : 'aspect-[3/2] w-full object-cover']}
+            class:list={[pile ? 'h-auto w-full' : poster ? 'h-full w-auto object-contain' : 'aspect-[3/2] w-full object-cover']}
           />
         </figure>
       ))

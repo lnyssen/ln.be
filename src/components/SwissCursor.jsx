@@ -64,18 +64,8 @@ function labelFor(node) {
   // La loupe couvre tout : elle se referme d'un clic, où qu'il tombe.
   if (node.closest('[data-loupe]')) return 'CLOSE';
 
-  // Un visuel de planche s'agrandit. La règle passe avant celle de la ligne
-  // dépliée, qui referme tout le reste.
+  // Un visuel de planche s'agrandit.
   if (node.closest('.filmstrip img')) return 'ZOOM';
-
-  const summary = node.closest('summary');
-  if (summary) {
-    return summary.closest('details')?.open ? 'CLOSE' : 'VIEW';
-  }
-
-  // Dans une ligne dépliée — visuels compris — tout referme, sauf les liens.
-  const open = node.closest('details[open]');
-  if (open && !node.closest('a, button')) return 'CLOSE';
 
   if (node.closest('[data-back-top]')) return { mot: 'Back to top', signe: 'TOP' };
   if (node.closest('[data-accent-cycle]')) return 'TINT';
@@ -101,6 +91,7 @@ function labelFor(node) {
   if (href === '/lab') return 'EXPLORE';
   if (href === '/shapes') return 'ENJOY';
   if (href === '/notes' || href.startsWith('/notes/')) return 'READ';
+  if (href.startsWith('/work/')) return 'VIEW';
   if (href.startsWith('mailto:')) return 'MAIL';
   if (href.startsWith('tel:')) return 'CALL';
   if (link.target === '_blank' || /^https?:/.test(href)) return 'VISIT';
@@ -187,12 +178,6 @@ export default function SwissCursor() {
 
     const onLeave = () => setVisible(false);
 
-    // L'étiquette d'une ligne d'index bascule VIEW / CLOSE à l'ouverture.
-    const onToggle = () => {
-      const hovered = document.querySelector('summary:hover');
-      if (hovered) setLabel(labelFor(hovered));
-    };
-
     // Le disque rattrape le pointeur au lieu de lui coller : 0,13 laisse une
     // traîne perceptible sans que l'écart devienne gênant au clic, puisque
     // c'est le pointeur réel, invisible, qui atteint la cible.
@@ -217,14 +202,12 @@ export default function SwissCursor() {
     window.addEventListener('pointermove', onMove);
     window.addEventListener('scrollend', onScrollEnd, { passive: true });
     document.addEventListener('pointerleave', onLeave);
-    document.addEventListener('toggle', onToggle, true);
     frame = requestAnimationFrame(tick);
 
     return () => {
       window.removeEventListener('pointermove', onMove);
       window.removeEventListener('scrollend', onScrollEnd);
       document.removeEventListener('pointerleave', onLeave);
-      document.removeEventListener('toggle', onToggle, true);
       cancelAnimationFrame(frame);
     };
   }, []);

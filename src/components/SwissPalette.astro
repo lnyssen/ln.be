@@ -19,7 +19,7 @@ const entrees: Entree[] = [
   ...projects.map((p) => ({
     label: p.data.title,
     genre: 'Project',
-    href: `/#${chemin(p)}`,
+    href: `/work/${chemin(p)}`,
     // Les tags entrent dans la recherche sans s'afficher : on tape « print »
     // et les projets d'impression remontent.
     mots: (p.data.tags ?? []).join(' '),

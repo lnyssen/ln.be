@@ -1,12 +1,11 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { getCollection } from 'astro:content';
 import SwissLayout from '../layouts/SwissLayout.astro';
 import SwissHeader from '../components/SwissHeader.astro';
 import SwissFooter from '../components/SwissFooter.astro';
 import also from '../data/also.json';
 import SwissArrow from '../components/SwissArrow.astro';
-import SwissFilmstrip from '../components/SwissFilmstrip.astro';
-import { Picture } from 'astro:assets';
+import { Image, Picture } from 'astro:assets';
 import { resolveImage } from '../lib/images';
 
 const projects = (await getCollection('projects')).sort(
@@ -15,15 +14,13 @@ const projects = (await getCollection('projects')).sort(
 
 // Le corps markdown est optionnel : on ne rend le composant que s'il y a du
 // texte, sinon la planche reste seule.
-const rendered = await Promise.all(
-  projects.map(async (project) => {
-    const { Content, remarkPluginFrontmatter } = await render(project);
-    // Un projet sans texte ne doit pas ouvrir un bloc vide.
-    const hasBody = Boolean((project.body ?? '').trim());
-    const slug = String(project.data.slug ?? (project as any).slug ?? project.id).replace(/\.md$/, '');
-    return { project, slug, Body: hasBody ? Content : null, remarkPluginFrontmatter };
-  })
-);
+const rendered = projects.map((project) => {
+  const slug = String(project.data.slug ?? (project as any).slug ?? project.id).replace(/\.md$/, '');
+  // La carte montre le deuxième visuel : le premier est déjà dans la vitrine.
+  const visuel = project.data.images?.[1] ?? project.data.images?.[0];
+  const couverture = resolveImage(typeof visuel === 'string' ? visuel : visuel?.src);
+  return { project, slug, couverture };
+});
 
 // La bande d'images : le premier visuel de chaque projet, dans l'ordre de
 // l'index. C'est ce qu'on voit en arrivant, avant même d'ouvrir une ligne.
@@ -113,7 +110,7 @@ function domainLabel(link: string) {
                   {vitrine.map((v, i) => (
                     <li class="shrink-0">
                       <a
-                        href={`#${v.slug}`}
+                        href={`/work/${v.slug}`}
                         data-ouvrir={v.slug}
                         data-titre={v.title}
                         tabindex={tour === 1 ? -1 : undefined}
@@ -190,81 +187,37 @@ function domainLabel(link: string) {
       </div>
     </section>
 
-    <!-- Index des projets. Chaque ligne est un <details> : la planche s'ouvre
-         au clic, donc au doigt comme à la souris, sans JavaScript. -->
+    <!-- Index des projets, en cartes : chacune mène à la page du projet. -->
     <section id="work" class="swiss-shell">
       <div class="swiss-grid gap-y-4 border-t border-[var(--rule)]" data-reveal>
         <h2 class="section-label swiss-meta col-span-6 text-[var(--ink-soft)] md:col-span-2">
           Selected work
         </h2>
 
-        <div class="col-span-6 md:col-span-10">
+        <div class="work-grille col-span-6 md:col-span-10">
           {
-            rendered.map(({ project, slug, Body }, i) => (
-              <details name="work" id={slug} class="group border-b border-[var(--rule)] last:border-b-0" data-slug={slug} data-reveal>
-                <!-- Grille explicite : le repli en flex désalignait tout sur
-                     mobile. Colonne 1 le numéro, colonne 2 le titre et les
-                     tags calés dessous, l'étiquette toujours à droite. -->
-                <summary class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-[9px] py-[26px] hover:text-[var(--accent-texte)] sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]">
-                  <h3 class="swiss-row-title col-start-1 row-start-1">{project.data.title}</h3>
-
-                  <span class="swiss-meta col-start-1 col-end-2 row-start-2 text-[var(--ink-soft)] sm:col-start-2 sm:col-end-3 sm:row-start-1">
-                    {project.data.tags.join(', ')}
-                  </span>
-
-                  <!-- Un signe plutôt qu'un verbe : le pointeur dit déjà VIEW
-                       et CLOSE au survol, mais au doigt il n'y a pas de
-                       pointeur — le repère doit donc rester. -->
-                  <span
-                    class="col-start-2 row-start-1 row-span-2 flex h-[16px] w-[16px] items-center justify-center justify-self-end self-center text-[var(--ink-soft)] group-open:text-[var(--accent-texte)] sm:col-start-3 sm:row-span-1"
-                    aria-hidden="true"
-                  >
-                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4">
-                      <path d="M0 7h14" />
-                      <path d="M7 0v14" class="origin-center transition-transform duration-300 ease-out group-open:rotate-90 group-open:opacity-0" />
-                    </svg>
-                  </span>
-                </summary>
-
-                <!-- Quatre points de marge en haut : le contenu de la ligne
-                     est rogné à ras bord le temps de l'ouverture, et le
-                     contour du bouton y laissait son filet supérieur. -->
-                <div class="pt-[4px] pb-[22px]">
-                  <!-- L'adresse suit le texte dans sa colonne. Sous les
-                       visuels, elle n'était trouvée que par ceux qui poussaient
-                       la planche jusqu'au bout ; rangée dans la colonne de
-                       droite, elle flottait seule dans un pan vide. Ici elle
-                       tombe là où l'œil arrive en finissant de lire, et
-                       téléphone comme grand écran la placent au même endroit.
-                       Les visuels restent en dessous, donc vus avant qu'on
-                       parte. -->
-                  <div class="swiss-grid mb-[22px] gap-y-[20px]">
-                    {Body && (
-                      <div class="project-body col-span-6 text-[16px] leading-[1.55] text-[var(--ink-soft)] md:col-span-7 md:text-[17px]">
-                        <Body />
-                      </div>
-                    )}
-
-                    {project.data.link && (
-                      <div class="col-span-6 md:col-span-7">
-                        <a
-                          href={project.data.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          data-cursor-mirror={domainLabel(project.data.link)}
-                          data-cursor-ink="var(--ink)"
-                          class="inline-flex items-center gap-[10px] rounded-full border border-[var(--ink)] px-[24px] py-[11px] text-[15px] font-medium tracking-[-0.01em] text-[var(--ink)] bouton-accent hover:bg-[var(--ink)] hover:text-[var(--paper)]"
-                        >
-                          {domainLabel(project.data.link)}
-                          <SwissArrow size={16} />
-                        </a>
-                      </div>
-                    )}
+            rendered.map(({ project, slug, couverture }) => (
+              <a href={`/work/${slug}`} class="work-carte group" data-slug={slug} data-reveal>
+                {couverture && (
+                  <Image
+                    src={couverture}
+                    alt=""
+                    widths={[480, 720, 1000]}
+                    sizes="(min-width: 768px) 40vw, 90vw"
+                    format="webp"
+                    quality={72}
+                    loading="lazy"
+                    class="work-couverture aspect-[3/2] w-full object-cover"
+                  />
+                )}
+                <div class="work-legende">
+                  <div class="min-w-0">
+                    <h3 class="swiss-row-title">{project.data.title}</h3>
+                    <p class="swiss-meta mt-[9px] text-[var(--ink-soft)]">{project.data.tags.join(', ')}</p>
                   </div>
-
-                  <SwissFilmstrip images={project.data.images} title={project.data.title} zoom />
+                  <SwissArrow direction="right" size={20} />
                 </div>
-              </details>
+              </a>
             ))
           }
         </div>
@@ -407,78 +360,12 @@ function domainLabel(link: string) {
   <SwissFooter />
 
   <script is:inline data-astro-rerun>
-    // Un visuel de la vitrine ouvre sa ligne dans l'index et la ramène sous
-    // la barre. Sans script, le lien descend simplement à la liste.
-    //
-    // La cible se calcule sur la mise en page finale, pas sur celle du
-    // moment. Ouvrir une ligne referme celle qui l'était — en animation, si
-    // bien que la page raccourcissait pendant le défilement et qu'on arrivait
-    // trop bas. Les lignes pas encore révélées portaient aussi leur décalage
-    // d'entrée. On coupe donc les animations le temps d'une image, on met la
-    // page dans son état final, on mesure, puis on défile.
+    // Les adresses déjà partagées, de la forme laurentnyssen.be/#moires,
+    // mènent à la page du projet.
     (() => {
-      const ouvrirProjet = (slug, doux = true) => {
-        const ligne = document.querySelector(`#work details[data-slug="${CSS.escape(slug)}"]`);
-        if (!ligne) return false;
-
-        const racine = document.documentElement;
-        racine.classList.add('sans-filer');
-
-        for (const el of document.querySelectorAll('main [data-reveal]')) {
-          const avant = el.compareDocumentPosition(ligne) & Node.DOCUMENT_POSITION_FOLLOWING;
-          if (avant || el === ligne || el.contains(ligne)) el.classList.add('is-in');
-        }
-        for (const autre of document.querySelectorAll('#work details[open]')) {
-          if (autre !== ligne) autre.open = false;
-        }
-        ligne.open = true;
-
-        // La ligne ouverte colle sous la barre : on s'aligne sur ce même arrêt.
-        // On mesure la ligne elle-même, pas son intitulé, qui une fois collant
-        // donnerait sa position figée plutôt que sa place.
-        const summary = ligne.querySelector(':scope > summary');
-        const arret = parseFloat(getComputedStyle(summary).top) || 0;
-        const y = ligne.getBoundingClientRect().top + scrollY - arret;
-
-        requestAnimationFrame(() => {
-          racine.classList.remove('sans-filer');
-          scrollTo({ top: Math.max(0, y), behavior: doux ? 'smooth' : 'instant' });
-        });
-        return true;
-      };
-
-      // Les écouteurs du document survivent aux navigations internes : on les
-      // pose une seule fois, et ils appellent la version courante.
-      window.__ouvrirProjet = ouvrirProjet;
-      if (!window.__ouvrirInstalle) {
-        window.__ouvrirInstalle = true;
-        document.addEventListener('click', (event) => {
-          const lien = event.target.closest('[data-ouvrir]');
-          if (!lien) return;
-          if (window.__ouvrirProjet?.(lien.dataset.ouvrir)) event.preventDefault();
-        });
-        addEventListener('hashchange', () => {
-          const slug = decodeURIComponent(location.hash.slice(1));
-          if (slug) window.__ouvrirProjet?.(slug, true);
-        });
-      }
-
-      // Une adresse de la forme laurentnyssen.be/#moires ouvre encore Moirés :
-      // les liens déjà partagés continuent de marcher. Mais ouvrir une ligne
-      // n'écrit plus rien dans la barre d'adresse — on lisait « #exaequo »
-      // derrière le nom du site en parcourant l'index, ce qui n'apprend rien
-      // à qui lit et salit ce qu'on copie.
-
-      const depuisAdresse = (doux) => {
-        const slug = decodeURIComponent(location.hash.slice(1));
-        if (slug) ouvrirProjet(slug, doux);
-      };
-      // À l'arrivée, on attend la fonte et la mise en page pour mesurer juste.
-      if (location.hash) {
-        if (document.fonts?.ready) document.fonts.ready.then(() => depuisAdresse(false));
-        // Les images chargées peuvent encore décaler la page : un dernier
-        // recalage, sans animation, une fois tout arrivé.
-        addEventListener('load', () => depuisAdresse(false), { once: true });
+      const slug = decodeURIComponent(location.hash.slice(1));
+      if (slug && document.querySelector(`.work-carte[data-slug="${CSS.escape(slug)}"]`)) {
+        location.replace(`/work/${slug}`);
       }
     })();
   </script>
@@ -853,91 +740,6 @@ function domainLabel(link: string) {
     })();
   </script>
 
-  <script is:inline data-astro-rerun>
-    // Un clic n'importe où dans une ligne dépliée la referme et la ramène au
-    // centre. Les liens gardent la main.
-    (() => {
-      // Clavier : la page s'appelle Index, elle se parcourt donc au clavier.
-      // ↑ ↓ d'un projet à l'autre, Entrée ouvre, Échap ferme, ← → dans la
-      // planche du projet ouvert.
-      const rows = [...document.querySelectorAll('#work details')];
-      const summaries = rows.map((row) => row.querySelector('summary'));
-
-      document.addEventListener('keydown', (event) => {
-        if (event.metaKey || event.ctrlKey || event.altKey) return;
-        const tag = event.target?.tagName;
-        if (tag === 'INPUT' || tag === 'TEXTAREA' || event.target?.isContentEditable) return;
-
-        // La loupe est au premier plan : tant qu'elle est ouverte, le clavier
-        // lui appartient. Sans cela, Échap refermait la loupe et la ligne d'un
-        // même coup, et l'on se retrouvait deux crans en arrière.
-        if (document.querySelector('[data-loupe]')) return;
-
-        const openRow = rows.find((row) => row.open);
-
-        if (event.key === 'Escape' && openRow) {
-          event.preventDefault();
-          openRow.open = false;
-          openRow.querySelector('summary')?.focus();
-          return;
-        }
-
-        if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
-          if (!openRow) return;
-          const strip = openRow.querySelector('.filmstrip');
-          const figure = strip?.querySelector('figure');
-          if (!strip || !figure) return;
-          event.preventDefault();
-          window.__filmstripAller?.(strip, event.key === 'ArrowRight' ? 1 : -1);
-          return;
-        }
-
-        if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return;
-
-        const current = summaries.indexOf(document.activeElement?.closest('summary'));
-        const next = current === -1
-          ? 0
-          : Math.min(summaries.length - 1, Math.max(0, current + (event.key === 'ArrowDown' ? 1 : -1)));
-
-        event.preventDefault();
-        summaries[next]?.focus();
-        summaries[next]?.scrollIntoView({ block: 'center', behavior: 'smooth' });
-      });
-
-      // Une ligne qui s'ouvre ou se ferme ne doit pas emporter la page. Son
-      // titre est collant tant qu'elle est ouverte : en se refermant il
-      // retrouve sa place naturelle, très au-dessus, et la vue sautait avec
-      // lui. On note où il est avant, et on rattrape l'écart au pixel après.
-      // Le défilement doit être sec : `scroll-behavior: smooth` s'applique
-      // aussi aux défilements programmés, et filerait sur toute la distance.
-      const pin = (row) => {
-        const summary = row.querySelector(':scope > summary');
-        if (!summary) return;
-        const before = summary.getBoundingClientRect().top;
-        requestAnimationFrame(() => {
-          const delta = summary.getBoundingClientRect().top - before;
-          if (Math.abs(delta) > 1) scrollBy({ top: delta, behavior: 'instant' });
-        });
-      };
-
-
-      for (const row of document.querySelectorAll('#work details')) {
-        const summary = row.querySelector(':scope > summary');
-        // Le clic précède la bascule : c'est le moment de relever la position.
-        summary?.addEventListener('click', () => pin(row));
-
-        const panel = row.querySelector(':scope > div');
-        if (!panel) continue;
-
-        // Cliquer dans la planche referme la ligne, sans bouger la page.
-        panel.addEventListener('click', (event) => {
-          if (event.target.closest('a, button, .filmstrip img')) return;
-          pin(row);
-          row.open = false;
-        });
-      }
-    })();
-  </script>
   <script is:inline data-astro-rerun>
     // La phrase se dévoile au fil du défilement : chaque mot part très pâle et
     // s'allume à son tour, comme si la phrase s'écrivait à mesure qu'on la

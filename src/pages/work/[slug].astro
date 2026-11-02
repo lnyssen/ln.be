@@ -1,0 +1,93 @@
+---
+import { getCollection, render } from 'astro:content';
+import SwissLayout from '../../layouts/SwissLayout.astro';
+import SwissHeader from '../../components/SwissHeader.astro';
+import SwissFooter from '../../components/SwissFooter.astro';
+import SwissArrow from '../../components/SwissArrow.astro';
+import SwissFilmstrip from '../../components/SwissFilmstrip.astro';
+
+const chemin = (p: any) =>
+  String(p.data.slug ?? p.slug ?? p.id).replace(/\.md$/, '');
+
+export async function getStaticPaths() {
+  const projets = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+  const lien = (p: any) => String(p.data.slug ?? p.slug ?? p.id).replace(/\.md$/, '');
+  // La liste boucle : il y a toujours deux portes en bas de page.
+  const n = projets.length;
+  return projets.map((projet, i) => ({
+    params: { slug: lien(projet) },
+    props: { projet, precedent: projets[(i - 1 + n) % n], suivant: projets[(i + 1) % n] },
+  }));
+}
+
+const { projet, precedent, suivant } = Astro.props;
+const { Content } = await render(projet);
+const { title, tags, images, link } = projet.data;
+const domaine = link ? new URL(link).hostname.replace(/^www\./, '') : null;
+const resume = (projet.body ?? '').replace(/\s+/g, ' ').trim().slice(0, 155);
+---
+
+<SwissLayout title={`${title} — Laurent Nyssen`} description={resume || title}>
+  <SwissHeader current="index" />
+
+  <main id="contenu" tabindex="-1">
+    <article>
+      <header class="swiss-shell pt-[var(--section-space)]">
+        <a href="/#work" class="swiss-meta note-retour text-[var(--ink-soft)] hover:text-[var(--accent-texte)]">
+          <SwissArrow direction="left" size={12} /> Selected work
+        </a>
+
+        <h1 class="note-titre mb-[var(--section-space)]" data-reveal data-reveal-slow>{title}</h1>
+      </header>
+
+      <section class="swiss-shell">
+        <div class="swiss-grid gap-y-8 border-t border-[var(--rule)]" data-reveal data-reveal-delay="140">
+          <dl class="note-fiche swiss-meta col-span-6 md:col-span-2">
+            <div>
+              <dt class="text-[var(--ink-soft)]">Services</dt>
+              <dd>{tags.join(', ')}</dd>
+            </div>
+            {domaine && (
+              <div>
+                <dt class="text-[var(--ink-soft)]">Website</dt>
+                <dd>
+                  <a href={link} target="_blank" rel="noopener noreferrer" class="note-original">
+                    {domaine} <SwissArrow size={10} />
+                  </a>
+                </dd>
+              </div>
+            )}
+          </dl>
+
+          <div class="note-corps col-span-6 md:col-start-3 md:col-span-7">
+            <Content />
+          </div>
+        </div>
+      </section>
+
+      <section class="swiss-shell">
+        <SwissFilmstrip images={images} title={title} variant="pile" arrows={false} zoom />
+      </section>
+    </article>
+
+    <section class="swiss-shell section-renvoi">
+      <div class="swiss-grid gap-y-[var(--section-space)] border-t border-[var(--rule)]" data-reveal>
+        <div class="col-span-6 md:col-span-3 min-[901px]:col-span-6">
+          <h2 class="section-label swiss-meta text-[var(--ink-soft)]">Previous project</h2>
+          <a href={`/work/${chemin(precedent)}`} class="work-voisin lab-teaser-title mt-[16px] block font-medium transition-colors duration-200 hover:text-[var(--accent-texte)] focus-visible:text-[var(--accent-texte)]">
+            <SwissArrow direction="left" size={24} /> {precedent.data.title}
+          </a>
+        </div>
+
+        <div class="col-span-6 md:col-span-3 md:text-right min-[901px]:col-span-6">
+          <h2 class="section-label swiss-meta text-[var(--ink-soft)]">Next project</h2>
+          <a href={`/work/${chemin(suivant)}`} class="work-voisin lab-teaser-title mt-[16px] block font-medium transition-colors duration-200 hover:text-[var(--accent-texte)] focus-visible:text-[var(--accent-texte)]">
+            {suivant.data.title} <SwissArrow direction="right" size={24} />
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <SwissFooter />
+</SwissLayout>
