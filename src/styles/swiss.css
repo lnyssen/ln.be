@@ -1775,6 +1775,20 @@
        rien ne passe : le papier plein, ni verre ni transparence. */
     background-color: var(--paper);
     isolation: isolate;
+    transition: top 320ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  /* La barre se retire pendant la lecture : l'intitulé ouvert monte prendre
+     sa place, au même rythme. Sans cela, il restait collé sous une barre
+     absente, et le texte défilait dans le vide au-dessus de lui. */
+  .swiss:not(.menu-open):has(header[data-swiss-header].header-cache:not(:focus-within)) details[open] > summary {
+    top: env(safe-area-inset-top);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .swiss details[open] > summary {
+      transition: none;
+    }
   }
 
   /* Ouverture filée : le contenu passe de 0 à sa hauteur réelle. Sur un
