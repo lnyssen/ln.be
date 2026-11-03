@@ -1,7 +1,7 @@
 ---
 title: "Brin d’acier"
 slug: "brin-dacier"
-order: 5
+order: 7
 tags: ["Naming", "Visual Identity", "UI/UX", "Strategy"]
 images:
   - src: "/images/brin-dacier-1.jpg"

@@ -1,7 +1,7 @@
 ---
 title: "World Cocoa Foundation"
 slug: "world-cocoa-foundation"
-order: 9
+order: 2
 tags: ["Rebranding", "UI/UX", "Print", "Strategy"]
 images:
   - src: "/images/world-cocoa-foundation-1.jpg"

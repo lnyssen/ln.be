@@ -1,7 +1,7 @@
 ---
 title: "Mandaï Distribution"
 slug: "mandai-distribution"
-order: 2
+order: 5
 tags: ["Rebranding", "UI/UX", "E-Commerce Strategy"]
 images:
   - src: "/images/mandai-distribution-1.jpg"

@@ -1,7 +1,7 @@
 ---
 title: "Psybru"
 slug: "psybru"
-order: 6
+order: 4
 tags: ["Visual Identity", "UI/UX", "Print", "Strategy"]
 images:
   - src: "/images/psybru-1.jpg"

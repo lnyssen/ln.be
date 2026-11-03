@@ -1,7 +1,7 @@
 ---
 title: "ExAequo"
 slug: "exaequo"
-order: 7
+order: 8
 tags: ["Strategy", "Campaign", "AI"]
 images:
   - src: "/images/exaequo-1.jpg"

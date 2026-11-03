@@ -1,7 +1,7 @@
 ---
 title: "EmpreinteS"
 slug: "empreintes"
-order: 8
+order: 10
 tags: ["Visual Identity", "UI/UX", "Strategy"]
 images:
   - src: "/images/empreintes-1.jpg"
