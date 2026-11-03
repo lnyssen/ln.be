@@ -2599,57 +2599,64 @@
   letter-spacing: -0.035em;
 }
 
-/* Transition de page : la nouvelle page monte derrière un masque qui
-   s'ouvre du bas vers le haut, l'ancienne recule d'un pas et s'assombrit.
-   Au retour, le masque descend. La barre et la capsule ne bougent pas :
-   elles sont les mêmes d'une page à l'autre. */
+/* Transition de page : un rideau de la couleur d'accent. L'ancienne page se
+   referme vers le haut et découvre l'accent ; la nouvelle s'ouvre ensuite
+   depuis le bas. La bande suit la teinte choisie dans la capsule. Au retour,
+   le mouvement s'inverse. La barre et la capsule ne bougent pas : elles sont
+   les mêmes d'une page à l'autre. */
 @media (prefers-reduced-motion: no-preference) {
   [data-swiss-header] { view-transition-name: entete; }
   .swiss-dock { view-transition-name: capsule; }
   [data-dock-haut] { view-transition-name: retour-haut; }
 
+  ::view-transition {
+    background: var(--accent);
+  }
+
   ::view-transition-group(root) {
-    animation-duration: 760ms;
+    animation-duration: 900ms;
   }
 
   ::view-transition-old(root) {
-    animation: page-recule 760ms cubic-bezier(0.76, 0, 0.24, 1) both;
+    animation: rideau-ferme 900ms cubic-bezier(0.76, 0, 0.24, 1) both;
   }
 
   ::view-transition-new(root) {
-    animation: page-masque 760ms cubic-bezier(0.76, 0, 0.24, 1) both;
+    animation: rideau-ouvre 900ms cubic-bezier(0.76, 0, 0.24, 1) both;
   }
 
   html[data-astro-transition='back']::view-transition-old(root) {
-    animation-name: page-recule-retour;
+    animation-name: rideau-ferme-retour;
   }
 
   html[data-astro-transition='back']::view-transition-new(root) {
-    animation-name: page-masque-retour;
+    animation-name: rideau-ouvre-retour;
   }
 
   ::view-transition-group(entete),
   ::view-transition-group(capsule),
   ::view-transition-group(retour-haut) {
-    animation-duration: 760ms;
+    animation-duration: 900ms;
     animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
   }
 }
 
-@keyframes page-masque {
-  from { clip-path: inset(100% 0 0 0); transform: translateY(8vh); }
-  to { clip-path: inset(0 0 0 0); transform: none; }
+@keyframes rideau-ferme {
+  0% { clip-path: inset(0 0 0 0); transform: none; }
+  60%, 100% { clip-path: inset(0 0 100% 0); transform: translateY(-6vh); }
 }
 
-@keyframes page-masque-retour {
-  from { clip-path: inset(0 0 100% 0); transform: translateY(-8vh); }
-  to { clip-path: inset(0 0 0 0); transform: none; }
+@keyframes rideau-ouvre {
+  0%, 40% { clip-path: inset(100% 0 0 0); transform: translateY(6vh); }
+  100% { clip-path: inset(0 0 0 0); transform: none; }
 }
 
-@keyframes page-recule {
-  to { transform: translateY(-12vh); filter: brightness(0.55); }
+@keyframes rideau-ferme-retour {
+  0% { clip-path: inset(0 0 0 0); transform: none; }
+  60%, 100% { clip-path: inset(100% 0 0 0); transform: translateY(6vh); }
 }
 
-@keyframes page-recule-retour {
-  to { transform: translateY(12vh); filter: brightness(0.55); }
+@keyframes rideau-ouvre-retour {
+  0%, 40% { clip-path: inset(0 0 100% 0); transform: translateY(-6vh); }
+  100% { clip-path: inset(0 0 0 0); transform: none; }
 }
