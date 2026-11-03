@@ -2774,3 +2774,17 @@
 .swiss.menu-open [data-swiss-header] .header-pill {
   border-bottom-color: transparent;
 }
+
+/* Essai : le Lab en deux colonnes dès la tablette, au même pas que la
+   grille des projets. */
+.swiss .lab-grille {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  column-gap: 20px;
+}
+
+@media (min-width: 768px) {
+  .swiss .lab-grille {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
