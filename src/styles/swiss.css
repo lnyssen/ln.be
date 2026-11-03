@@ -2574,14 +2574,19 @@
   display: block;
 }
 
+/* Sous la carte, le seul titre et sa flèche, centrés l'un sur l'autre. */
 .swiss .work-legende {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 16px;
   margin-top: 16px;
   color: var(--ink);
   transition: color 200ms;
+}
+
+.swiss .work-legende .swiss-arrow {
+  vertical-align: 0;
 }
 
 .swiss .work-carte:hover .work-legende,
