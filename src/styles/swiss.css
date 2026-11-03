@@ -2697,10 +2697,11 @@
   box-shadow: none;
 }
 
-/* Essai — menu en index typographique. La capsule disparaît : la barre est
-   une bande de papier pleine largeur, fermée par un filet, avec le nom à
-   gauche et les pages numérotées à droite. La page courante prend l'accent,
-   sans pastille. Sur téléphone, le signe du menu ouvre toujours l'affiche. */
+/* Essai — menu en bande. La capsule disparaît : la barre est une bande de
+   papier pleine largeur, fermée par un filet, avec le nom à gauche et les
+   pages à droite. La pastille glisse toujours sous la page courante, et
+   Hello garde son contour. Sur téléphone, le signe du menu ouvre toujours
+   l'affiche. */
 .swiss body > header[data-swiss-header] {
   background-color: var(--paper);
   background-image: url("/images/grain-encre.png");
@@ -2711,8 +2712,7 @@
   background-image: url("/images/grain-papier.png");
 }
 
-.swiss [data-swiss-header] .header-plate,
-.swiss [data-swiss-header] .nav-pill {
+.swiss [data-swiss-header] .header-plate {
   display: none;
 }
 
@@ -2726,45 +2726,15 @@
   padding: 14px 0 16px;
 }
 
-.swiss [data-swiss-header] [data-nav] {
-  counter-reset: page;
-  gap: 26px;
+/* Le nom prend plus de place : il est seul à porter la barre. */
+.swiss [data-swiss-header] .header-pill > :first-child svg {
+  height: 38px;
 }
 
-.swiss [data-swiss-header] [data-nav-link] {
-  counter-increment: page;
-  height: auto;
-  padding: 0;
-  border-radius: 0;
-  color: var(--ink);
-}
-
-.swiss [data-swiss-header] [data-nav-link]::before {
-  content: "0" counter(page);
-  margin-right: 0.55em;
-  color: var(--ink-soft);
-}
-
-.swiss [data-swiss-header] [data-nav-link].is-lit,
-.swiss [data-swiss-header] [data-nav-link][aria-current="page"],
-.swiss [data-swiss-header] [data-nav-link][aria-current="page"]::before,
-.swiss [data-swiss-header] [data-nav-link]:hover,
-.swiss [data-swiss-header] [data-nav-link]:hover::before {
-  color: var(--accent-texte);
-}
-
-.swiss [data-swiss-header] a[href^="mailto:"] {
-  height: auto;
-  padding: 0;
-  border: 0;
-  border-radius: 0;
-  background: none;
-  margin-left: 10px;
-}
-
-.swiss [data-swiss-header] a[href^="mailto:"]:hover {
-  background: none;
-  color: var(--accent-texte);
+@media (min-width: 768px) {
+  .swiss [data-swiss-header] .header-pill > :first-child svg {
+    height: 46px;
+  }
 }
 
 .swiss.menu-open body > header[data-swiss-header] {
