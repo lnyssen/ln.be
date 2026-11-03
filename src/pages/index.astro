@@ -78,63 +78,61 @@ function domainLabel(link: string) {
            964 px sur un écran de 800 — on arrivait toujours sans une image.
            Un visuel mène à sa ligne, qui s'ouvre. La bande est doublée pour
            boucler sans couture ; la copie est cachée aux lecteurs d'écran. -->
-      <div class="vitrine relative border-t border-[var(--rule)]" role="region" aria-label="Project preview" data-reveal data-reveal-slow data-reveal-delay="80">
-        <!-- La bande avance seule : il faut pouvoir l'arrêter, et pas
-             seulement en la survolant ou en y entrant au clavier. La commande
-             se voit, se prend au doigt comme au clavier, et dit son état. Elle
-             se retire quand le système demande moins de mouvement : la bande
-             ne bouge alors pas, il n'y a rien à arrêter. -->
-        <button
-          type="button"
-          data-vitrine-pause
-          aria-pressed="false"
-          aria-label="Pause the showcase"
-          class="vitrine-pause strip-nav absolute right-[20px] top-[16px] z-10 flex h-[34px] w-[34px] items-center justify-center rounded-full text-[var(--paper)] md:right-[40px]"
-        >
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true" class="pause-signe">
-            <g class="signe-barres">
-              <rect x="2" y="1.5" width="3" height="9" rx="1" />
-              <rect x="7" y="1.5" width="3" height="9" rx="1" />
-            </g>
-            <path class="signe-triangle" d="M3 1.8 10.2 6 3 10.2Z" />
-          </svg>
-        </button>
+      <!-- La vitrine : une seule grande image à la fois, celle d'un projet,
+           qui cède la place à la suivante toutes les trois secondes. Le nom
+           du projet est écrit dessous. Elle s'arrête au survol, au clavier,
+           sur commande, et ne bouge pas quand le système demande moins de
+           mouvement. -->
+      <div class="vitrine diaporama border-t border-[var(--rule)]" role="region" aria-roledescription="carousel" aria-label="Selected projects" data-reveal data-reveal-slow data-reveal-delay="80">
+        <div class="diapo-cadre">
+          {
+            vitrine.map((v, i) => (
+              <a
+                href={`/work/${v.slug}`}
+                data-ouvrir={v.slug}
+                data-titre={v.title}
+                data-diapo
+                class:list={['diapo', i === 0 && 'est-active']}
+                hidden={i > 1 ? true : undefined}
+                aria-hidden={i === 0 ? undefined : 'true'}
+                tabindex={i === 0 ? undefined : -1}
+              >
+                <Picture
+                  src={v.asset!}
+                  alt={v.title}
+                  formats={['avif']}
+                  widths={[600, 900, 1200, 1600, 2000]}
+                  sizes="(min-width: 1440px) 1360px, 94vw"
+                  quality={62}
+                  loading={i === 0 ? 'eager' : 'lazy'}
+                  fetchpriority={i === 0 ? 'high' : undefined}
+                  decoding="async"
+                  draggable="false"
+                  pictureAttributes={{ class: 'block h-full' }}
+                  class="diapo-image h-full w-full object-cover"
+                />
+              </a>
+            ))
+          }
+        </div>
 
-        <div class="marquee marquee-images overflow-hidden">
-          <div class="marquee-track flex w-max">
-            {
-              [0, 1].map((tour) => (
-                <ul class="flex shrink-0 list-none gap-[10px] pr-[10px]" aria-hidden={tour === 1 ? 'true' : undefined}>
-                  {vitrine.map((v, i) => (
-                    <li class="shrink-0">
-                      <a
-                        href={`/work/${v.slug}`}
-                        data-ouvrir={v.slug}
-                        data-titre={v.title}
-                        tabindex={tour === 1 ? -1 : undefined}
-                        class="vitrine-lien block"
-                      >
-                        <Picture
-                          src={v.asset!}
-                          alt={v.title}
-                          formats={['avif']}
-                          widths={[300, 450, 600, 690, 800, 1000]}
-                          sizes="(min-width: 768px) and (max-height: 900px) 450px, (min-width: 768px) 690px, 300px"
-                          quality={58}
-                          loading={i < 3 && tour === 0 ? 'eager' : 'lazy'}
-                          fetchpriority={i < 2 && tour === 0 ? 'high' : undefined}
-                          decoding="async"
-                          draggable="false"
-                          pictureAttributes={{ class: 'block' }}
-                          class="vitrine-image aspect-[3/2] object-cover"
-                        />
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              ))
-            }
-          </div>
+        <div class="diapo-legende">
+          <p class="swiss-row-title" aria-live="off" data-diapo-titre>{vitrine[0]?.title}</p>
+          <button
+            type="button"
+            data-vitrine-pause
+            aria-pressed="false"
+            aria-label="Pause the slideshow"
+            class="vitrine-pause swiss-meta flex h-[34px] w-[34px] shrink-0 items-center justify-center rounded-full border border-[var(--rule)] transition-colors duration-200 hover:border-[var(--accent)]"
+          >
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true" class="pause-signe">
+              <g class="signe-barres">
+                <rect x="2" y="1.5" width="3" height="9" rx="1" />
+                <rect x="7" y="1.5" width="3" height="9" rx="1" />
+              </g>
+              <path class="signe-triangle" d="M3 1.8 10.2 6 3 10.2Z" />
+            </svg>
+          </button>
         </div>
       </div>
 
@@ -509,200 +507,59 @@ function domainLabel(link: string) {
   </script>
 
   <script is:inline data-astro-rerun>
-    // La vitrine avance seule, ralentit au survol, et se prend en main : on
-    // la fait glisser au doigt ou à la souris, on la pousse au pavé tactile.
-    // Relâchée, elle garde un peu d'élan puis reprend son allure. Un
-    // glissement n'ouvre pas le projet sous le doigt ; un toucher, si.
+    // Le diaporama de la vitrine : une image toutes les trois secondes, en
+    // fondu. Seules l'image affichée et la suivante sont dans la page ; les
+    // autres attendent leur tour, et ne se chargent qu'à leur approche.
     (() => {
-      const bande = document.querySelector('.marquee-images');
-      const piste = bande?.querySelector('.marquee-track');
-      if (!piste) return;
+      const cadre = document.querySelector('.diaporama');
+      if (!cadre) return;
+      const diapos = [...cadre.querySelectorAll('[data-diapo]')];
+      const titre = cadre.querySelector('[data-diapo-titre]');
+      const bouton = cadre.querySelector('[data-vitrine-pause]');
+      if (diapos.length < 2) return;
       const calme = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      // Cent cinquante pixels par seconde sur grand écran, où la bande est
-      // large et se traverse lentement ; sur téléphone, où l'écran est étroit,
-      // cent quarante suffisent à donner la même vitesse apparente.
-      const telephone = matchMedia('(max-width: 767px)');
-      const allure = () => (calme ? 0 : telephone.matches ? 140 : 150);
-      let decal = 0;
-      let facteur = 1;
-      let cible = 1;
-      let elan = 0;
-      let prise = null;
+      let courante = 0;
       let arret = false;
-      let aGlisse = false;
-      let dernier = 0;
+      let survol = false;
       let visible = true;
 
-      const moitie = () => piste.scrollWidth / 2 || 1;
-      const poser = () => {
-        const m = moitie();
-        decal = ((decal % m) + m) % m;
-        piste.style.transform = `translate3d(${-decal}px, 0, 0)`;
-      };
-
-      const tick = (t) => {
-        const dt = Math.min(0.05, (t - (dernier || t)) / 1000);
-        dernier = t;
-        facteur += (cible - facteur) * (1 - Math.exp(-dt / 0.18));
-        if (!prise && !arret) {
-          decal += (allure() * facteur + elan) * dt;
-          elan *= Math.exp(-dt / 0.35);
-          if (Math.abs(elan) < 2) elan = 0;
+      const montrer = (n) => {
+        const avant = diapos[courante];
+        courante = (n + diapos.length) % diapos.length;
+        const apres = diapos[courante];
+        apres.hidden = false;
+        avant.classList.remove('est-active');
+        apres.classList.add('est-active');
+        for (const d of diapos) {
+          const active = d === apres;
+          d.setAttribute('aria-hidden', active ? 'false' : 'true');
+          d.tabIndex = active ? 0 : -1;
         }
-        poser();
-        if (visible) requestAnimationFrame(tick);
-        else dernier = 0;
+        if (titre) titre.textContent = apres.dataset.titre;
+        // La suivante entre dans la page pour se charger à l'avance.
+        diapos[(courante + 1) % diapos.length].hidden = false;
       };
 
-      new IntersectionObserver(([entree]) => {
-        const avant = visible;
-        visible = entree.isIntersecting;
-        if (visible && !avant) requestAnimationFrame(tick);
-      }).observe(bande);
-      requestAnimationFrame(tick);
+      const tourne = () => !arret && !survol && visible && !calme;
+      setInterval(() => {
+        if (tourne()) montrer(courante + 1);
+      }, 3000);
 
-      bande.addEventListener('pointerenter', (e) => {
-        if (e.pointerType === 'mouse' && !arret) cible = 0.2;
-      });
-      bande.addEventListener('pointerleave', () => {
-        if (!arret) cible = clavier ? 0 : 1;
-      });
+      new IntersectionObserver(([e]) => { visible = e.isIntersecting; }).observe(cadre);
+      cadre.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') survol = true; });
+      cadre.addEventListener('pointerleave', () => { survol = false; });
+      cadre.addEventListener('focusin', () => { survol = true; });
+      cadre.addEventListener('focusout', (e) => { if (!cadre.contains(e.relatedTarget)) survol = false; });
 
-      // La commande d'arrêt. Arrêtée, la bande ne repart ni au survol, ni au
-      // défilement de la page : le visiteur l'a arrêtée, elle reste arrêtée.
-      const bouton = document.querySelector('[data-vitrine-pause]');
       if (bouton) {
         if (calme) bouton.hidden = true;
         bouton.addEventListener('click', () => {
           arret = !arret;
-          elan = 0;
-          cible = arret ? 0 : clavier ? 0 : 1;
-          if (arret) facteur = 0;
           bouton.setAttribute('aria-pressed', String(arret));
-          bouton.setAttribute('aria-label', arret ? 'Play the showcase' : 'Pause the showcase');
+          bouton.setAttribute('aria-label', arret ? 'Play the slideshow' : 'Pause the slideshow');
         });
       }
-
-      // Au clavier, la bande s'arrête net tant que le focus y est — un
-      // contenu qui défile seul doit pouvoir s'arrêter — et elle amène
-      // l'image qui a le focus sous les yeux. Le navigateur, lui, faisait
-      // défiler la bande de travers pour montrer le lien, en plus de notre
-      // propre défilement.
-      let clavier = false;
-      bande.addEventListener('focusin', (e) => {
-        const li = e.target.closest('li');
-        if (!li) return;
-        clavier = true;
-        cible = 0;
-        facteur = 0;
-        elan = 0;
-      });
-
-      // Pour montrer un lien qui reçoit le focus, le navigateur fait défiler
-      // la bande lui-même, par-dessus notre propre décalage. On reprend ce
-      // défilement à notre compte : il devient du décalage, et la bande
-      // reste à zéro. L'image arrive sous les yeux, une seule fois.
-      bande.addEventListener('scroll', () => {
-        const x = bande.scrollLeft;
-        if (!x) return;
-        bande.scrollLeft = 0;
-        decal += x;
-        poser();
-      });
-      bande.addEventListener('focusout', (e) => {
-        if (bande.contains(e.relatedTarget)) return;
-        clavier = false;
-        cible = 1;
-      });
-
-      // La bande suit la main. Le défilement de la page lui donne une
-      // impulsion dans le sens du geste, qu'elle perd ensuite comme après un
-      // glissement — c'est le même élan, nourri autrement. Elle ne suit rien
-      // pendant une prise, au clavier, hors de l'écran, ni quand on demande
-      // moins de mouvement.
-      let dernierY = scrollY;
-      let dernierT = performance.now();
-      addEventListener(
-        'scroll',
-        () => {
-          const t = performance.now();
-          if (calme || arret || prise || clavier || !visible) {
-            dernierY = scrollY;
-            dernierT = t;
-            return;
-          }
-          const dt = Math.max(16, t - dernierT);
-          const vitesse = ((scrollY - dernierY) / dt) * 1000;
-          dernierY = scrollY;
-          dernierT = t;
-          // Un huitième de la vitesse du doigt, et jamais plus de trois cent
-          // cinquante pixels par seconde : au-delà, la bande part en trombe et
-          // l'on ne lit plus les visuels. C'est une inclinaison, pas un
-          // entraînement.
-          elan = Math.max(-350, Math.min(350, elan + vitesse * 0.12));
-        },
-        { passive: true },
-      );
-
-      // Pavé tactile et molette horizontale : la bande suit le geste.
-      bande.addEventListener(
-        'wheel',
-        (e) => {
-          if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
-          e.preventDefault();
-          decal += e.deltaX;
-          elan = 0;
-          poser();
-        },
-        { passive: false },
-      );
-
-      // Glisser, au doigt comme à la souris.
-      bande.addEventListener('pointerdown', (e) => {
-        if (e.pointerType === 'mouse' && e.button !== 0) return;
-        prise = { id: e.pointerId, x: e.clientX, y: e.clientY, depart: decal, t: e.timeStamp, vx: 0, tenu: false };
-        aGlisse = false;
-        elan = 0;
-      });
-      bande.addEventListener('pointermove', (e) => {
-        if (!prise || e.pointerId !== prise.id) return;
-        const dx = e.clientX - prise.x;
-        const dy = e.clientY - prise.y;
-        if (!prise.tenu) {
-          if (Math.abs(dx) < 6 || Math.abs(dx) < Math.abs(dy)) return;
-          prise.tenu = true;
-          aGlisse = true;
-          try {
-            bande.setPointerCapture(e.pointerId);
-          } catch {}
-        }
-        const dt = Math.max(1, e.timeStamp - prise.t);
-        const nouveau = prise.depart - dx;
-        prise.vx = ((nouveau - decal) / dt) * 1000 * 0.6 + prise.vx * 0.4;
-        prise.t = e.timeStamp;
-        decal = nouveau;
-        poser();
-      });
-      const lacher = (e) => {
-        if (!prise || e.pointerId !== prise.id) return;
-        if (prise.tenu) elan = Math.max(-2500, Math.min(2500, prise.vx)) - allure();
-        prise = null;
-      };
-      bande.addEventListener('pointerup', lacher);
-      bande.addEventListener('pointercancel', lacher);
-
-      // Un glissement ne vaut pas un clic.
-      bande.addEventListener(
-        'click',
-        (e) => {
-          if (!aGlisse) return;
-          e.preventDefault();
-          e.stopPropagation();
-          aGlisse = false;
-        },
-        true,
-      );
     })();
   </script>
 
