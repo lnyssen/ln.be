@@ -318,6 +318,39 @@ const ogImage = new URL('/og.png?v=3', Astro.site).href;
     </script>
 
     <ClientRouter />
+
+    <script is:inline>
+      // Le cercle de la transition part du point cliqué. Son rayon est la
+      // distance jusqu'au coin le plus loin, pour couvrir l'écran sans
+      // tourner à vide. Sans clic (retour du navigateur, clavier), il part
+      // du centre.
+      (() => {
+        if (window.__cercleTransition) return;
+        window.__cercleTransition = true;
+        // La page arrivante remplace les attributs de la racine : le point
+        // est gardé ici et reposé juste après l'échange, avant la capture.
+        let point = null;
+        addEventListener('click', (e) => {
+          if (!e.target.closest?.('a[href]') || e.detail === 0) return;
+          const x = e.clientX;
+          const y = e.clientY;
+          const r = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+          point = { x, y, r: Math.ceil(r), t: performance.now() };
+        }, true);
+        document.addEventListener('astro:after-swap', () => {
+          const racine = document.documentElement;
+          // Un clic qui n'a mené nulle part ne doit pas servir au prochain retour.
+          if (point && performance.now() - point.t < 3000) {
+            racine.style.setProperty('--cercle-x', `${point.x}px`);
+            racine.style.setProperty('--cercle-y', `${point.y}px`);
+            racine.style.setProperty('--cercle-r', `${point.r}px`);
+          } else {
+            ['--cercle-x', '--cercle-y', '--cercle-r'].forEach((p) => racine.style.removeProperty(p));
+          }
+          point = null;
+        });
+      })();
+    </script>
   </head>
   <body>
     <!-- Au clavier, il faut sinon traverser la barre entière avant d'atteindre
