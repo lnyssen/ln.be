@@ -1,6 +1,16 @@
 ---
 import SwissThemeToggle from './SwissThemeToggle.jsx';
 
+// Essai : la navigation quitte la barre du haut et rejoint la capsule, à
+// portée du pouce. La page courante se lit à l'adresse.
+const chemin = Astro.url.pathname;
+const pages = [
+  { href: '/', label: 'Index', actif: chemin === '/' || chemin.startsWith('/work/') },
+  { href: '/lab', label: 'Lab', actif: chemin.startsWith('/lab') },
+  { href: '/shapes', label: 'Shapes', actif: chemin.startsWith('/shapes') },
+  { href: '/notes', label: 'Notes', actif: chemin.startsWith('/notes') },
+];
+
 // Les outils du visiteur — la grille, la teinte et le thème — ne
 // sont pas de la navigation : ils quittent la barre et se posent en capsule
 // flottante, centrée au bas de l'écran et à portée du pouce. Le contact n'y
@@ -19,13 +29,41 @@ import SwissThemeToggle from './SwissThemeToggle.jsx';
   <div
     class="dock-capsule flex items-center gap-[10px] rounded-full p-[7px]"
   >
+    <nav class="dock-nav swiss-meta flex items-center gap-[2px]" aria-label="Main">
+      {
+        pages.map((page) => (
+          <a
+            href={page.href}
+            class="dock-lien flex h-[38px] items-center whitespace-nowrap rounded-full px-[11px] transition-colors duration-200 sm:px-[14px]"
+            aria-current={page.actif ? 'page' : undefined}
+          >
+            {page.label}
+          </a>
+        ))
+      }
+      <a
+        href="mailto:hello@laurentnyssen.be"
+        aria-label="Hello, write to me"
+        data-cursor-mirror="Hello"
+        data-cursor-sign="MAIL"
+        class="dock-hello ml-[4px] flex h-[38px] shrink-0 items-center gap-[8px] rounded-full border border-[var(--rule)] px-[12px] transition-colors duration-200 hover:border-[var(--accent)] hover:bg-[var(--accent)] hover:text-[var(--sur-accent)] sm:px-[16px]"
+      >
+        <span class="hidden sm:inline">Hello</span>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M3.5 6.5h17v11h-17z M3.5 7l8.5 6 8.5-6" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </a>
+    </nav>
+
+    <span class="dock-separe hidden h-[24px] w-px bg-[var(--rule)] opacity-40 md:block" aria-hidden="true"></span>
+
     <button
       type="button"
       data-grid-toggle
       aria-pressed="false"
       aria-label="Show grid"
       title="Grille (G)"
-      class="swiss-meta flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-full border border-[var(--rule)] transition-colors duration-200 hover:border-[var(--accent)] hover:bg-[var(--accent)] hover:text-[var(--sur-accent)] aria-pressed:bg-[var(--ink)] aria-pressed:text-[var(--paper)]"
+      class="swiss-meta hidden h-[38px] md:flex w-[38px] shrink-0 items-center justify-center rounded-full border border-[var(--rule)] transition-colors duration-200 hover:border-[var(--accent)] hover:bg-[var(--accent)] hover:text-[var(--sur-accent)] aria-pressed:bg-[var(--ink)] aria-pressed:text-[var(--paper)]"
     >
       <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true">
         <g stroke="currentColor" stroke-width="1">
@@ -40,14 +78,14 @@ import SwissThemeToggle from './SwissThemeToggle.jsx';
       data-accent-cycle
       aria-label="Change the site accent colour"
       title="Accent colour"
-      class="swiss-meta flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-full border border-[var(--rule)] transition-colors duration-200 hover:border-[var(--accent)]"
+      class="swiss-meta hidden h-[38px] md:flex w-[38px] shrink-0 items-center justify-center rounded-full border border-[var(--rule)] transition-colors duration-200 hover:border-[var(--accent)]"
     >
       <!-- La pastille porte la teinte du moment : le bouton dit déjà où on en
            est, sans un mot. -->
       <span class="dock-teinte" aria-hidden="true"></span>
     </button>
 
-    <SwissThemeToggle client:load />
+    <div class="hidden md:flex"><SwissThemeToggle client:load /></div>
   </div>
 </div>
 

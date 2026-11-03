@@ -1,5 +1,6 @@
 ---
 import LogoLockup from './LogoLockup.astro';
+import SwissThemeToggle from './SwissThemeToggle.jsx';
 
 interface Props {
   current?: 'index' | 'lab' | 'notes' | 'polographe';
@@ -54,6 +55,10 @@ const pages = [
     }
 
     <div class="flex items-center gap-[16px]">
+      <!-- Essai : sur téléphone, la capsule du bas n'a plus la place du
+           thème ; il revient ici, seul à droite du nom. -->
+      <div class="md:hidden"><SwissThemeToggle client:load /></div>
+
       <!-- La page courante est marquée par une pastille qui glisse d'un
            repère à l'autre. Le nœud traverse les transitions de vue, sans
            quoi elle sauterait au lieu de glisser. -->

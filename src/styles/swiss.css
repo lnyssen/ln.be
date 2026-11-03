@@ -2663,3 +2663,34 @@
 @keyframes page-recule {
   to { transform: scale(0.96); filter: brightness(0.5); }
 }
+
+/* Essai : la navigation vit dans la capsule du bas. La barre du haut ne
+   garde que le nom ; ses repères, son bouton et son menu se retirent. */
+.swiss [data-swiss-header] [data-nav],
+.swiss [data-swiss-header] a[href^="mailto:"],
+.swiss [data-swiss-header] [data-menu-toggle],
+.swiss #swiss-menu {
+  display: none !important;
+}
+
+.swiss .dock-lien {
+  color: var(--ink);
+}
+
+.swiss .dock-lien:hover {
+  color: var(--accent-texte);
+}
+
+.swiss .dock-lien[aria-current="page"] {
+  background-color: var(--accent);
+  color: var(--sur-accent);
+}
+
+/* La barre du haut n'a plus que le nom : sur grand écran, elle se resserre
+   autour de lui au lieu de courir vide d'un bord à l'autre. */
+@media (min-width: 768px) {
+  .swiss [data-swiss-header] .header-pill {
+    width: fit-content;
+    padding-right: 26px;
+  }
+}
