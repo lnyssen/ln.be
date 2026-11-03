@@ -2593,13 +2593,26 @@
   scroll-snap-type: none;
 }
 
+.swiss .work-voisins .text-right .work-voisin {
+  justify-content: flex-end;
+}
+
+.swiss .work-voisin .swiss-arrow {
+  vertical-align: 0;
+}
+
 .swiss .work-voisins {
   display: grid;
   grid-template-columns: 1fr 1fr;
   column-gap: 20px;
 }
 
+/* La flèche se cale au milieu des capitales, pas sur la ligne de base : en
+   ligne, elle montait au-dessus du titre. */
 .swiss .work-voisin {
+  display: flex;
+  align-items: center;
+  gap: 0.3em;
   font-size: clamp(1.125rem, 2.6vw, 2rem);
   line-height: 1.1;
   letter-spacing: -0.035em;
