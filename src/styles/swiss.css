@@ -2749,3 +2749,32 @@
     height: 24px;
   }
 }
+
+/* L'accueil respire plus large que les autres pages : les sections s'y
+   suivent comme les pages d'un livret, pas comme les lignes d'une liste. Les
+   écarts de la grille des projets s'ouvrent au même rythme. */
+.swiss main[data-accueil] {
+  --section-space: 56px;
+  --renvoi-space: 84px;
+}
+
+.swiss main[data-accueil] .work-grille {
+  gap: 48px 20px;
+}
+
+/* La bande d'images garde son pas serré sous le titre : elle doit entrer
+   dans le premier écran. */
+.swiss main[data-accueil] section.section-ouverture > .vitrine {
+  padding-top: 42px;
+}
+
+@media (min-width: 768px) {
+  .swiss main[data-accueil] {
+    --section-space: 88px;
+    --renvoi-space: 120px;
+  }
+
+  .swiss main[data-accueil] .work-grille {
+    gap: 72px 28px;
+  }
+}
