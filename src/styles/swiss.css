@@ -2624,7 +2624,10 @@
    part du centre. La barre et la capsule ne bougent pas : elles sont les
    mêmes d'une page à l'autre. */
 @media (prefers-reduced-motion: no-preference) {
-  [data-swiss-header] { view-transition-name: entete; }
+  /* Le nom va à la capsule elle-même et non à la barre : un nom de
+     transition isole son élément, et le flou de la capsule, enfermé dans la
+     barre, ne voyait plus la page derrière elle. */
+  [data-swiss-header] .header-pill { view-transition-name: entete; }
   .swiss-dock { view-transition-name: capsule; }
   [data-dock-haut] { view-transition-name: retour-haut; }
 
