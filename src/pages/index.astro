@@ -69,7 +69,7 @@ function domainLabel(link: string) {
     <!-- Titre pleine largeur, calé au filet. -->
     <section class="swiss-shell section-ouverture">
       <h1 class="swiss-display" data-reveal data-reveal-slow>
-        Bold brands.<br />Human <br class="titre-coupe" />experiences<span class="titre-point">.</span>
+        Bold brands<span class="titre-point">.</span><br />Human <br class="titre-coupe" />experiences<span class="titre-point">.</span>
       </h1>
 
       <!-- Vitrine : une bande de visuels, un par projet, qui défile comme la
@@ -364,6 +364,30 @@ function domainLabel(link: string) {
       const slug = decodeURIComponent(location.hash.slice(1));
       if (slug && document.querySelector(`.work-carte[data-slug="${CSS.escape(slug)}"]`)) {
         location.replace(`/work/${slug}`);
+        return;
+      }
+      // Le retour d'une page projet mène à #work. L'ancre a fait son office
+      // une fois la page posée : on l'ôte de l'adresse, sans quoi recharger
+      // l'accueil y redescendait à chaque fois.
+      if (slug) {
+        const oter = () => history.replaceState(history.state, '', location.pathname + location.search);
+        if (document.readyState === 'complete') setTimeout(oter, 300);
+        else addEventListener('load', () => setTimeout(oter, 300), { once: true });
+      }
+
+      // Recharger l'accueil le reprend par le haut, sur le titre, au lieu de
+      // retomber là où on l'avait laissé. Une seule fois par chargement : la
+      // navigation garde le type « reload » toute la vie du document, et
+      // seule la page rechargée elle-même est concernée.
+      const entree = performance.getEntriesByType('navigation')[0];
+      if (!window.__accueilRecharge && entree?.type === 'reload' && new URL(entree.name).pathname === '/') {
+        window.__accueilRecharge = true;
+        const enHaut = () => {
+          scrollTo(0, 0);
+          if (history.state) history.replaceState({ ...history.state, scrollX: 0, scrollY: 0 }, '');
+        };
+        if (document.readyState === 'complete') enHaut();
+        else addEventListener('load', enHaut, { once: true });
       }
     })();
   </script>
