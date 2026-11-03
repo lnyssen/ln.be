@@ -76,6 +76,7 @@ const entries = (await getCollection('lab')).sort(
                 {entry.data.demo && (
                   <a
                     href={entry.data.demo}
+                    hreflang={entry.data.lang}
                     target="_blank"
                     rel="noopener noreferrer"
                     data-cursor-mirror="Try it"
@@ -85,6 +86,11 @@ const entries = (await getCollection('lab')).sort(
                   >
                     <span class="bouton-lab-mot">Try it</span> <SwissArrow size={15} />
                   </a>
+                )}
+                {entry.data.lang && (
+                  <span class="self-center text-[var(--ink-soft)]">
+                    In {new Intl.DisplayNames(['en'], { type: 'language' }).of(entry.data.lang)}
+                  </span>
                 )}
                 {entry.data.doc && (
                   <a

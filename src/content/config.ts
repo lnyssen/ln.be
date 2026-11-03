@@ -26,6 +26,9 @@ const lab = defineCollection({
     image: z.string().optional(),
     demo: z.string().optional(),
     doc: z.string().optional(),
+    // La langue de l'outil quand ce n'est pas l'anglais du site, en code
+    // (« fr ») : le visiteur sait avant de cliquer.
+    lang: z.string().optional(),
   }),
 });
 

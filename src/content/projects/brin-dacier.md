@@ -15,8 +15,7 @@ images:
 link: "https://www.librairiebrindacier.be/"
 ---
 
-Naming, brand identity, and e-commerce platform for a neighborhood
-bookstore in Schaerbeek. The name pairs delicate lightness with structural
+Naming and brand identity for a neighborhood bookstore in Schaerbeek. The name pairs delicate lightness with structural
 strength (“steel strand”). The visual execution echoes this contrast
 through high-voltage electric blue and warm orange palette choices,
 geometric typography, and playful punctuation-inspired graphic elements.
