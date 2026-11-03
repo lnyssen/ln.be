@@ -2699,7 +2699,9 @@
   backdrop-filter: none;
   border: 0;
   border-radius: 0;
-  padding: 14px 0 16px;
+  /* Autant d'air sous le logo qu'au-dessus : les 16 px de la barre plus les
+     14 px de la pilule, soit 30 px de chaque côté. */
+  padding: 14px 0 30px;
 }
 
 /* Le nom prend plus de place : il est seul à porter la barre. */
