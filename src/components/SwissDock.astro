@@ -87,13 +87,13 @@ import SwissThemeToggle from './SwissThemeToggle.jsx';
     });
   })();
 
-  // La capsule et la barre du haut s'effacent quand on descend — elles
-  // couvraient le texte qu'on lit — et reviennent dès qu'on remonte, en haut
-  // de page, ou quand le clavier y entre. Le retour en haut paraît passé un écran et demi de lecture.
+  // La capsule s'efface quand on descend — elle couvrait le texte qu'on
+  // lit — et revient dès qu'on remonte, en haut de page, ou quand le clavier
+  // y entre. La barre du haut, elle, reste toujours là. Le retour en haut
+  // paraît passé un écran et demi de lecture.
   (() => {
     const dock = document.querySelector('.swiss-dock');
     const haut = document.querySelector('[data-dock-haut]');
-    const barre = document.querySelector('[data-swiss-header]');
     if (!dock || !haut) return;
 
     // On n'écrit dans le DOM que si l'état change : retoucher une classe ou
@@ -111,7 +111,6 @@ import SwissThemeToggle from './SwissThemeToggle.jsx';
       if (suivant !== cache) {
         cache = suivant;
         dock.classList.toggle('dock-cache', cache);
-        barre?.classList.toggle('header-cache', cache);
       }
       const montrer = y > innerHeight * 1.5;
       if (montrer !== visible) {

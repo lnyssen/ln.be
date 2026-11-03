@@ -2664,52 +2664,24 @@
   to { transform: scale(0.96); filter: brightness(0.5); }
 }
 
-/* Grain : un bruit fin dans le papier lui-même, comme celui d'un tirage. Il
-   vit dans le fond de la page, sous le contenu : les photos et les aplats
-   restent nets. Une petite image de bruit se répète : un filtre SVG se
-   rendait plus ou moins fort selon le navigateur. Sur le papier clair, le
-   grain est d'encre ; sur le fond sombre, il est de papier. */
-.swiss body,
-.swiss body > main {
-  background-image: url("/images/grain-encre.png");
-  background-size: 160px 160px;
-}
-
-.swiss[data-swiss-theme="dark"] body,
-.swiss[data-swiss-theme="dark"] body > main {
-  background-image: url("/images/grain-papier.png");
-}
-
-/* La bande de papier au-dessus de la barre prend le même grain : lisse, elle
-   se détachait du reste de la page. Elle ne couvre plus la pilule, l'ombre
-   qui l'entourait de papier n'a donc plus lieu d'être. */
-.swiss .header-plate {
-  background-color: var(--paper);
-  background-image: url("/images/grain-encre.png");
-  background-size: 160px 160px;
-}
-
-.swiss[data-swiss-theme="dark"] .header-plate {
-  background-image: url("/images/grain-papier.png");
-}
-
-.swiss .plate-hole {
-  box-shadow: none;
-}
 
 /* Essai — menu en bande. La capsule disparaît : la barre est une bande de
-   papier pleine largeur, fermée par un filet, avec le nom à gauche et les
+   verre dépoli pleine largeur, toujours visible, fermée par un filet, avec le nom à gauche et les
    pages à droite. La pastille glisse toujours sous la page courante, et
    Hello garde son contour. Sur téléphone, le signe du menu ouvre toujours
    l'affiche. */
 .swiss body > header[data-swiss-header] {
-  background-color: var(--paper);
-  background-image: url("/images/grain-encre.png");
-  background-size: 160px 160px;
+  background-color: color-mix(in srgb, var(--paper) 72%, transparent);
+  -webkit-backdrop-filter: blur(20px) saturate(1.35);
+  backdrop-filter: blur(20px) saturate(1.35);
 }
 
-.swiss[data-swiss-theme="dark"] body > header[data-swiss-header] {
-  background-image: url("/images/grain-papier.png");
+@media (prefers-reduced-transparency: reduce) {
+  .swiss body > header[data-swiss-header] {
+    background-color: var(--paper);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
 }
 
 .swiss [data-swiss-header] .header-plate {
@@ -2739,6 +2711,8 @@
 
 .swiss.menu-open body > header[data-swiss-header] {
   background: transparent;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
 }
 
 .swiss.menu-open [data-swiss-header] .header-pill {
@@ -2756,5 +2730,26 @@
 @media (min-width: 768px) {
   .swiss .lab-grille {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Sur téléphone, la barre ne garde que le monogramme et le signe du menu,
+   deux traits sans cadre. Le monogramme est le début du logo : la boîte est
+   rognée à sa largeur (170 sur 962 unités du dessin). */
+@media (max-width: 767px) {
+  .swiss [data-swiss-header] .header-pill > :first-child {
+    width: calc(38px * 170.3 / 159.6);
+    overflow: hidden;
+  }
+
+  .swiss [data-swiss-header] [data-menu-toggle] {
+    border-color: transparent;
+    width: 36px;
+    margin-right: -6px;
+  }
+
+  .swiss [data-swiss-header] [data-menu-toggle] .menu-icon {
+    width: 24px;
+    height: 24px;
   }
 }
