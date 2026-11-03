@@ -2790,3 +2790,12 @@
     gap: 72px 28px;
   }
 }
+
+/* Le nom d'un projet tient sur une ligne : la taille suit la largeur de
+   l'écran, calculée pour que le plus long, « World Cocoa Foundation »,
+   passe d'un trait. */
+.swiss .note-titre.projet-titre {
+  max-width: none;
+  white-space: nowrap;
+  font-size: clamp(1.5rem, 8vw, 5.5rem);
+}
