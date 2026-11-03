@@ -1,7 +1,7 @@
 ---
 title: "Silicones Europe"
 slug: "silicones-europe"
-order: 9
+order: 8
 tags: ["Rebranding", "Print"]
 images:
   - src: "/images/silicones-europe-1.jpg"

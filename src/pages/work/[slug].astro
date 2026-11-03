@@ -71,15 +71,17 @@ const resume = (projet.body ?? '').replace(/\s+/g, ' ').trim().slice(0, 155);
     </article>
 
     <section class="swiss-shell section-renvoi">
-      <div class="swiss-grid gap-y-[var(--section-space)] border-t border-[var(--rule)]" data-reveal>
-        <div class="col-span-6 md:col-span-3 min-[901px]:col-span-6">
+      <!-- Précédent et suivant sur une même ligne, à toutes les tailles :
+           l'un pousse à gauche, l'autre à droite. -->
+      <div class="work-voisins border-t border-[var(--rule)]" data-reveal>
+        <div class="min-w-0">
           <h2 class="section-label swiss-meta text-[var(--ink-soft)]">Previous project</h2>
           <a href={`/work/${chemin(precedent)}`} class="work-voisin lab-teaser-title mt-[16px] block font-medium transition-colors duration-200 hover:text-[var(--accent-texte)] focus-visible:text-[var(--accent-texte)]">
             <SwissArrow direction="left" size={24} /> {precedent.data.title}
           </a>
         </div>
 
-        <div class="col-span-6 md:col-span-3 md:text-right min-[901px]:col-span-6">
+        <div class="min-w-0 text-right">
           <h2 class="section-label swiss-meta text-[var(--ink-soft)]">Next project</h2>
           <a href={`/work/${chemin(suivant)}`} class="work-voisin lab-teaser-title mt-[16px] block font-medium transition-colors duration-200 hover:text-[var(--accent-texte)] focus-visible:text-[var(--accent-texte)]">
             {suivant.data.title} <SwissArrow direction="right" size={24} />
