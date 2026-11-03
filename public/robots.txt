@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /admin/
 
-Sitemap: https://laurentnyssen.be/sitemap-index.xml
+Sitemap: https://www.laurentnyssen.be/sitemap-index.xml
