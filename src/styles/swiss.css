@@ -2663,3 +2663,36 @@
 @keyframes page-recule {
   to { transform: scale(0.96); filter: brightness(0.5); }
 }
+
+/* Grain : un bruit fin dans le papier lui-même, comme celui d'un tirage. Il
+   vit dans le fond de la page, sous le contenu : les photos et les aplats
+   restent nets. Une petite image de bruit se répète : un filtre SVG se
+   rendait plus ou moins fort selon le navigateur. Sur le papier clair, le
+   grain est d'encre ; sur le fond sombre, il est de papier. */
+.swiss body,
+.swiss body > main {
+  background-image: url("/images/grain-encre.png");
+  background-size: 160px 160px;
+}
+
+.swiss[data-swiss-theme="dark"] body,
+.swiss[data-swiss-theme="dark"] body > main {
+  background-image: url("/images/grain-papier.png");
+}
+
+/* La bande de papier au-dessus de la barre prend le même grain : lisse, elle
+   se détachait du reste de la page. Elle ne couvre plus la pilule, l'ombre
+   qui l'entourait de papier n'a donc plus lieu d'être. */
+.swiss .header-plate {
+  background-color: var(--paper);
+  background-image: url("/images/grain-encre.png");
+  background-size: 160px 160px;
+}
+
+.swiss[data-swiss-theme="dark"] .header-plate {
+  background-image: url("/images/grain-papier.png");
+}
+
+.swiss .plate-hole {
+  box-shadow: none;
+}
