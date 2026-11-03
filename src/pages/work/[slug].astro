@@ -67,7 +67,7 @@ const partage = visuel
 
       <section class="swiss-shell">
         <div class="swiss-grid gap-y-8 border-t border-[var(--rule)]" data-reveal data-reveal-delay="140">
-          <dl class="note-fiche swiss-meta col-span-6 md:col-span-2">
+          <dl class="note-fiche swiss-meta col-span-6 min-w-0 md:col-span-3">
             <div>
               <dt class="text-[var(--ink-soft)]">Services</dt>
               <dd>{tags.join(', ')}</dd>
@@ -77,14 +77,14 @@ const partage = visuel
                 <dt class="text-[var(--ink-soft)]">Website</dt>
                 <dd>
                   <a href={link} target="_blank" rel="noopener noreferrer" class="note-original">
-                    {domaine} <SwissArrow size={10} />
+                    {domaine.slice(0, domaine.lastIndexOf('.'))}<wbr /><span class="whitespace-nowrap">{domaine.slice(domaine.lastIndexOf('.'))}<SwissArrow size={10} /></span>
                   </a>
                 </dd>
               </div>
             )}
           </dl>
 
-          <div class="note-corps col-span-6 md:col-start-3 md:col-span-7">
+          <div class="note-corps col-span-6 md:col-start-4 md:col-span-7">
             <Content />
           </div>
         </div>

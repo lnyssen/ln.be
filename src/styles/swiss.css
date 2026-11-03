@@ -2294,10 +2294,15 @@
 .swiss .note-fiche dd { margin-top: 5px; }
 
 .swiss .note-original {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
+  display: inline;
   color: var(--accent-texte);
+  /* Une adresse longue se coupe dans sa colonne, devant un point, au lieu de
+     déborder sur le texte voisin. La flèche suit le dernier mot. */
+  overflow-wrap: break-word;
+}
+
+.swiss .note-original .swiss-arrow {
+  margin-left: 4px;
 }
 
 @media (min-width: 768px) {
