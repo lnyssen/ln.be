@@ -2666,10 +2666,10 @@
 
 
 /* Essai — menu en bande. La capsule disparaît : la barre est une bande de
-   verre dépoli pleine largeur, toujours visible, fermée par un filet, avec le nom à gauche et les
-   pages à droite. La pastille glisse toujours sous la page courante, et
-   Hello garde son contour. Sur téléphone, le signe du menu ouvre toujours
-   l'affiche. */
+   verre dépoli pleine largeur, toujours visible et sans filet, avec le nom
+   à gauche et les pages à droite. La pastille glisse toujours sous la page
+   courante, et Hello garde son contour. Sur téléphone, le signe du menu
+   ouvre toujours l'affiche. */
 .swiss body > header[data-swiss-header] {
   background-color: color-mix(in srgb, var(--paper) 72%, transparent);
   -webkit-backdrop-filter: blur(20px) saturate(1.35);
@@ -2693,7 +2693,6 @@
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
   border: 0;
-  border-bottom: var(--rule-barre, 1.5px) solid var(--rule);
   border-radius: 0;
   padding: 14px 0 16px;
 }
@@ -2715,9 +2714,6 @@
   backdrop-filter: none;
 }
 
-.swiss.menu-open [data-swiss-header] .header-pill {
-  border-bottom-color: transparent;
-}
 
 /* Essai : le Lab en deux colonnes dès la tablette, au même pas que la
    grille des projets. */
