@@ -118,11 +118,11 @@ function domainLabel(link: string) {
                           src={v.asset!}
                           alt={v.title}
                           formats={['avif']}
-                          widths={[300, 450, 600, 690, 1000]}
+                          widths={[300, 450, 600, 690, 800, 1000]}
                           sizes="(min-width: 768px) and (max-height: 900px) 450px, (min-width: 768px) 690px, 300px"
-                          quality={70}
+                          quality={58}
                           loading={i < 3 && tour === 0 ? 'eager' : 'lazy'}
-                          fetchpriority={i === 0 && tour === 0 ? 'high' : undefined}
+                          fetchpriority={i < 2 && tour === 0 ? 'high' : undefined}
                           decoding="async"
                           draggable="false"
                           pictureAttributes={{ class: 'block' }}

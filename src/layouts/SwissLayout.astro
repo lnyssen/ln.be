@@ -13,12 +13,17 @@ interface Props {
   title?: string;
   description?: string;
   noindex?: boolean;
+  // Image de partage propre à la page (chemin du site), et ce qu'elle montre.
+  image?: string;
+  imageAlt?: string;
 }
 
 const {
   title = 'Laurent Nyssen — Multidisciplinary Designer',
   description = "I'm Laurent Nyssen, a Brussels-based designer creating bold identities and digital experiences through creative direction, strategy, branding and UX/UI with AI used where it truly adds value.",
   noindex = false,
+  image,
+  imageAlt = 'Laurent Nyssen, Multidisciplinary Designer: Bold brands. Human experiences.',
 } = Astro.props;
 
 // Fiche structurée, posée sur la seule page d'accueil : c'est elle qui
@@ -55,7 +60,7 @@ const person = {
 
 // Adresses absolues : les réseaux sociaux refusent les chemins relatifs.
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
-const ogImage = new URL('/og.png?v=3', Astro.site).href;
+const ogImage = new URL(image ?? '/og.png?v=3', Astro.site).href;
 ---
 
 <html lang="en" class="swiss" data-swiss-theme="light">
@@ -81,7 +86,7 @@ const ogImage = new URL('/og.png?v=3', Astro.site).href;
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Laurent Nyssen, Multidisciplinary Designer: Bold brands. Human experiences." />
+    <meta property="og:image:alt" content={imageAlt} />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />

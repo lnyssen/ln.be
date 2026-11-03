@@ -1,5 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
+import { getImage } from 'astro:assets';
+import { resolveImage } from '../../lib/images';
 import SwissLayout from '../../layouts/SwissLayout.astro';
 import SwissHeader from '../../components/SwissHeader.astro';
 import SwissFooter from '../../components/SwissFooter.astro';
@@ -24,10 +26,33 @@ const { projet, precedent, suivant } = Astro.props;
 const { Content } = await render(projet);
 const { title, tags, images, link } = projet.data;
 const domaine = link ? new URL(link).hostname.replace(/^www\./, '') : null;
-const resume = (projet.body ?? '').replace(/\s+/g, ' ').trim().slice(0, 155);
+// Le résumé des moteurs et des aperçus de partage s'arrête à la fin d'une
+// phrase : coupé net à 155 signes, il finissait au milieu d'un mot.
+const texte = (projet.body ?? '').replace(/\s+/g, ' ').trim();
+const phrases = texte.match(/[^.!?]+[.!?]+(\s|$)/g) ?? [texte];
+let resume = '';
+for (const phrase of phrases) {
+  if (resume && (resume + phrase).trim().length > 160) break;
+  resume += phrase;
+}
+resume = resume.trim();
+if (resume.length > 160) resume = resume.slice(0, 157).replace(/\s+\S*$/, '') + '…';
+
+// L'aperçu de partage montre le premier visuel du projet, recadré au format
+// des réseaux sociaux.
+const premier = images?.[0];
+const visuel = resolveImage(typeof premier === 'string' ? premier : premier?.src);
+const partage = visuel
+  ? await getImage({ src: visuel, width: 1200, height: 630, fit: 'cover', format: 'jpg', quality: 80 })
+  : null;
 ---
 
-<SwissLayout title={`${title} — Laurent Nyssen`} description={resume || title}>
+<SwissLayout
+  title={`${title} — Laurent Nyssen`}
+  description={resume || title}
+  image={partage?.src}
+  imageAlt={(typeof premier === 'string' ? undefined : premier?.alt) ?? title}
+>
   <SwissHeader current="index" />
 
   <main id="contenu" tabindex="-1">
