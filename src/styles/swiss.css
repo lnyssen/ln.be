@@ -2741,24 +2741,18 @@
   }
 }
 
-/* Sur téléphone, la barre ne garde que le monogramme et le signe du menu,
-   deux traits sans cadre. Le monogramme est le début du logo : la boîte est
-   rognée à sa largeur (170 sur 962 unités du dessin). */
+/* Sur téléphone, la barre garde le logo entier et le signe du menu : deux
+   traits longs, sans cadre. */
 @media (max-width: 767px) {
-  .swiss [data-swiss-header] .header-pill > :first-child {
-    width: calc(38px * 170.3 / 159.6);
-    overflow: hidden;
-  }
-
   .swiss [data-swiss-header] [data-menu-toggle] {
     border-color: transparent;
-    width: 36px;
-    margin-right: -6px;
+    width: 40px;
+    margin-right: -8px;
   }
 
   .swiss [data-swiss-header] [data-menu-toggle] .menu-icon {
-    width: 24px;
-    height: 24px;
+    width: 30px;
+    height: 22px;
   }
 }
 
