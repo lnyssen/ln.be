@@ -2446,25 +2446,25 @@
   .swiss:not(.menu-open) header[data-swiss-header].header-cache:not(:focus-within) { translate: none; }
 }
 
-/* Manifeste : les mots s'allument au défilement. Le script de l'accueil
-   les enveloppe et donne à chacun son rang (--k, de 0 à 1) ; le défilement
-   lui-même pilote l'opacité. Sans cette prise en charge, le script prend le
-   relais. */
-.swiss .manifeste .mot,
-.swiss .manifeste .titre-point {
+/* Profil et manifeste : les mots s'allument au défilement. Le script de
+   l'accueil les enveloppe et donne à chacun son rang (--k, de 0 à 1) ; le
+   défilement lui-même pilote l'opacité. Sans cette prise en charge, le
+   script prend le relais. */
+.swiss [data-devoile] .mot,
+.swiss [data-devoile] .titre-point {
   transition: opacity 140ms linear;
 }
 
 @supports (animation-timeline: view()) {
-  .swiss .manifeste[data-decoupe] {
-    view-timeline-name: --manifeste;
+  .swiss [data-devoile][data-decoupe] {
+    view-timeline-name: --devoile;
   }
 
-  .swiss .manifeste[data-decoupe] .mot,
-  .swiss .manifeste[data-decoupe] .titre-point {
+  .swiss [data-devoile][data-decoupe] .mot,
+  .swiss [data-devoile][data-decoupe] .titre-point {
     transition: none;
     animation: mot-allume linear both;
-    animation-timeline: --manifeste;
+    animation-timeline: --devoile;
     /* La phrase s'allume entre son entrée par le bas de l'écran et le
        moment où elle en occupe le milieu ; chaque mot prend sa part. */
     animation-range:
@@ -2479,8 +2479,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .swiss .manifeste .mot,
-  .swiss .manifeste .titre-point {
+  .swiss [data-devoile] .mot,
+  .swiss [data-devoile] .titre-point {
     animation: none !important;
     opacity: 1 !important;
   }
